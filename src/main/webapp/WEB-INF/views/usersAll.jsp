@@ -9,20 +9,22 @@
 </head>
 <body>
 <div class="container">
-    <section class="grid text-center"> <a href="<c:url value="/admin/users/add"/>" class="button primary">Add User</a>
-    </section>
-    <section class="grid">
-        <table class="table full-width"> <thead>
+    <form action="<c:url value='/admin/users/add'/>" method="get">
+        <button type="submit" class="primary">Add User</button>
+    </form>
+
+    <section class="grid" id="tables">
+        <table class="striped full-width"> <thead>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Action</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
             <tbody>
             <c:forEach items="${users}" var="user">
-                <tr>
+                <tr scope="row">
                     <td><c:out value="${user.firstName}"/></td>
                     <td><c:out value="${user.lastName}"/></td>
                     <td><c:out value="${user.email}"/></td>
