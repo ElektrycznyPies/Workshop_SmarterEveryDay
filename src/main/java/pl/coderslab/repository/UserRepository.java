@@ -3,18 +3,15 @@ package pl.coderslab.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pl.coderslab.model.Book;
-
-import java.util.List;
-import java.util.Optional;
+import pl.coderslab.model.User;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 // TE 4 METODY są dziedziczone z JpaRepo i nie trzeba ich deklarować:
-    //    List<Book> findAll();
-    //    Optional<Book> findById(Long id);
-    //    Book save(Book book);
+    //    List<User> findAll();
+    //    Optional<User> findById(Long id);
+    //    User save(User user);
     //    void deleteById(Long id);
 
 }

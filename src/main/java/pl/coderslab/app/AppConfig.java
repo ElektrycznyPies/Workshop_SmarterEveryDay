@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import pl.coderslab.service.BookService;
+import pl.coderslab.service.UserService;
 //import pl.coderslab.converter.AuthorConverter;
 //import pl.coderslab.converter.PublisherConverter;
 
@@ -42,7 +42,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public LocalEntityManagerFactoryBean entityManagerFactory() {
         LocalEntityManagerFactoryBean emfb = new LocalEntityManagerFactoryBean();
-        emfb.setPersistenceUnitName("workshopHibernate");
+        emfb.setPersistenceUnitName("SmarterEveryDay");
         return emfb;
     }
 
@@ -73,13 +73,13 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Controller
-    @RequestMapping("/admin/books")
-    public class ManageBookController {
+    @RequestMapping("/admin/users")
+    public class UsersCRUDController {
 
-        private final BookService bookService;
+        private final UserService userService;
 
-        public ManageBookController(BookService bookService) {
-            this.bookService = bookService;
+        public UsersCRUDController(UserService userService) {
+            this.userService = userService;
         }
 
     }

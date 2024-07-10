@@ -1,30 +1,31 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<jsp:include page="headerAdmin.jsp"></jsp:include>
+
 <html>
 <head>
-    <title>Book Details</title>
+    <title>User Details</title>
 </head>
 <body>
-<table border="1">
-    <thead>
-    <th>isbn</th>
-    <th>title</th>
-    <th>author</th>
-    <th>publisher</th>
-    <th>type</th>
-    </thead>
-    <tbody>
-    <tr>
 
-        <td><c:out value="${book.isbn}"/></td>
-        <td><c:out value="${book.title}"/></td>
-        <td><c:out value="${book.author}"/></td>
-        <td><c:out value="${book.publisher}"/></td>
-        <td><c:out value="${book.type}"/></td>
-    </tr>
+<main class="container">
+    <section class="grid">
+        <h2 class="text-center">User Details</h2>
 
-    </tbody>
-</table>
-</body>
-</html>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <c:out value="${user.firstName}"/>
+            </div>
 
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <c:out value="${user.lastName}"/>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <c:out value="${user.email}"/>
+            </div>
+        </div>

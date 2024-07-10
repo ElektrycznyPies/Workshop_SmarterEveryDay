@@ -3,9 +3,9 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
-    <persistence-unit name="workshopHibernate">
+    <persistence-unit name="SmarterEveryDay">
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/workshop-hibernate?serverTimezone=UTC" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/smarter-every-day?serverTimezone=CET" />
             <property name="javax.persistence.jdbc.user" value="root" />
             <property name="javax.persistence.jdbc.password" value="coderslab" />
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
