@@ -6,30 +6,16 @@
 <html>
 <head>
     <title>Smarter Every Day - starting page</title>
+
 </head>
 <body>
 <main class="container">
+    <section id="links">
 
-    <form>
-        <div class="grid">
-            <form action="<c:url value='/admin/users/add'/>" method="get">
-                <button type="submit" class="primary">About</button>
-            </form>
-            <form action="<c:url value='/admin/users/add'/>" method="get">
-                <button type="submit" class="primary">Login</button>
-            </form>
-            <form action="<c:url value='/admin/users/add'/>" method="get">
-                <button type="submit" class="primary">Register</button>
-            </form>
-        </div>
-
-        <fieldset>
-            <label for="terms">
-                <input type="checkbox" role="switch" id="terms" name="terms" />
-                I agree to the
-                <a href="#" onclick="event.preventDefault()">Privacy Policy</a>
-            </label>
-        </fieldset>
-    </form>
-</section>
+    <p class="grid">
+        <button class="secondary"><a href="<c:url value='/about'/>">About</a></button>
+        <button><a href="<c:url value='/login'/>">Login</a></button>
+        <button><a href="<c:url value='/register'/>">Register</a></button>
+    </p>
+    </section>
 </main>

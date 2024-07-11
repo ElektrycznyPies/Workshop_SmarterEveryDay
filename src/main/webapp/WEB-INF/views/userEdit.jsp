@@ -19,7 +19,7 @@
     <form:hidden path="id"/>
     <form:hidden path="created_at"/>
     <form:hidden path="updated_at"/>
-    <form:hidden path="hashed_password"/>
+    <form:hidden path="password"/>
 
     <div class="form-group">
         <label for="firstName">First Name</label>

@@ -35,9 +35,9 @@
             <form:errors path="email" class="text-danger" />
         </div>
         <div class="form-group">
-            <label for="hashed_password">Password</label>
-            <form:input path="hashed_password" class="input"/>
-            <form:errors path="hashed_password" class="text-danger" />
+            <label for="password">Password</label>
+            <form:input path="password" class="input"/>
+            <form:errors path="password" class="text-danger" />
         </div>
 
         <div class="form-group">

@@ -1,4 +1,4 @@
-//link: https://lms.coderslab.pl/material/1535/8-12/e5f4d001-24dd-4913-a44f-26bb272c664b
+///link: https://lms.coderslab.pl/material/1535/8-12/e5f4d001-24dd-4913-a44f-26bb272c664b
 package pl.coderslab.app;
 
 import org.springframework.context.annotation.Bean;
@@ -70,18 +70,6 @@ public class AppConfig implements WebMvcConfigurer {
         StringHttpMessageConverter converter = new StringHttpMessageConverter();
         converter.setSupportedMediaTypes(List.of(new MediaType("text", "html", StandardCharsets.UTF_8)));
         return converter;
-    }
-
-    @Controller
-    @RequestMapping("/admin/users")
-    public class UsersCRUDController {
-
-        private final UserService userService;
-
-        public UsersCRUDController(UserService userService) {
-            this.userService = userService;
-        }
-
     }
 
 
