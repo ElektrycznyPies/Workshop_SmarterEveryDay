@@ -1,19 +1,20 @@
+package pl.coderslab.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.model.User;
 import pl.coderslab.service.UserService;
-
 import javax.persistence.EntityNotFoundException;
 
 @Controller
-@RequestMapping("/flashcard")
-public class FlashcardController {
+@RequestMapping("")
+public class FlashPackController {
 
     private final UserService userService;
     @Autowired
-    public FlashcardController(UserService userService) {
+    public FlashPackController(UserService userService) {
         this.userService = userService;
     }
 
@@ -23,7 +24,7 @@ public class FlashcardController {
         return "redirect:/";
     }
 
-    @GetMapping("/show/packages/{id}") //////REDO REDO//////////
+    @GetMapping("/admin/users/packages/{id}") //////REDO REDO//////////
     public String showPackages(Model model, @PathVariable Long id) {
         //stworzenie obiektu, ponieważ met. get() z UserController daje Optional, a nie obiekt. Optional utrudnia pracę z jsp
         User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));

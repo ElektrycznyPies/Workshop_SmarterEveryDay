@@ -14,15 +14,15 @@ public class Flashcard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max="50")
+    @Size(max=50)
     private String name;
-    @Size(max="100")
+    @Size(max=100)
     private String word;
-    @Size(max="100")
+    @Size(max=100)
     private String imageLink;
-    @Size(max="100")
+    @Size(max=100)
     private String soundLink;
-    @Size(max="1000")
+    @Size(max=1000)
     private String additionalText;
 
     @ManyToOne
@@ -62,6 +62,14 @@ public class Flashcard {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Package getPack() {
+        return pack;
+    }
+
+    public void setPack(Package pack) {
+        this.pack = pack;
     }
 
     public String getWord() {

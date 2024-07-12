@@ -29,7 +29,7 @@ public class Package {
     @ManyToMany(mappedBy = "packages")
     private Set<User> users;
 
-    @OneToMany(mappedBy = "package", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pack", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Flashcard> flashcards;
 
     public Package() {
