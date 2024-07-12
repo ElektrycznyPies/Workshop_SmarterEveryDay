@@ -10,7 +10,6 @@
     <section id="about">
         <div>
             <p>Smarter Every Day is an educational tool for creating flashcards. It lets you learn vocabulary or images in no time.</p>
-            <p>Please register or login to use it.</p>
         </div>
 </body>
 </html>

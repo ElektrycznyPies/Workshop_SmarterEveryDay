@@ -36,7 +36,7 @@ public class LoginController {
                 sess.setAttribute("user", user);
                 sess.setAttribute("loggedIn", true);
                 if (user.getRole() == 1L) {
-                    return "redirect:/admin/users/all";
+                    return "redirect:/user/home";
                 } else if (user.getRole() == 0L) {
                     {
                         return "redirect:/user/home";
@@ -45,7 +45,7 @@ public class LoginController {
             }
         }
         model.addAttribute("error", "Invalid email or password"); //REDO:POP-UP
-        return "@@@loginPage";
+        return "redirect:/";
     }
 
 }

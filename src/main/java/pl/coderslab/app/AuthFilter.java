@@ -18,7 +18,7 @@ public class AuthFilter implements Filter {
 
         boolean loggedIn = false;
 
-        if (url.startsWith("/admin/")) {
+        if (url.startsWith("/user/")) {
             if (sess == null || sess.getAttribute("user") == null) {
                 httpResp.sendRedirect("/login");
                 return;
