@@ -22,7 +22,7 @@
     </section>
     <section id="packages">
         <details>
-            <summary>Available Packages</summary>
+            <summary>Available packages</summary>
             <div class="content">
                 <%@ include file="showUserPackages.jsp" %>
             </div>
@@ -30,9 +30,8 @@
     </section>
     <section id="new_package">
             <details>
-                <summary>Create New Package</summary>
                 <div class="content">
-                    <%@ include file="newUserPackage.jsp" %>
+                    <a href="<c:url value='/newPackage'/>" class="button">Create new package</a>
                 </div>
             </details>
     </section>

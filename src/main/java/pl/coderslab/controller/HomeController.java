@@ -3,14 +3,11 @@ package pl.coderslab.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.model.User;
 import pl.coderslab.service.UserService;
 
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/")
@@ -29,7 +26,9 @@ public class HomeController {
     }
 
     @GetMapping("/about")
-    public String aboutPage() {
+    public String aboutPage(HttpServletRequest request, Model model) {
+        String referer = request.getHeader("Referer");
+        model.addAttribute("prevUrl", referer != null ? referer : "/");
         return "aboutPage";
     }
 

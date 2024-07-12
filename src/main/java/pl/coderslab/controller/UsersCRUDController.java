@@ -53,12 +53,12 @@ public class UsersCRUDController {
 
     // WYŚWIETL detale jednej PO ID
 
-    @GetMapping("/show/{id}")
-    public String showUser(Model model, @PathVariable Long id) {
+    @GetMapping("/show/packages/{id}")
+    public String showUser(Model model, @PathVariable Long id) { //REDO:POKAŻ PACKAGE, A NIE SZCZEG. USERA
         //stworzenie obiektu, ponieważ met. get() z UserController daje Optional, a nie obiekt. Optional utrudnia pracę z jsp
         User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
         model.addAttribute("user", user);
-        return "adminUserDetails";
+        return "adminUserPackagesList";
     }
 
     // EDYCJA
