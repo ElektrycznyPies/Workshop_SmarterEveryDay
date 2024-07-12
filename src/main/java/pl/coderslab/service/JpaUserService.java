@@ -27,6 +27,7 @@ public class JpaUserService implements UserService {
     public void registerUser(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        user.setRole(0L); // Set default role to user
         userRepository.save(user);
     }
 

@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<jsp:include page="headerAdmin.jsp"></jsp:include>
-
+<%@ include file="header.jsp" %>
 <html>
 <head>
     <title>Edit User</title>
@@ -38,7 +37,10 @@
         <form:input path="email" class="input"/>
         <form:errors path="email" class="text-danger" />
     </div>
-
+    <div>
+        <label for="isAdmin">Admin:</label>
+        <input type="checkbox" id="isAdmin" name="isAdmin" ${user.role == 1 ? 'checked' : ''}>
+    </div>
     <div class="form-group">
         <input type="submit" value="Save" class="button primary">
     </div>

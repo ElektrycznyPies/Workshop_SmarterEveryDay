@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.model.User;
 import pl.coderslab.service.UserService;
 
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
@@ -22,7 +23,8 @@ public class HomeController {
     }
 
     @GetMapping("")
-    public String homePage() {
+    public String homePage(Model model) {
+        model.addAttribute("user", new User());
         return "homePage"; // Nazwa pliku widoku
     }
 
@@ -30,30 +32,10 @@ public class HomeController {
     public String aboutPage() {
         return "aboutPage";
     }
-    @GetMapping("/login")
-    public String loginPage() {
-        return "loginPage";
-    }
-
-    @PostMapping("/login")
-    public String loginUser(@RequestParam String email, @RequestParam String password, Model model) {
-        Optional<User> optionalUser = userService.authorize(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (userService.checkPassword(password, user.getPassword())) {
-                // Zalogowano pomyślnie
-                model.addAttribute("user", user);
-                return "redirect:/user/home";
-            }
-        }
-        // Nieudane logowanie
-        model.addAttribute("error", "Invalid email or password");
-        return "loginPage";
-    }
 
     @GetMapping("/user/home")
     public String loggedPage() {
-        return "homePage"; // Nazwa pliku widoku
+        return "userPage"; // Nazwa pliku widoku
     }
 
     @GetMapping("/t")

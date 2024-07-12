@@ -10,7 +10,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 public class AppInitializer implements WebApplicationInitializer {
-    @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.register(AppConfig.class);
@@ -23,5 +22,9 @@ public class AppInitializer implements WebApplicationInitializer {
         fr.setInitParameter("encoding", "UTF-8");
         fr.setInitParameter("forceEncoding", "true");
         fr.addMappingForUrlPatterns(null, true, "/*");
+
+        // Register Auth Filter
+        FilterRegistration.Dynamic authFilter = servletContext.addFilter("authFilter", new AuthFilter());
+        authFilter.addMappingForUrlPatterns(null, false, "/*");
     }
 }

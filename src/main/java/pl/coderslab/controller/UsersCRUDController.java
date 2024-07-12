@@ -29,21 +29,21 @@ public class UsersCRUDController {
     @GetMapping("/all")     // w przeglądarce
     public String showAll(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "usersAll";  // nazwa pliku
+        return "adminUsersList";  // nazwa pliku
     }
 
     // DODAWANIE
     @GetMapping(value = "/add")
     public String showAddForm(Model model) {
         model.addAttribute("user", new User());
-        return "userAdd";
+        return "adminUserAdd";
     }
 
 
     @PostMapping(value = "/add")
     public String saveUser(@Valid User user, BindingResult result) {
         if (result.hasErrors()) {
-            return "userAdd";
+            return "adminUserAdd";
         }
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -58,20 +58,26 @@ public class UsersCRUDController {
         //stworzenie obiektu, ponieważ met. get() z UserController daje Optional, a nie obiekt. Optional utrudnia pracę z jsp
         User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
         model.addAttribute("user", user);
-        return "showOne";
+        return "adminUserDetails";
     }
 
     // EDYCJA
     @GetMapping(value = "/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("user", userService.getUser(id));
-        return "userEdit";
+        Optional<User> userOptional = userService.getUser(id);
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+            return "adminUserEdit";
+        } else {
+            // Handle the case where the user is not found
+            return "redirect:/admin/users/all";
+        }
     }
 
     @PostMapping(value = "/edit")
-    public String editUser(@Valid User user, BindingResult result) {
+    public String editUser(@Valid User user, BindingResult result, @RequestParam(required = false) boolean isAdmin) {
         if (result.hasErrors()) {
-            return "userEdit";
+            return "adminUserEdit";
         }
         Optional<User> existingUser = userService.getUser(user.getId());
         if (existingUser.isPresent()) {
@@ -83,17 +89,28 @@ public class UsersCRUDController {
                 String encodedPassword = passwordEncoder.encode(user.getPassword());
                 updatedUser.setPassword(encodedPassword);
             }
+            updatedUser.setRole(isAdmin ? 1L : 0L);
             userService.updateUser(updatedUser);
         }
         return "redirect:/admin/users/all";
     }
-
-//    @PostMapping(value = "/edit")
+    //    @PostMapping(value = "/edit")
 //    public String editUser(@Valid User user, BindingResult result) {
 //        if (result.hasErrors()) {
 //            return "userEdit";
 //        }
-//        userService.addUser(user);
+//        Optional<User> existingUser = userService.getUser(user.getId());
+//        if (existingUser.isPresent()) {
+//            User updatedUser = existingUser.get();
+//            updatedUser.setFirstName(user.getFirstName());
+//            updatedUser.setLastName(user.getLastName());
+//            updatedUser.setEmail(user.getEmail());
+//            if (!user.getPassword().equals(updatedUser.getPassword())) {
+//                String encodedPassword = passwordEncoder.encode(user.getPassword());
+//                updatedUser.setPassword(encodedPassword);
+//            }
+//            userService.updateUser(updatedUser);
+//        }
 //        return "redirect:/admin/users/all";
 //    }
 

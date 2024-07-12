@@ -28,23 +28,20 @@ public class User {
     @Email
     @Size(max = 50)
     private String email;
-
-//    @NotBlank
-//    @Size(max = 50)
     @Column(length = 255)
     private String password;
-
     @CreationTimestamp
     private Timestamp created_at;
     @UpdateTimestamp
     private Timestamp updated_at;
-
+    @Column(nullable = false)
+    private Long role = 0L; // 0 = user, 1 = admin, other numbers for future roles
 
     public User() {
     }
 
     public User(Long id, String firstName, String lastName, String email, String password,
-                Timestamp created_at, Timestamp updated_at) {
+                Timestamp created_at, Timestamp updated_at, Long role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,6 +49,7 @@ public class User {
         this.password = password;
         this.created_at = created_at;
         this.updated_at = updated_at;
+        this.role = role;
     }
 
     public Long getId() {
@@ -110,6 +108,14 @@ public class User {
         this.updated_at = updated_at;
     }
 
+    public Long getRole() {
+        return role;
+    }
+
+    public void setRole(Long role) {
+        this.role = role;
+    }
+
     public String getFullName() {
         return firstName + " " + lastName;
     }
@@ -124,6 +130,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
+                ", role=" + role +
                 '}';
     }
 }

@@ -23,12 +23,11 @@ public class RegistrationController {
     @GetMapping("")
     public String registerPage(Model model) {
         model.addAttribute("user", new User());
-        return "registerPage";
+        return "redirect:/";
     }
 
     @PostMapping("")
     public String registerUser(@ModelAttribute User user) {
-        System.out.println("===== Received password: " + user.getPassword());
         userService.registerUser(user);
         return "redirect:/login";
     }
