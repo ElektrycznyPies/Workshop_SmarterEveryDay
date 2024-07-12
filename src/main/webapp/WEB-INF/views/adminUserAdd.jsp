@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<jsp:include page="headerAdmin.jsp"></jsp:include>
-
+<%@ include file="header.jsp" %>
 <html>
 <head>
     <title>Add User</title>
@@ -35,9 +34,9 @@
             <form:errors path="email" class="text-danger" />
         </div>
         <div class="form-group">
-            <label for="hashed_password">Password</label>
-            <form:input path="hashed_password" class="input"/>
-            <form:errors path="hashed_password" class="text-danger" />
+            <label for="password">Password</label>
+            <form:input path="password" class="input"/>
+            <form:errors path="password" class="text-danger" />
         </div>
 
         <div class="form-group">

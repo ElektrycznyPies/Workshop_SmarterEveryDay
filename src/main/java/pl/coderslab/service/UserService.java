@@ -17,5 +17,12 @@ public interface UserService {
     void deleteUser(Long id);
 
     void updateUser(User user);
-}
+
+    Optional<User> authorize(String email);
+
+    void registerUser(User user);
+
+    boolean checkPassword(String plainPassword, String hashedPassword);
+
+    }
 

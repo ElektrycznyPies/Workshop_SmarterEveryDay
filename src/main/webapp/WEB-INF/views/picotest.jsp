@@ -1,4 +1,4 @@
-<jsp:include page="headerAdmin.jsp"></jsp:include>
+<jsp:include page="header.jsp"></jsp:include>
 
 <!-- Main -->
 <main class="container">

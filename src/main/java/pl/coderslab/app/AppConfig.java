@@ -1,4 +1,4 @@
-//link: https://lms.coderslab.pl/material/1535/8-12/e5f4d001-24dd-4913-a44f-26bb272c664b
+///link: https://lms.coderslab.pl/material/1535/8-12/e5f4d001-24dd-4913-a44f-26bb272c664b
 package pl.coderslab.app;
 
 import org.springframework.context.annotation.Bean;
@@ -12,6 +12,8 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -47,6 +49,10 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
@@ -70,18 +76,6 @@ public class AppConfig implements WebMvcConfigurer {
         StringHttpMessageConverter converter = new StringHttpMessageConverter();
         converter.setSupportedMediaTypes(List.of(new MediaType("text", "html", StandardCharsets.UTF_8)));
         return converter;
-    }
-
-    @Controller
-    @RequestMapping("/admin/users")
-    public class UsersCRUDController {
-
-        private final UserService userService;
-
-        public UsersCRUDController(UserService userService) {
-            this.userService = userService;
-        }
-
     }
 
 
