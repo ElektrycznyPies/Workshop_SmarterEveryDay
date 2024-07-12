@@ -8,7 +8,6 @@
     <meta name="description" content="Simple flashcard learning tool." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css" />
 
-
     <%--PŁYNNE ROZWIJANIE:--%>
     <%--    <style>--%>
 <%--        details .content {--%>
@@ -89,14 +88,36 @@
                 </c:when>
 
                 <%--                ZALOGOWANY ADMIN--%>
+<%--                <c:when test="${sessionScope.user.role == 1}">--%>
+<%--                    <footer>--%>
+<%--                        <div class="grid">--%>
+<%--                            <div style="width: 70%;">--%>
+<%--                                <small><a href="<c:url value="/user/home#admin">ADMIN privileges.</a> Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>--%>
+<%--                            </div>--%>
+<%--                            <div style="text-align: right;">--%>
+<%--                                <small><a href="<c:url value='/logout'/>">Logout</a></small>--%>
+<%--                            </div>--%>
+<%--                            <div style="text-align: right;">--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">--%>
+<%--                                        <small><a href="${prevUrl}" class="button">Back</a></small>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:otherwise>--%>
+<%--                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>--%>
+<%--                                    </c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </footer>--%>
+<%--                </c:when>--%>
                 <c:when test="${sessionScope.user.role == 1}">
                     <footer>
                         <div class="grid">
                             <div style="width: 70%;">
-                                <small>ADMIN privileges. Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>
+                                <small><a href="<c:url value='/user/home#admin'/>">ADMIN privileges.</a> Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>
                             </div>
                             <div style="text-align: right;">
-                                <small><a href="<c:url value='/logout'/>">Logout</a></small>
+                                    <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
                             <div style="text-align: right;">
                                 <c:choose>
@@ -111,6 +132,10 @@
                         </div>
                     </footer>
                 </c:when>
+
+
+
+
                 <c:otherwise>
                     <!-- inne przyszłe role -->
                 </c:otherwise>
