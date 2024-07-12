@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "Users")
@@ -36,6 +37,13 @@ public class User {
     private Timestamp updated_at;
     @Column(nullable = false)
     private Long role = 0L; // 0 = user, 1 = admin, other numbers for future roles
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_package",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "package_id"))
+    private Set<Package> packages;
 
     public User() {
     }
