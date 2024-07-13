@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
+import pl.coderslab.service.PacketService;
 import pl.coderslab.service.UserService;
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -15,28 +17,42 @@ import java.util.List;
 public class FlashPackController {
 
     private final UserService userService;
+    private final PacketService packetService;
+
     @Autowired
-    public FlashPackController(UserService userService) {
+    public FlashPackController(UserService userService, PacketService packetService) {
         this.userService = userService;
+        this.packetService = packetService;
     }
 
-    @GetMapping("/newPacket")
+    // NOWY PAKIET
+    @GetMapping("/flashpack/new/packet")
     public String newPacketPage(Model model) {
-        model.addAttribute("user", new User());
-        return "redirect:/";
+        model.addAttribute("packet", new Packet());
+        return "newUserPacket";
     }
 
+    @PostMapping("/flashpack/new/packet")
+    public String createNewPacket(@ModelAttribute Packet packet, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        User user = userService.getUser(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        packetService.addPacket(packet, user);
+        return "redirect:/flashpack/user/packets";
+    }
+
+
+    // ADMIN POBIERA PAKIETY USERA
     @GetMapping("/admin/users/packets/{id}")
     public String showPackets(Model model, @PathVariable Long id) {
         User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
         List<Packet> userPackets = userService.getUserPackets(id);
-        System.out.println("====================" + userPackets);
         model.addAttribute("user", user);
         model.addAttribute("packets", userPackets);
         return "adminUserPacketsList";
     }
 
-    @PostMapping("/newFlashcard")
+    // NOWA FISZKA W PAKIECIE
+    @PostMapping("/flashpack/new/flashcard")
     public String registerUser(@ModelAttribute User user) {
         userService.registerUser(user);
         return "redirect:/";

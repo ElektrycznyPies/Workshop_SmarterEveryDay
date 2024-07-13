@@ -29,10 +29,9 @@ public class PacketServiceImpl implements PacketService {
         return packetRepository.findById(id);
     }
 
-    @Override
-    public void addPacket(Packet pack, User user) {
-        pack.getUsers().add(user);
-        packetRepository.save(pack);
+    public void addPacket(Packet packet, User user) {
+        packet.getUsers().add(user);
+        packetRepository.save(packet);
     }
 
     @Override

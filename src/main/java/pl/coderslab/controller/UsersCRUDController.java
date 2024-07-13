@@ -84,26 +84,6 @@ public class UsersCRUDController {
         }
         return "redirect:/admin/users/all";
     }
-    //    @PostMapping(value = "/edit")
-//    public String editUser(@Valid User user, BindingResult result) {
-//        if (result.hasErrors()) {
-//            return "userEdit";
-//        }
-//        Optional<User> existingUser = userService.getUser(user.getId());
-//        if (existingUser.isPresent()) {
-//            User updatedUser = existingUser.get();
-//            updatedUser.setFirstName(user.getFirstName());
-//            updatedUser.setLastName(user.getLastName());
-//            updatedUser.setEmail(user.getEmail());
-//            if (!user.getPassword().equals(updatedUser.getPassword())) {
-//                String encodedPassword = passwordEncoder.encode(user.getPassword());
-//                updatedUser.setPassword(encodedPassword);
-//            }
-//            userService.updateUser(updatedUser);
-//        }
-//        return "redirect:/admin/users/all";
-//    }
-
 
     // KASOWANIE
     @GetMapping("/delete/{id}")

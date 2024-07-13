@@ -34,7 +34,7 @@
                     <td>
                         <a href="<c:url value="/admin/users/edit/${user.id}"/>" class="button secondary">Edit</a>
                         <a href="<c:url value="/admin/users/delete/${user.id}"/>" class="button danger">Delete</a>
-                        <a href="<c:url value="/admin/users/packets/${user.id}"/>" class="button info">Packages</a>
+                        <a href="<c:url value="/admin/users/packets/${user.id}"/>" class="button info">Packets</a>
                     </td>
                 </tr>
             </c:forEach>

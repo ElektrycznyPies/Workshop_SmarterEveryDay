@@ -39,6 +39,6 @@ public class HomeController {
 
     @GetMapping("/t")
     public String testPage() {
-        return "picotest"; // Nazwa pliku widoku
+        return "picotest";
     }
 }

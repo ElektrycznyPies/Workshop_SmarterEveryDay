@@ -28,7 +28,7 @@
     </section>
     <section id="new_package">
             <div class="content">
-                <a href="<c:url value='/flashcard/newPacket'/>" class="button">Create new packet</a>
+                <a href="<c:url value='/flashpack/new/packet'/>">Create new packet</a>
             </div>
     </section>
     <c:choose>
