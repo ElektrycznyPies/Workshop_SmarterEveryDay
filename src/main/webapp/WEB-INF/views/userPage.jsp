@@ -4,7 +4,7 @@
 <%@ include file="header.jsp" %>
 <html>
 <head>
-    <title>Smarter Every Day - user page</title>
+    <title>Smarter Every Day - user/admin page</title>
 
 </head>
 <body>
@@ -21,20 +21,15 @@
         </details>
     </section>
     <section id="packages">
-        <details>
-            <summary>Available Packages</summary>
             <div class="content">
-                <%@ include file="showUserPackages.jsp" %>
+                <a href="<c:url value=''/>" class="button">Available packets</a>
+                <%@ include file="showUserPackets.jsp" %>
             </div>
-        </details>
     </section>
     <section id="new_package">
-            <details>
-                <summary>Create New Package</summary>
-                <div class="content">
-                    <%@ include file="newUserPackage.jsp" %>
-                </div>
-            </details>
+            <div class="content">
+                <a href="<c:url value='/flashpack/new/packet'/>">Create new packet</a>
+            </div>
     </section>
     <c:choose>
         <c:when test="${sessionScope.user.role == 1}">
@@ -43,14 +38,9 @@
             <p>Admin section</p>
                 <div class="grid">
                     <div>
-                        List and manage users
+                        <a href="<c:url value='/admin/users/all'/>" class="button">List and manage users</a>
                     </div>
-                    <div>
-                        Add user
-                    </div>
-                    <div>
-                        Coś tam TRZECIEGO do dodania
-                    </div>
+                </div>
         </section>
         </c:when>
     </c:choose>

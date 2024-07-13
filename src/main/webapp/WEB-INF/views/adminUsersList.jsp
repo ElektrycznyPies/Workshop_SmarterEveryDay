@@ -9,6 +9,9 @@
 </head>
 <body>
 <div class="container">
+    <div>
+    <a href="<c:url value='/user/home'/>" class="button">Main page</a></div>
+
     <form action="<c:url value='/admin/users/add'/>" method="get">
         <button type="submit" class="primary">Add User</button>
     </form>
@@ -31,7 +34,7 @@
                     <td>
                         <a href="<c:url value="/admin/users/edit/${user.id}"/>" class="button secondary">Edit</a>
                         <a href="<c:url value="/admin/users/delete/${user.id}"/>" class="button danger">Delete</a>
-                        <a href="<c:url value="/admin/users/show/${user.id}"/>" class="button info">Details</a>
+                        <a href="<c:url value="/admin/users/packets/${user.id}"/>" class="button info">Packets</a>
                     </td>
                 </tr>
             </c:forEach>

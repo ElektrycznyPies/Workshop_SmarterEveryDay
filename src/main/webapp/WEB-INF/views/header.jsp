@@ -8,7 +8,6 @@
     <meta name="description" content="Simple flashcard learning tool." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css" />
 
-
     <%--PŁYNNE ROZWIJANIE:--%>
     <%--    <style>--%>
 <%--        details .content {--%>
@@ -40,7 +39,6 @@
             <h3>Simple flashcard learning tool.</h3>
             <c:choose>
 
-
                 <%--                NIKT NIE JEST ZALOGOWANY--%>
                 <c:when test="${empty sessionScope.user}">
                 <%--LUB LEPIEJ:  <c:when test="${sessionScope.loggedIn == true}">--%>
@@ -50,17 +48,16 @@
                                 <small>Login or register to use this tool fully.</small>
                             </div>
                             <div style="text-align: right;">
-<%--                                <c:choose>--%>
-<%--                                    <c:when test="${sessionScope.loggedIn == true}">--%>
-<%--                                        <small><a href="<c:url value='/logout'/>">Logout</a></small>--%>
-<%--                                    </c:when>--%>
-<%--                                    <c:otherwise>--%>
-<%--                                        <!-- Nie wyświetlaj nic -->--%>
-<%--                                    </c:otherwise>--%>
-<%--                                </c:choose>--%>
                             </div>
                             <div style="text-align: right;">
-                                <small><a href="<c:url value='/about'/>">About</a></small>
+                                <c:choose>
+                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
+                                        <small><a href="${prevUrl}" class="button">Back</a></small>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </footer>
@@ -74,47 +71,47 @@
                                 <small>Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>
                             </div>
                             <div style="text-align: right;">
-                                <c:choose>
-                                    <c:when test="${sessionScope.loggedIn == true}">
                                         <small><a href="<c:url value='/logout'/>">Logout</a></small>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <!-- Nie wyświetlaj nic -->
-                                    </c:otherwise>
-                                </c:choose>
                             </div>
                             <div class="grid" style="text-align: right;">
-                                <small><a href="<c:url value='/about'/>">About</a></small>
+                                <c:choose>
+                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
+                                        <small><a href="${prevUrl}" class="button">Back</a></small>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </footer>
                 </c:when>
 
-                <%--                ZALOGOWANY ADMIN--%>
                 <c:when test="${sessionScope.user.role == 1}">
                     <footer>
                         <div class="grid">
                             <div style="width: 70%;">
-                                <small>Admin privileges. Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>
+                                <small><a href="<c:url value='/user/home#admin'/>">ADMIN privileges</a>. Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>
+                            </div>
+                            <div style="text-align: right;">
+                                    <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
                             <div style="text-align: right;">
                                 <c:choose>
-                                    <c:when test="${sessionScope.loggedIn == true}">
-                                        <small><a href="<c:url value='/logout'/>">Logout</a></small>
+                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
+                                        <small><a href="${prevUrl}" class="button">Back</a></small>
                                     </c:when>
                                     <c:otherwise>
-                                        <!-- Nie wyświetlaj nic -->
+                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>
                                     </c:otherwise>
                                 </c:choose>
-                            </div>
-                            <div style="text-align: right;">
-                                <small><a href="<c:url value='/about'/>">About</a></small>
                             </div>
                         </div>
                     </footer>
                 </c:when>
+
                 <c:otherwise>
-                    <!-- inne warunki -->
+                    <!-- inne przyszłe role -->
                 </c:otherwise>
             </c:choose>
         </article>

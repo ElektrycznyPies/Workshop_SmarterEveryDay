@@ -4,7 +4,7 @@
 
 <section id="login">
     <p>
-        Please enter your credentials.
+        Enter your credentials.
     </p>
 <%--    <form action="<c:url value='/login'/>" method="post">--%>
     <form action="${pageContext.request.contextPath}/login" method="post">

@@ -39,7 +39,6 @@ public class UsersCRUDController {
         return "adminUserAdd";
     }
 
-
     @PostMapping(value = "/add")
     public String saveUser(@Valid User user, BindingResult result) {
         if (result.hasErrors()) {
@@ -51,15 +50,6 @@ public class UsersCRUDController {
         return "redirect:/admin/users/all";
     }
 
-    // WYŚWIETL detale jednej PO ID
-
-    @GetMapping("/show/{id}")
-    public String showUser(Model model, @PathVariable Long id) {
-        //stworzenie obiektu, ponieważ met. get() z UserController daje Optional, a nie obiekt. Optional utrudnia pracę z jsp
-        User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
-        model.addAttribute("user", user);
-        return "adminUserDetails";
-    }
 
     // EDYCJA
     @GetMapping(value = "/edit/{id}")
@@ -94,26 +84,6 @@ public class UsersCRUDController {
         }
         return "redirect:/admin/users/all";
     }
-    //    @PostMapping(value = "/edit")
-//    public String editUser(@Valid User user, BindingResult result) {
-//        if (result.hasErrors()) {
-//            return "userEdit";
-//        }
-//        Optional<User> existingUser = userService.getUser(user.getId());
-//        if (existingUser.isPresent()) {
-//            User updatedUser = existingUser.get();
-//            updatedUser.setFirstName(user.getFirstName());
-//            updatedUser.setLastName(user.getLastName());
-//            updatedUser.setEmail(user.getEmail());
-//            if (!user.getPassword().equals(updatedUser.getPassword())) {
-//                String encodedPassword = passwordEncoder.encode(user.getPassword());
-//                updatedUser.setPassword(encodedPassword);
-//            }
-//            userService.updateUser(updatedUser);
-//        }
-//        return "redirect:/admin/users/all";
-//    }
-
 
     // KASOWANIE
     @GetMapping("/delete/{id}")
