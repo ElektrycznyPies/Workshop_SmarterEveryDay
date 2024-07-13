@@ -32,9 +32,10 @@
                     <td><c:out value="${user.lastName}"/></td>
                     <td><c:out value="${user.email}"/></td>
                     <td>
-                        <a href="<c:url value="/admin/users/edit/${user.id}"/>" class="button secondary">Edit</a>
-                        <a href="<c:url value="/admin/users/delete/${user.id}"/>" class="button danger">Delete</a>
-                        <a href="<c:url value="/admin/users/packets/${user.id}"/>" class="button info">Packets</a>
+                        <a href="<c:url value='/admin/users/edit/${user.id}'/>" class="button secondary">Edit</a>
+                        <a href="<c:url value='/admin/users/delete/'/>${user.id}" onclick="return confirm('Are you sure?')" class="button danger">Delete</a>
+                        <a href="<c:url value='/admin/users/packets/${user.id}'/>" class="button info">Packets</a>
+
                     </td>
                 </tr>
             </c:forEach>

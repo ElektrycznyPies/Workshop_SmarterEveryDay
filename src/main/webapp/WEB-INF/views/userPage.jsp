@@ -22,8 +22,7 @@
     </section>
     <section id="packages">
             <div class="content">
-                <a href="<c:url value=''/>" class="button">Available packets</a>
-                <%@ include file="showUserPackets.jsp" %>
+                <a href="<c:url value='/flashpack/user/packets'/>" class="button">Available packets</a>
             </div>
     </section>
     <section id="new_package">
