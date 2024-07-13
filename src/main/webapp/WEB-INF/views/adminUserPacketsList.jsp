@@ -10,16 +10,16 @@
 <body>
 <h1>Packets for ${user.firstName} ${user.lastName}</h1>
 <c:choose>
-    <c:when test="${empty packages}">
-        <p>This user has no packages.</p>
+    <c:when test="${empty packets}">
+        <p>This user has no packets.</p>
     </c:when>
     <c:otherwise>
         <ul>
-            <c:forEach items="${packages}" var="package">
+            <c:forEach items="${packets}" var="package">
                 <li>
-                        ${package.name} - ${package.description}
-                    <a href="/admin/packages/edit/${package.id}">Edit</a>
-                    <a href="/admin/packages/delete/${package.id}" onclick="return confirm('Are you sure?')">Delete</a>
+                        ${packet.name} - ${packet.description}
+                    <a href="/admin/packages/edit/${packet.id}">Edit</a>
+                    <a href="/admin/packages/delete/${packet.id}" onclick="return confirm('Are you sure?')">Delete</a>
                 </li>
             </c:forEach>
         </ul>

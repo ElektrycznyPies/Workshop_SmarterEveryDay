@@ -23,7 +23,7 @@
     <section id="packages">
             <div class="content">
                 <a href="<c:url value=''/>" class="button">Available packages</a>
-                <%@ include file="showUserPackages.jsp" %>
+                <%@ include file="showUserPackets.jsp" %>
             </div>
     </section>
     <section id="new_package">

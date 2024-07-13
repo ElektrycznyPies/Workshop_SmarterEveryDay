@@ -20,7 +20,7 @@ public class FlashPackController {
         this.userService = userService;
     }
 
-    @GetMapping("/newPackage")
+    @GetMapping("/newPacket")
     public String newPackagePage(Model model) {
         model.addAttribute("user", new User());
         return "redirect:/";
@@ -32,7 +32,7 @@ public class FlashPackController {
         List<Packet> userPackets = userService.getUserPackets(id);
         model.addAttribute("user", user);
         model.addAttribute("packets", userPackets);
-        return "adminUserPackagesList";
+        return "adminUserPacketsList";
     }
 
     @PostMapping("/newFlashcard")

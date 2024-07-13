@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.repository.FlashcardRepository;
-import pl.coderslab.repository.PackageRepository;
+import pl.coderslab.repository.PacketRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     private FlashcardRepository flashcardRepository;
 
     @Autowired
-    private PackageRepository packageRepository;
+    private PacketRepository packetRepository;
 
     @Override
     public List<Flashcard> getAllFlashcards() {
