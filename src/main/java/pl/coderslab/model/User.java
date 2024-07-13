@@ -45,6 +45,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "packet_id"))
     private Set<Packet> packets;
 
+    @OneToMany(mappedBy = "user")
+    private Set<StudySession> studySessions;
+
     public User() {
     }
 

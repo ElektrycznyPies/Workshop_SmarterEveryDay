@@ -32,6 +32,9 @@ public class Packet {
     @OneToMany(mappedBy = "pack", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Flashcard> flashcards;
 
+    @OneToMany(mappedBy = "packet")
+    private Set<StudySession> studySessions;
+
     public Packet() {
     }
 

@@ -22,13 +22,13 @@
     </section>
     <section id="packages">
             <div class="content">
-                <a href="<c:url value=''/>" class="button">Available packages</a>
+                <a href="<c:url value=''/>" class="button">Available packets</a>
                 <%@ include file="showUserPackets.jsp" %>
             </div>
     </section>
     <section id="new_package">
             <div class="content">
-                <a href="<c:url value='/flashcard/newPackage'/>" class="button">Create new package</a>
+                <a href="<c:url value='/flashcard/newPacket'/>" class="button">Create new packet</a>
             </div>
     </section>
     <c:choose>
