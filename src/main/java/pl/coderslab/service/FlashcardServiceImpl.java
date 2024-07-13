@@ -3,7 +3,7 @@ package pl.coderslab.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.model.Flashcard;
-import pl.coderslab.model.Package;
+import pl.coderslab.model.Packet;
 import pl.coderslab.repository.FlashcardRepository;
 import pl.coderslab.repository.PackageRepository;
 
@@ -30,7 +30,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
     @Override
-    public void addFlashcard(Flashcard flashcard, Package pack) {
+    public void addFlashcard(Flashcard flashcard, Packet pack) {
         flashcard.setPack(pack);
         flashcardRepository.save(flashcard);
     }

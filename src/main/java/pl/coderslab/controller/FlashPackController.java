@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
 import pl.coderslab.service.UserService;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Controller
 @RequestMapping("")
@@ -24,11 +26,12 @@ public class FlashPackController {
         return "redirect:/";
     }
 
-    @GetMapping("/admin/users/packages/{id}") //////REDO REDO//////////
+    @GetMapping("/admin/users/packets/{id}")
     public String showPackages(Model model, @PathVariable Long id) {
-        //stworzenie obiektu, ponieważ met. get() z UserController daje Optional, a nie obiekt. Optional utrudnia pracę z jsp
         User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
+        List<Packet> userPackets = userService.getUserPackets(id);
         model.addAttribute("user", user);
+        model.addAttribute("packets", userPackets);
         return "adminUserPackagesList";
     }
 

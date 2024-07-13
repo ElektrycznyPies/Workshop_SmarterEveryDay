@@ -43,7 +43,7 @@ public class User {
             name = "user_package",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "package_id"))
-    private Set<Package> packages;
+    private Set<Packet> packets;
 
     public User() {
     }

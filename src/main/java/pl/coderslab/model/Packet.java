@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Packages")
-public class Package {
+public class Packet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +32,11 @@ public class Package {
     @OneToMany(mappedBy = "pack", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Flashcard> flashcards;
 
-    public Package() {
+    public Packet() {
     }
 
-    public Package(Long id, String name, String description, Timestamp created_at,
-                   Timestamp updated_at, Set<User> users, Set<Flashcard> flashcards) {
+    public Packet(Long id, String name, String description, Timestamp created_at,
+                  Timestamp updated_at, Set<User> users, Set<Flashcard> flashcards) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -105,7 +105,7 @@ public class Package {
 
     @Override
     public String toString() {
-        return "Package{" +
+        return "Packet{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

@@ -2,7 +2,7 @@ package pl.coderslab.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.model.Package;
+import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
 import pl.coderslab.repository.PackageRepository;
 import pl.coderslab.repository.UserRepository;
@@ -20,17 +20,17 @@ public class PackageServiceImpl implements PackageService {
     private UserRepository userRepository;
 
     @Override
-    public List<Package> getAllPackages() {
+    public List<Packet> getAllPackages() {
         return packageRepository.findAll();
     }
 
     @Override
-    public Optional<Package> getPackage(Long id) {
+    public Optional<Packet> getPackage(Long id) {
         return packageRepository.findById(id);
     }
 
     @Override
-    public void addPackage(Package pack, User user) {
+    public void addPackage(Packet pack, User user) {
         pack.getUsers().add(user);
         packageRepository.save(pack);
     }
@@ -41,7 +41,7 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public void updatePackage(Package pack) {
+    public void updatePackage(Packet pack) {
         packageRepository.save(pack);
     }
 }

@@ -27,7 +27,7 @@ public class Flashcard {
 
     @ManyToOne
     @JoinColumn(name = "package_id", nullable = false)
-    private Package pack;
+    private Packet pack;
 
     @CreationTimestamp
     private Timestamp created_at;
@@ -64,11 +64,11 @@ public class Flashcard {
         this.name = name;
     }
 
-    public Package getPack() {
+    public Packet getPack() {
         return pack;
     }
 
-    public void setPack(Package pack) {
+    public void setPack(Packet pack) {
         this.pack = pack;
     }
 
