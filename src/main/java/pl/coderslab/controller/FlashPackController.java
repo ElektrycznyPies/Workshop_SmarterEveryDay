@@ -21,15 +21,16 @@ public class FlashPackController {
     }
 
     @GetMapping("/newPacket")
-    public String newPackagePage(Model model) {
+    public String newPacketPage(Model model) {
         model.addAttribute("user", new User());
         return "redirect:/";
     }
 
     @GetMapping("/admin/users/packets/{id}")
-    public String showPackages(Model model, @PathVariable Long id) {
+    public String showPackets(Model model, @PathVariable Long id) {
         User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
         List<Packet> userPackets = userService.getUserPackets(id);
+        System.out.println("====================" + userPackets);
         model.addAttribute("user", user);
         model.addAttribute("packets", userPackets);
         return "adminUserPacketsList";

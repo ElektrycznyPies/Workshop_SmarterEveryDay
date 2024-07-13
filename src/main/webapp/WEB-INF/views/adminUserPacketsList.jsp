@@ -15,11 +15,11 @@
     </c:when>
     <c:otherwise>
         <ul>
-            <c:forEach items="${packets}" var="package">
+            <c:forEach items="${packets}" var="packet">
                 <li>
                         ${packet.name} - ${packet.description}
-                    <a href="/admin/packages/edit/${packet.id}">Edit</a>
-                    <a href="/admin/packages/delete/${packet.id}" onclick="return confirm('Are you sure?')">Delete</a>
+                    <a href="/admin/users/packets/edit/${packet.id}">Edit</a>
+                    <a href="/admin/users/packets/delete/${packet.id}" onclick="return confirm('Are you sure?')">Delete</a>
                 </li>
             </c:forEach>
         </ul>
@@ -61,7 +61,7 @@
 <%--                    <td>--%>
 <%--                        <a href="<c:url value="/admin/users/edit/${user.id}"/>" class="button secondary">Edit</a>--%>
 <%--                        <a href="<c:url value="/admin/users/delete/${user.id}"/>" class="button danger">Delete</a>--%>
-<%--                        <a href="<c:url value="/admin/users/packages/${user.id}"/>" class="button info">Packages</a>--%>
+<%--                        <a href="<c:url value="/admin/users/packets/${user.id}"/>" class="button info">Packages</a>--%>
 <%--                    </td>--%>
 <%--                </tr>--%>
 <%--            </c:forEach>--%>

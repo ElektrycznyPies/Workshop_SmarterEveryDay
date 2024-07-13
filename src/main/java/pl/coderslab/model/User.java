@@ -40,9 +40,9 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name = "user_package",
+            name = "user_packet",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "package_id"))
+            inverseJoinColumns = @JoinColumn(name = "packet_id"))
     private Set<Packet> packets;
 
     public User() {

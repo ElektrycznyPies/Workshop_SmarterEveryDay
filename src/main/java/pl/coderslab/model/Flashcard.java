@@ -26,7 +26,7 @@ public class Flashcard {
     private String additionalText;
 
     @ManyToOne
-    @JoinColumn(name = "package_id", nullable = false)
+    @JoinColumn(name = "packet_id", nullable = false)
     private Packet pack;
 
     @CreationTimestamp

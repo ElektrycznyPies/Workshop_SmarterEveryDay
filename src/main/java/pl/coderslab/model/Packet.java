@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
-@Table(name = "Packages")
+@Table(name = "Packets")
 public class Packet {
 
     @Id
@@ -26,10 +26,10 @@ public class Packet {
     @UpdateTimestamp
     private Timestamp updated_at;
 
-    @ManyToMany(mappedBy = "packages")
+    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
     private Set<User> users;
 
-    @OneToMany(mappedBy = "pack", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pack", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Flashcard> flashcards;
 
     public Packet() {

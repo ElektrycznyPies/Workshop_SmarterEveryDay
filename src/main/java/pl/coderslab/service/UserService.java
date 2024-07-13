@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public interface UserService {
     Optional<User> authorize(String email);
     void registerUser(User user);
     boolean checkPassword(String plainPassword, String hashedPassword);
+    @Transactional
     List<Packet> getUserPackets(Long userId);
     }
 

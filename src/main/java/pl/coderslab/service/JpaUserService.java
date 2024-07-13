@@ -9,6 +9,7 @@ import pl.coderslab.model.User;
 import pl.coderslab.model.Packet;
 import pl.coderslab.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +62,8 @@ public class JpaUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public List<Packet> getUserPackets(Long userId) {
-        return userRepository.findPackagesByUserId(userId);
+        return userRepository.findPacketsByUserId(userId);
     }
 }
