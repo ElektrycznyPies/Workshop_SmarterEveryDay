@@ -34,12 +34,27 @@ public class FlashPackController {
 
     @PostMapping("/flashpack/new/packet")
     public String createNewPacket(@ModelAttribute Packet packet, HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        User user = userService.getUser(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found in session");
+        }
         packetService.addPacket(packet, user);
         return "redirect:/flashpack/user/packets";
     }
 
+
+    // USER POBIERA SWOJE PAKIETY
+
+    @GetMapping("/flashpack/user/packets")
+    public String showUserPackets(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found in session");
+        }
+        List<Packet> userPackets = userService.getUserPackets(user.getId());
+        model.addAttribute("packets", userPackets);
+        return "userPacketsList";
+    }
 
     // ADMIN POBIERA PAKIETY USERA
     @GetMapping("/admin/users/packets/{id}")

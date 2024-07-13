@@ -11,6 +11,7 @@
 <div class="container">
     <h1>Create New Packet</h1>
     <form:form method="POST" modelAttribute="packet">
+        <form:hidden path="id"/>
         <div>
             <form:label path="name">Packet Name:</form:label>
             <form:input path="name"/>

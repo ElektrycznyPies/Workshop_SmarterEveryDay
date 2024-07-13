@@ -24,8 +24,10 @@ public class AuthFilter implements Filter {
                 return;
             }
             User user = (User) sess.getAttribute("user");
-            if (user.getRole() != 1L) {
-                httpResp.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied"); // REDO:POP-UP
+            if (user.getRole() == 1L || user.getRole() == 0L) {
+                chain.doFilter(httpReq, httpResp);
+            } else {
+                httpResp.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
                 return;
             }
         }
