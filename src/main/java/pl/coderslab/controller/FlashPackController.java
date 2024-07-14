@@ -38,10 +38,9 @@ public class FlashPackController {
         if (user == null) {
             throw new EntityNotFoundException("User not found in session");
         }
-        packetService.addPacket(packet, user);
+        Packet savedPacket = packetService.addPacket(packet, user);
         return "redirect:/flashpack/user/packets";
     }
-
 
     // USER POBIERA SWOJE PAKIETY
 
@@ -64,6 +63,64 @@ public class FlashPackController {
         model.addAttribute("user", user);
         model.addAttribute("packets", userPackets);
         return "adminUserPacketsList";
+    }
+
+    // EDYCJA PAKIETU
+    @GetMapping("/flashpack/user/packets/edit/{id}")
+    public String editPacketPage(@PathVariable Long id, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found in session");
+        }
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        model.addAttribute("packet", packet);
+        return "userPacketEdit";
+    }
+
+
+    @PostMapping("/flashpack/user/packets/edit")
+    public String editPacket(@ModelAttribute Packet packet, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found in session");
+        }
+        packetService.updatePacket(packet);
+        return "redirect:/flashpack/user/packets";
+    }
+
+    // USUWANIE PAKIETU
+    @GetMapping("/flashpack/user/packets/delete/{id}")
+    public String deletePacket(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found in session");
+        }
+        packetService.deletePacket(id);
+        return "redirect:/flashpack/user/packets";
+    }
+
+    // POKAŻ FISZKI W PAKIECIE
+    @GetMapping("/flashpack/user/packets/{id}/flashcards")
+    public String showFlashcards(@PathVariable Long id, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found in session");
+        }
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        model.addAttribute("flashcards", packet.getFlashcards());
+        return "flashcardsList";
+    }
+
+    // ROZPOCZNIJ SESJĘ NAUKI
+    @GetMapping("/flashpack/user/packets/{id}/study")
+    public String startStudySession(@PathVariable Long id, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found in session");
+        }
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        model.addAttribute("packet", packet);
+        return "studySession";
     }
 
     // NOWA FISZKA W PAKIECIE

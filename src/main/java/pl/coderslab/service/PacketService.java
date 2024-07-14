@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PacketService {
     List<Packet> getAllPackets();
     Optional<Packet> getPacket(Long id);
-    void addPacket(Packet pack, User user);
+    Packet addPacket(Packet pack, User user);
     void deletePacket(Long id);
     void updatePacket(Packet pack);
 

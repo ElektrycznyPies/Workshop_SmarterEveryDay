@@ -7,6 +7,8 @@ import pl.coderslab.model.User;
 import pl.coderslab.repository.PacketRepository;
 import pl.coderslab.repository.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -30,20 +32,21 @@ public class PacketServiceImpl implements PacketService {
         return packetRepository.findById(id);
     }
 
-    public void addPacket(Packet packet, User user) {
+    @Transactional
+    public Packet addPacket(Packet packet, User user) {
         if (packet.getUsers() == null) {
             packet.setUsers(new HashSet<>());
         }
         packet.getUsers().add(user);
 
-        packetRepository.save(packet);
+        Packet savedPacket = packetRepository.save(packet);
 
-        // Aktualizacja użytkownika, aby dodać pakiet do jego zbioru pakietów
         if (user.getPackets() == null) {
             user.setPackets(new HashSet<>());
         }
-        user.getPackets().add(packet);
+        user.getPackets().add(savedPacket);
         userRepository.save(user);
+        return savedPacket;
     }
 //    public void addPacket(Packet packet, User user) {
 //        if (packet.getUsers() == null) {
@@ -62,7 +65,13 @@ public class PacketServiceImpl implements PacketService {
     }
 
     @Override
-    public void updatePacket(Packet pack) {
-        packetRepository.save(pack);
+    @Transactional
+    public void updatePacket(Packet updatedPacket) {
+        Packet existingPacket = packetRepository.findById(updatedPacket.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+
+        existingPacket.setName(updatedPacket.getName());
+        existingPacket.setDescription(updatedPacket.getDescription());
+        packetRepository.save(existingPacket);
     }
 }

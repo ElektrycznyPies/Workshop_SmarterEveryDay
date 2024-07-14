@@ -5,28 +5,39 @@
 
 <html>
 <head>
-    <title>User Packets</title>
+    <title>Packets List</title>
 </head>
 <body>
 <div class="container">
-    <h1>Your Packets</h1>
-    <c:choose>
-        <c:when test="${empty packets}">
-            <p>You have no packets.</p>
-        </c:when>
-        <c:otherwise>
-            <ul>
-                <c:forEach items="${packets}" var="packet">
-                    <li>
-                            ${packet.name} - ${packet.description}
-                        <a href="/flashpack/user/packets/edit/${packet.id}">Edit</a>
-                        <a href="/flashpack/user/packets/delete/${packet.id}" onclick="return confirm('Are you sure?')">Delete</a>
-                    </li>
-                </c:forEach>
-            </ul>
-        </c:otherwise>
-    </c:choose>
-    <a href="/userPage">Main page</a>
+    <div>
+        <a href="<c:url value='/user/home'/>" class="button">Main page</a>
+    </div>
+
+    <section class="grid" id="tables">
+        <table class="striped full-width">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${packets}" var="packet">
+                <tr scope="row">
+                    <td><c:out value="${packet.name}"/></td>
+                    <td><c:out value="${packet.description}"/></td>
+                    <td>
+                        <a href="<c:url value='/flashpack/user/packets/edit/${packet.id}'/>" class="button secondary">Edit</a>
+                        <a href="<c:url value='/flashpack/user/packets/delete/${packet.id}'/>" onclick="return confirm('Are you sure?')" class="button danger">Delete</a>
+                        <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>
+                        <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>" class="button info">Study</a>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </section>
 </div>
 </body>
 </html>

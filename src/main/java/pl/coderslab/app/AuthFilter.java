@@ -9,7 +9,6 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
 
 
-    /// PRZETESTOWAĆ I POPRAWIĆ FILTR
     @Override
     public void doFilter(ServletRequest servletReq, ServletResponse servletResp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) servletReq;
