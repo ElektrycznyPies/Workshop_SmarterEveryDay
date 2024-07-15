@@ -25,16 +25,22 @@
                 <td><form:input path="word"/></td>
             </tr>
             <tr>
+                <td><form:label path="additionalText">Additional Text:</form:label></td>
+                <td><form:textarea path="additionalText"/></td>
+            </tr>
+            <tr>
                 <td><form:label path="imageLink">Image Link:</form:label></td>
-                <td><form:input path="imageLink"/></td>
+                <td>
+                    <form:input path="imageLink" id="imageLink"/>
+                    <button type="button" onclick="openFileChooser('imageLink')">Choose Image</button>
+                </td>
             </tr>
             <tr>
                 <td><form:label path="soundLink">Sound Link:</form:label></td>
-                <td><form:input path="soundLink"/></td>
-            </tr>
-            <tr>
-                <td><form:label path="additionalText">Additional Text:</form:label></td>
-                <td><form:textarea path="additionalText"/></td>
+                <td>
+                    <form:input path="soundLink" id="soundLink"/>
+                    <button type="button" onclick="openFileChooser('soundLink')">Choose Sound</button>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -43,6 +49,11 @@
             </tr>
         </table>
     </form:form>
+    <script>
+        function openFileChooser(field) {
+            window.open('/choose-file?field=' + field, 'fileChooser', 'width=300,height=100');
+        }
+    </script>
 </div>
 </body>
 </html>
