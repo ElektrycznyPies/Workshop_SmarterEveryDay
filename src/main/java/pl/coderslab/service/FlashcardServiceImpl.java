@@ -7,6 +7,7 @@ import pl.coderslab.model.Packet;
 import pl.coderslab.repository.FlashcardRepository;
 import pl.coderslab.repository.PacketRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +41,23 @@ public class FlashcardServiceImpl implements FlashcardService {
         flashcardRepository.deleteById(id);
     }
 
+//    @Override
+//    public void updateFlashcard(Flashcard flashcard) {
+//        flashcardRepository.save(flashcard);
+//    }
+
     @Override
-    public void updateFlashcard(Flashcard flashcard) {
-        flashcardRepository.save(flashcard);
+    public void updateFlashcard(Flashcard updatedFlashcard) {
+        Flashcard existingFlashcard = flashcardRepository.findById(updatedFlashcard.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
+
+        // updatuję poszczególne pola, żeby w razie zostawienia pustych nie zapisał jako null
+        existingFlashcard.setName(updatedFlashcard.getName());
+        existingFlashcard.setWord(updatedFlashcard.getWord());
+        existingFlashcard.setImageLink(updatedFlashcard.getImageLink());
+        existingFlashcard.setSoundLink(updatedFlashcard.getSoundLink());
+        existingFlashcard.setAdditionalText(updatedFlashcard.getAdditionalText());
+
+        flashcardRepository.save(existingFlashcard);
     }
 }

@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
+import pl.coderslab.service.FlashcardService;
 import pl.coderslab.service.PacketService;
 import pl.coderslab.service.UserService;
 import javax.persistence.EntityNotFoundException;
@@ -18,11 +20,13 @@ public class FlashPackController {
 
     private final UserService userService;
     private final PacketService packetService;
+    private final FlashcardService flashcardService;
 
     @Autowired
-    public FlashPackController(UserService userService, PacketService packetService) {
+    public FlashPackController(UserService userService, PacketService packetService, FlashcardService flashcardService) {
         this.userService = userService;
         this.packetService = packetService;
+        this.flashcardService = flashcardService;
     }
 
     // NOWY PAKIET
@@ -100,6 +104,17 @@ public class FlashPackController {
     }
 
     // POKAŻ FISZKI W PAKIECIE
+//    @GetMapping("/flashpack/user/packets/{id}/flashcards")
+//    public String showFlashcards(@PathVariable Long id, Model model, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found in session");
+//        }
+//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        model.addAttribute("flashcards", packet.getFlashcards());
+//        return "flashcardsList";
+//    }
+
     @GetMapping("/flashpack/user/packets/{id}/flashcards")
     public String showFlashcards(@PathVariable Long id, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -108,7 +123,48 @@ public class FlashPackController {
         }
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         model.addAttribute("flashcards", packet.getFlashcards());
-        return "flashcardsList";
+        model.addAttribute("packetId", id);
+        return "userFlashcardsList";
+    }
+
+
+    // DODAWANIE FISZKI
+    @GetMapping("/flashpack/user/packets/{packetId}/flashcards/add")
+    public String showAddFlashcardForm(@PathVariable Long packetId, Model model) {
+        model.addAttribute("flashcard", new Flashcard());
+        model.addAttribute("packetId", packetId);
+        return "userFlashcardAdd";
+    }
+
+    @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
+    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard) {
+        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        flashcardService.addFlashcard(flashcard, packet);
+        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+    }
+
+    // EDYCJA FISZKI
+    @GetMapping("/flashpack/user/packets/{packetId}/flashcards/edit/{id}")
+    public String showEditFlashcardForm(@PathVariable Long packetId, @PathVariable Long id, Model model) {
+        Flashcard flashcard = flashcardService.getFlashcard(id).orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
+        model.addAttribute("flashcard", flashcard);
+        model.addAttribute("packetId", packetId);
+        return "userFlashcardEdit";
+    }
+
+    @PostMapping("/flashpack/user/packets/{packetId}/flashcards/edit")
+    public String editFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard) {
+        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        flashcard.setPack(packet);
+        flashcardService.updateFlashcard(flashcard);
+        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+    }
+
+    // KASOWANIE FISZKI
+    @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
+    public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id) {
+        flashcardService.deleteFlashcard(id);
+        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
     // ROZPOCZNIJ SESJĘ NAUKI
@@ -123,10 +179,10 @@ public class FlashPackController {
         return "studySession";
     }
 
-    // NOWA FISZKA W PAKIECIE
-    @PostMapping("/flashpack/new/flashcard")
-    public String registerUser(@ModelAttribute User user) {
-        userService.registerUser(user);
-        return "redirect:/";
-    }
+//    // NOWA FISZKA W PAKIECIE
+//    @PostMapping("/flashpack/new/flashcard")
+//    public String registerUser(@ModelAttribute User user) {
+//        userService.registerUser(user);
+//        return "redirect:/";
+//    }
 }
