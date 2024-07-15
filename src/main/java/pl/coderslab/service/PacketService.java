@@ -6,6 +6,7 @@ import pl.coderslab.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public interface PacketService {
@@ -15,6 +16,7 @@ public interface PacketService {
     void deletePacket(Long id);
     void updatePacket(Packet pack);
 
+    void updateStudySettings(Long packetId, Set<String> showFields, String compareField);
 
         }
 

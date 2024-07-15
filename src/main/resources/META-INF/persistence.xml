@@ -19,5 +19,13 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
             <property name="hibernate.connection.CharSet" value="utf8" />
         </properties>
     </persistence-unit>
-</persistence>
+
+        <persistence-unit name="default">
+            <properties>
+                <property name="hibernate.show_sql" value="true"/>
+                <property name="hibernate.format_sql" value="true"/>
+            </properties>
+        </persistence-unit>
+    </persistence>
+
 

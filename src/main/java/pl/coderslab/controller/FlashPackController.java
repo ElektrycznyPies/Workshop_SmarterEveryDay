@@ -14,6 +14,7 @@ import pl.coderslab.service.UserService;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("")
@@ -82,7 +83,6 @@ public class FlashPackController {
         return "userPacketEdit";
     }
 
-
     @PostMapping("/flashpack/user/packets/edit")
     public String editPacket(@ModelAttribute Packet packet, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -91,6 +91,14 @@ public class FlashPackController {
         }
         packetService.updatePacket(packet);
         return "redirect:/flashpack/user/packets";
+    }
+
+    @PostMapping("/flashpack/user/packets/{packetId}/update-study-settings")
+    public String updateStudySettings(@PathVariable Long packetId,
+                                      @RequestParam(required = false) Set<String> showFields,
+                                      @RequestParam(required = false) String compareField) {
+        packetService.updateStudySettings(packetId, showFields, compareField);
+        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
     // USUWANIE PAKIETU
@@ -116,9 +124,10 @@ public class FlashPackController {
         model.addAttribute("flashcards", packet.getFlashcards());
         model.addAttribute("packetId", id);
         model.addAttribute("packetName", packet.getName());
+        model.addAttribute("showFields", packet.getShowFields());
+        model.addAttribute("compareField", packet.getCompareField());
         return "userFlashcardsList";
     }
-
 
     // DODAWANIE FISZKI, JEDEN FORM.
 

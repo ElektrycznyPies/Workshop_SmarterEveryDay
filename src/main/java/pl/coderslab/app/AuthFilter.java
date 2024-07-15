@@ -18,7 +18,7 @@ public class AuthFilter implements Filter {
         String url = httpReq.getRequestURI();
 
         if (sess == null || sess.getAttribute("user") == null) {
-            if (!url.equals("/") && !url.startsWith("/login")) {
+            if (!url.equals("/") && !url.startsWith("/login") && !url.equals("/about")) {
                 httpResp.sendRedirect("/");
                 return;
             }

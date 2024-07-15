@@ -47,7 +47,7 @@ public class User {
     private Set<Packet> packets;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<StudySession> studySessions;
 
     public User() {

@@ -10,10 +10,10 @@
 <body>
 <div class="container">
     <div>
-        <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards'/>" class="button">Back to Flashcards</a>
+        <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards'/>" class="button">Back to flashcards list</a>
     </div>
 
-    <h1>${isEdit ? 'Edit' : 'Add'} Flashcard</h1>
+    <h2>${isEdit ? 'Edit' : 'Add'} Flashcard</h2>
     <h3>Packet name: ${packetName}</h3>
 
     <form:form action="${isEdit ? '/flashpack/user/packets/'.concat(packetId).concat('/flashcards/edit') : '/flashpack/user/packets/'.concat(packetId).concat('/flashcards/add')}" method="post" modelAttribute="flashcard">

@@ -21,9 +21,10 @@ public class StudySession {
     @JoinColumn(name = "packet_id", nullable = false)
     private Packet packet;
 
-    @Column(nullable = false)
+    @Column(name = "start_time", nullable = false)
     private Timestamp startTime;
 
+    @Column(name = "end_time")
     private Timestamp endTime;
 
     private Long duration;

@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PacketServiceImpl implements PacketService {
@@ -27,10 +28,17 @@ public class PacketServiceImpl implements PacketService {
         return packetRepository.findAll();
     }
 
-    @Override
-    public Optional<Packet> getPacket(Long id) {
-        return packetRepository.findById(id);
-    }
+//    @Override
+//    public Optional<Packet> getPacket(Long id) {
+//        return packetRepository.findById(id);
+//    }
+@Override
+@Transactional
+public Optional<Packet> getPacket(Long id) {
+    Optional<Packet> packet = packetRepository.findById(id);
+    packet.ifPresent(p -> p.getShowFields().size()); // Access the collection to initialize it
+    return packet;
+}
 
     @Transactional
     public Packet addPacket(Packet packet, User user) {
@@ -48,17 +56,6 @@ public class PacketServiceImpl implements PacketService {
         userRepository.save(user);
         return savedPacket;
     }
-//    public void addPacket(Packet packet, User user) {
-//        if (packet.getUsers() == null) {
-//            packet.setUsers(new HashSet<>());
-//        }
-//        packet.getUsers().add(user);
-//        packetRepository.save(packet);
-//        // Aktualizacja użytkownika, aby dodać pakiet do jego zbioru pakietów
-//        userRepository.save(user);
-//        System.out.println("|||||||||||||||||||||||||||Packet ID after save: " + packet.getId());
-//    }
-
     @Override
     public void deletePacket(Long id) {
         packetRepository.deleteById(id);
@@ -74,4 +71,14 @@ public class PacketServiceImpl implements PacketService {
         existingPacket.setDescription(updatedPacket.getDescription());
         packetRepository.save(existingPacket);
     }
+    @Override
+    @Transactional
+    public void updateStudySettings(Long packetId, Set<String> showFields, String compareField) {
+        Packet packet = packetRepository.findById(packetId)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        packet.setShowFields(showFields);
+        packet.setCompareField(compareField);
+        packetRepository.save(packet);
+    }
+
 }

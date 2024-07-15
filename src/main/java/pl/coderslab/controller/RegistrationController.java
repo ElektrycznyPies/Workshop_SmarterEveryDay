@@ -23,7 +23,8 @@ public class RegistrationController {
     @GetMapping("")
     public String registerPage(Model model) {
         model.addAttribute("user", new User());
-        return "redirect:/";
+        //return "redirect:/";
+        return "homePage";
     }
 
     @PostMapping("")
