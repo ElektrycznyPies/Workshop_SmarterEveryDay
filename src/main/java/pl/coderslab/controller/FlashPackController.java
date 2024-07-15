@@ -115,48 +115,42 @@ public class FlashPackController {
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         model.addAttribute("flashcards", packet.getFlashcards());
         model.addAttribute("packetId", id);
+        model.addAttribute("packetName", packet.getName());
         return "userFlashcardsList";
     }
 
 
-    // DODAWANIE FISZKI
+    // DODAWANIE FISZKI, JEDEN FORM.
+
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/add")
     public String showAddFlashcardForm(@PathVariable Long packetId, Model model) {
+        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         model.addAttribute("flashcard", new Flashcard());
         model.addAttribute("packetId", packetId);
-        return "userFlashcardAdd";
+        model.addAttribute("packetName", packet.getName());
+        model.addAttribute("isEdit", false);
+        return "userFlashcardForm";
     }
 
-//    @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
-//    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard) {
-//        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        flashcardService.addFlashcard(flashcard, packet);
-//        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
-//    }
 
     @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
     public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard) {
         Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-
-        String imagePath = FileChooserUtil.chooseFile("Choose Image File");
-        if (imagePath != null) {
-            flashcard.setImageLink(imagePath);
-        }
-        String soundPath = FileChooserUtil.chooseFile("Choose Sound File");
-        if (soundPath != null) {
-            flashcard.setSoundLink(soundPath);
-        }
         flashcardService.addFlashcard(flashcard, packet);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
-    // EDYCJA FISZKI
+
+    // EDYCJA FISZKI, JEDEN FORM.
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/edit/{id}")
     public String showEditFlashcardForm(@PathVariable Long packetId, @PathVariable Long id, Model model) {
+        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         Flashcard flashcard = flashcardService.getFlashcard(id).orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
         model.addAttribute("flashcard", flashcard);
         model.addAttribute("packetId", packetId);
-        return "userFlashcardEdit";
+        model.addAttribute("packetName", packet.getName());
+        model.addAttribute("isEdit", true);
+        return "userFlashcardForm";
     }
 
     @PostMapping("/flashpack/user/packets/{packetId}/flashcards/edit")
@@ -170,11 +164,12 @@ public class FlashPackController {
     // WYBÓR PLIKU OBRAZ/DŹWIĘK
 
     @GetMapping("/choose-file")
-    public String chooseFile(Model model) {
-        String filePath = FileChooserUtil.chooseFile("Choose File");
-        model.addAttribute("filePath", filePath);
-        return "fileChooserResult";
+    @ResponseBody
+    public String chooseFile(@RequestParam String type) {
+        String title = type.equals("image") ? "Choose Image File" : "Choose Sound File";
+        return FileChooserUtil.chooseFile(title);
     }
+
 
     // KASOWANIE FISZKI
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")

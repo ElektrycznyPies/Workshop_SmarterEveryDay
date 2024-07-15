@@ -30,21 +30,36 @@
             <tr>
                 <td><form:label path="imageLink">Image Link:</form:label></td>
                 <td>
-                    <fieldset role="imglink">
                     <form:input path="imageLink" id="imageLink"/>
-                    <button type="button" onclick="openFileChooser('imageLink')">Choose Image</button>
-                    </fieldset>
+                    <button type="button" onclick="chooseFile('image')">Choose Image</button>
                 </td>
             </tr>
             <tr>
                 <td><form:label path="soundLink">Sound Link:</form:label></td>
                 <td>
-                    <fieldset role="sndlink">
                     <form:input path="soundLink" id="soundLink"/>
-                    <button type="button" onclick="openFileChooser('soundLink')">Choose Sound</button>
-                    </fieldset>
+                    <button type="button" onclick="chooseFile('sound')">Choose Sound</button>
                 </td>
             </tr>
+
+<%--            <tr>--%>
+<%--                <td><form:label path="imageLink">Image Link:</form:label></td>--%>
+<%--                <td>--%>
+<%--                    <fieldset role="imglink">--%>
+<%--                    <form:input path="imageLink" id="imageLink"/>--%>
+<%--                    <button type="button" onclick="openFileChooser('imageLink')">Choose Image</button>--%>
+<%--                    </fieldset>--%>
+<%--                </td>--%>
+<%--            </tr>--%>
+<%--            <tr>--%>
+<%--                <td><form:label path="soundLink">Sound Link:</form:label></td>--%>
+<%--                <td>--%>
+<%--                    <fieldset role="sndlink">--%>
+<%--                    <form:input path="soundLink" id="soundLink"/>--%>
+<%--                    <button type="button" onclick="openFileChooser('soundLink')">Choose Sound</button>--%>
+<%--                    </fieldset>--%>
+<%--                </td>--%>
+<%--            </tr>--%>
             <tr>
                 <td colspan="2">
                     <button type="submit" class="primary">Add Flashcard</button>
@@ -53,8 +68,14 @@
         </table>
     </form:form>
     <script>
-        function openFileChooser(field) {
-            window.open('/choose-file?field=' + field, 'fileChooser', 'width=300,height=100');
+        function chooseFile(type) {
+            fetch('/choose-file?type=' + type)
+                .then(response => response.text())
+                .then(path => {
+                    if (path) {
+                        document.getElementById(type + 'Link').value = path;
+                    }
+                });
         }
     </script>
 </div>

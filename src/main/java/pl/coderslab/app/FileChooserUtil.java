@@ -7,7 +7,7 @@ public class FileChooserUtil {
     public static String chooseFile(String title) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File("."));
-        fileChooser.setDialogTitle(title);
+        fileChooser.setDialogTitle("Choose file");
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
