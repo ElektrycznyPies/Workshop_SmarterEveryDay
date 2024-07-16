@@ -8,6 +8,10 @@
 </head>
 <body>
 <main class="container">
+    <div style="text-align: right;">
+        <p>Correct answers: ${correctAnswers}</p>
+        <p>Wrong answers: ${wrongAnswers}</p>
+    </div>
     <h2>Study session for packet: ${packet.name}</h2>
     <div class="flashcard">
         <c:choose>
@@ -18,7 +22,7 @@
                 <p>Word: ${flashcard.word}</p>
             </c:when>
             <c:when test="${packet.showFields.contains('imageLink')}">
-                <p><img src="${flashcard.imageLink}" alt="Image"/></p>
+                <p><img src="${flashcard.imageLink}" alt="Image" />${flashcard.imageLink}</p>
             </c:when>
             <c:when test="${packet.showFields.contains('soundLink')}">
                 <p><audio controls><source src="${flashcard.soundLink}" type="audio/mpeg"></audio></p>

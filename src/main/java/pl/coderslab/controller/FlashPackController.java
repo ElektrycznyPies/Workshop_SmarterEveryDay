@@ -179,7 +179,7 @@ public class FlashPackController {
     @GetMapping("/choose-file")
     @ResponseBody
     public String chooseFile(@RequestParam String type) {
-        String title = type.equals("image") ? "Choose Image File" : "Choose Sound File";
+        String title = type.equals("image") ? "Choose image file" : "Choose sound file";
         return FileChooserUtil.chooseFile(title);
     }
 

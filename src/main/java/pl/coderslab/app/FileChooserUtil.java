@@ -6,7 +6,7 @@ import java.io.File;
 public class FileChooserUtil {
     public static String chooseFile(String title) {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File("."));
+        fileChooser.setCurrentDirectory(new File("/home/elpies/Workshop_SmarterEveryDay/src/main/resources/data"));
         fileChooser.setDialogTitle("Choose file");
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {

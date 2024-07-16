@@ -32,6 +32,7 @@ public class StudyController {
         this.studySessionService = studySessionService;
     }
 
+
 //    @GetMapping("/flashpack/user/packets/{id}/study")
 //    public String startStudySession(@PathVariable Long id, Model model, HttpSession session) {
 //        User user = (User) session.getAttribute("user");
@@ -41,8 +42,10 @@ public class StudyController {
 //        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
 //        studySessionService.startSession(user, packet);
 //        List<Flashcard> flashcards = flashcardService.getFlashcardsByPacketId(id);
+//        session.setAttribute("flashcards", flashcards);
+//        session.setAttribute("currentIndex", 0);
 //        model.addAttribute("packet", packet);
-//        model.addAttribute("flashcards", flashcards);
+//        model.addAttribute("flashcard", flashcards.get(0));
 //        return "userStudy";
 //    }
 
@@ -57,8 +60,12 @@ public class StudyController {
         List<Flashcard> flashcards = flashcardService.getFlashcardsByPacketId(id);
         session.setAttribute("flashcards", flashcards);
         session.setAttribute("currentIndex", 0);
+        session.setAttribute("correctAnswers", 0);
+        session.setAttribute("wrongAnswers", 0);
         model.addAttribute("packet", packet);
         model.addAttribute("flashcard", flashcards.get(0));
+        model.addAttribute("correctAnswers", 0);
+        model.addAttribute("wrongAnswers", 0);
         return "userStudy";
     }
 
@@ -72,8 +79,11 @@ public class StudyController {
         int currentIndex = (int) session.getAttribute("currentIndex");
         Flashcard currentFlashcard = flashcards.get(currentIndex);
 
-        boolean isCorrect = checkAnswer(currentFlashcard, answer);
-        if (!isCorrect) {
+        boolean isCorrect = isAnswerCorrect(currentFlashcard, answer, packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found")).getCompareField());
+        if (isCorrect) {
+            session.setAttribute("correctAnswers", (int) session.getAttribute("correctAnswers") + 1);
+        } else {
+            session.setAttribute("wrongAnswers", (int) session.getAttribute("wrongAnswers") + 1);
             flashcards.add(currentFlashcard); // jeśli niepoprawna, dodaj na koniec listy
         }
 
@@ -85,7 +95,22 @@ public class StudyController {
         session.setAttribute("currentIndex", currentIndex);
         model.addAttribute("packet", packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found")));
         model.addAttribute("flashcard", flashcards.get(currentIndex));
+        model.addAttribute("correctAnswers", session.getAttribute("correctAnswers"));
+        model.addAttribute("wrongAnswers", session.getAttribute("wrongAnswers"));
         return "userStudy";
+    }
+
+    private boolean isAnswerCorrect(Flashcard flashcard, String answer, String compareField) {
+        switch (compareField) {
+            case "name":
+                return flashcard.getName().equalsIgnoreCase(answer);
+            case "word":
+                return flashcard.getWord().equalsIgnoreCase(answer);
+            case "additionalText":
+                return flashcard.getAdditionalText().equalsIgnoreCase(answer);
+            default:
+                return false;
+        }
     }
 
     @PostMapping("/flashpack/user/packets/{id}/study/end")
@@ -94,11 +119,5 @@ public class StudyController {
         session.removeAttribute("currentIndex");
         return "redirect:/flashpack/user/packets";
     }
-
-    private boolean checkAnswer(Flashcard flashcard, String answer) {
-        // Implement your logic to check if the answer is correct
-        return flashcard.getWord().equalsIgnoreCase(answer);
-    }
-
 
 }
