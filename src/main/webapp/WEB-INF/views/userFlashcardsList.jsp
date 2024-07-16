@@ -24,7 +24,7 @@
     <c:otherwise>
     <div class="container">
         <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">            <h4>Select fields to show during study:</h4>
-            <label><input type="checkbox" name="showFields" value="image" ${showFields.contains('image') ? 'checked' : ''}> Image</label>
+            <label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image</label>
             <label><input type="checkbox" name="showFields" value="name" ${showFields.contains('name') ? 'checked' : ''}> Name</label>
             <label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word</label>
             <label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional Text</label>

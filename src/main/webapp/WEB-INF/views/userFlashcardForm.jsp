@@ -27,11 +27,11 @@
 
         <label for="imageLink">Image Link:</label>
         <form:input path="imageLink" id="imageLink" />
-        <button type="button" onclick="chooseFile('image')" class="secondary">Choose Image</button>
+        <button type="button" onclick="chooseFile('image')" class="secondary">Choose image</button>
 
         <label for="soundLink">Sound Link:</label>
         <form:input path="soundLink" id="soundLink" />
-        <button type="button" onclick="chooseFile('sound')" class="secondary">Choose Sound</button>
+        <button type="button" onclick="chooseFile('sound')" class="secondary">Choose sound</button>
 
         <label for="additionalText">Additional Text:</label>
         <form:textarea path="additionalText" id="additionalText" rows="4" />
