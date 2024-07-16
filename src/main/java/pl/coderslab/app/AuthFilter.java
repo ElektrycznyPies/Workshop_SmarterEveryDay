@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class AuthFilter implements Filter {
 
-
     @Override
     public void doFilter(ServletRequest servletReq, ServletResponse servletResp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) servletReq;
@@ -18,7 +17,7 @@ public class AuthFilter implements Filter {
         String url = httpReq.getRequestURI();
 
         if (sess == null || sess.getAttribute("user") == null) {
-            if (!url.equals("/") && !url.startsWith("/login") && !url.equals("/about")) {
+            if (!url.equals("/") && !url.startsWith("/login") && !url.equals("/about") && !url.equals("/register")) {
                 httpResp.sendRedirect("/");
                 return;
             }
@@ -31,28 +30,6 @@ public class AuthFilter implements Filter {
         }
         chain.doFilter(httpReq, httpResp);
     }
-
-
-
-
-// STARY DZIAŁAJĄCY, ALE ZŁY FILTR
-//            if (url.startsWith("/user/")) {
-//            if (sess == null || sess.getAttribute("user") == null) {
-//                httpResp.sendRedirect("/");
-//                return;
-//            }
-//            User user = (User) sess.getAttribute("user");
-//            if (user.getRole() == 1L || user.getRole() == 0L) {
-//                chain.doFilter(httpReq, httpResp);
-//            } else {
-//                httpResp.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
-//                return;
-//            }
-//        }
-//
-//        chain.doFilter(httpReq, httpResp);
-//    }
-
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
