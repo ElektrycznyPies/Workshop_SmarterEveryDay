@@ -19,24 +19,20 @@
         <div class="form-group">
             <label for="firstName">First Name</label>
             <form:input path="firstName" class="input"/>
-            <form:errors path="firstName" class="text-danger" />
         </div>
 
         <div class="form-group">
             <label for="lastName">Last Name</label>
             <form:input path="lastName" class="input"/>
-            <form:errors path="lastName" class="text-danger" />
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
             <form:input path="email" class="input"/>
-            <form:errors path="email" class="text-danger" />
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <form:input path="password" class="input"/>
-            <form:errors path="password" class="text-danger" />
+            <form:input path="password" class="input" type="password"/>
         </div>
 
         <div class="form-group">

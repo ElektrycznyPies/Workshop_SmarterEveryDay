@@ -14,6 +14,14 @@
     </div>
 
     <h3>Packet name: ${packetName}</h3>
+    <c:choose>
+    <c:when test="${empty flashcards}">
+    <p>No flashcards</p>
+    <form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
+        <button type="submit" class="primary">Add Flashcard</button>
+    </form>
+    </c:when>
+    <c:otherwise>
     <div class="container">
         <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">            <h4>Select fields to show during study:</h4>
             <label><input type="checkbox" name="showFields" value="image" ${showFields.contains('image') ? 'checked' : ''}> Image</label>
@@ -31,11 +39,7 @@
         <form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
         <button type="submit" class="primary">Add Flashcard</button>
     </form>
-        <c:choose>
-            <c:when test="${empty flashcards}">
-                <p>No flashcards</p>
-            </c:when>
-            <c:otherwise>
+
                 <section class="grid" id="tables">
                     <table class="striped full-width">
                             <thead>

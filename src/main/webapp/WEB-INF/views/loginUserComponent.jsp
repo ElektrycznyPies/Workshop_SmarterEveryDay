@@ -24,7 +24,7 @@
                     aria-label="Password"
                     required
             />
-            <button type="submit">Login</button>
         </div>
+        <button type="submit">Login</button>
     </form>
 </section>

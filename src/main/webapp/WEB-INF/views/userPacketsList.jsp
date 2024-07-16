@@ -12,6 +12,13 @@
     <div>
         <a href="<c:url value='/user/home'/>" class="button">Main page</a>
     </div>
+    <c:choose>
+    <c:when test="${empty packets}">
+    <section class="grid" id="tables">
+    <p>No packets</p>
+    </section>
+    </c:when>
+    <c:otherwise>
 
     <section class="grid" id="tables">
         <table class="striped full-width">
@@ -38,6 +45,8 @@
             </tbody>
         </table>
     </section>
+    </c:otherwise>
+    </c:choose>
 </div>
 </body>
 </html>
