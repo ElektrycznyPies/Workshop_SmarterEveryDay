@@ -62,4 +62,9 @@ public class FlashcardServiceImpl implements FlashcardService {
 
         flashcardRepository.save(existingFlashcard);
     }
+
+    @Override
+    public List<Flashcard> getFlashcardsByPacketId(Long packetId) {
+        return flashcardRepository.findByPackId(packetId);
+    }
 }

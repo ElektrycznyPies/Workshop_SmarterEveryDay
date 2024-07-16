@@ -192,14 +192,14 @@ public class FlashPackController {
     }
 
     // ROZPOCZNIJ SESJĘ NAUKI
-    @GetMapping("/flashpack/user/packets/{id}/study")
-    public String startStudySession(@PathVariable Long id, Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            throw new EntityNotFoundException("User not found");
-        }
-        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        model.addAttribute("packet", packet);
-        return "studySession";
-    }
+//    @GetMapping("/flashpack/user/packets/{id}/study")
+//    public String startStudySession(@PathVariable Long id, Model model, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        model.addAttribute("packet", packet);
+//        return "studySession";
+//    }
 }

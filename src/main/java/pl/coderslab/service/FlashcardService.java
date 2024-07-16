@@ -14,4 +14,6 @@ public interface FlashcardService {
     void addFlashcard(Flashcard flashcard, Packet pack);
     void deleteFlashcard(Long id);
     void updateFlashcard(Flashcard flashcard);
+    List<Flashcard> getFlashcardsByPacketId(Long packetId);
+
 }

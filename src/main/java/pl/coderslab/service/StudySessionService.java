@@ -8,6 +8,7 @@ import pl.coderslab.model.User;
 import pl.coderslab.repository.StudySessionRepository;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class StudySessionService {
     @Autowired
     private StudySessionRepository studySessionRepository;
 
+    @Transactional
     public StudySession startSession(User user, Packet packet) {
         StudySession session = new StudySession();
         session.setUser(user);
