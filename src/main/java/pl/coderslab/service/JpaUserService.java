@@ -9,6 +9,7 @@ import pl.coderslab.model.User;
 import pl.coderslab.model.Packet;
 import pl.coderslab.repository.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,24 @@ public class JpaUserService implements UserService {
         userRepository.save(user);
     }
 
+//    public void deleteUser(Long id) {
+//        userRepository.deleteById(id);
+//    }
+
+    @Transactional
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        // osierocone pakiety -- przypisuje do defaultUser o id 0
+        User defaultUser = userRepository.findById(0L)
+                .orElseThrow(() -> new EntityNotFoundException("Default user not found"));
+
+        for (Packet packet : user.getPackets()) {
+            packet.getUsers().remove(user);
+            packet.getUsers().add(defaultUser);
+        }
+        userRepository.delete(user);
     }
 
     public void updateUser(User user) {

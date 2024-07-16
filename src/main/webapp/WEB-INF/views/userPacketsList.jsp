@@ -36,7 +36,9 @@
                     <td><c:out value="${packet.description}"/></td>
                     <td>
                         <a href="<c:url value='/flashpack/user/packets/edit/${packet.id}'/>" class="button secondary">Edit</a>
-                        <a href="<c:url value='/flashpack/user/packets/delete/${packet.id}'/>" onclick="return confirm('Are you sure?')" class="button danger">Delete</a>
+                        <a href="<c:url value='/flashpack/user/packets/delete/${packet.id}'/>"
+                           onclick="return confirm('${packetsWithFlashcards[packet.id] ? 'Are you sure? This packet CONTAINS FLASHCARDS!' : 'Are you sure? This packet is empty.'}')"
+                           class="button danger">Delete</a>
                         <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>
                         <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>" class="button info">Study</a>
                     </td>

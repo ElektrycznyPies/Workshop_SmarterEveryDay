@@ -39,9 +39,9 @@
             <h3>Simple flashcard learning tool.</h3>
             <c:choose>
 
-                <%--                NIKT NIE JEST ZALOGOWANY--%>
-                <c:when test="${empty sessionScope.user}">
-                <%--LUB LEPIEJ:  <c:when test="${sessionScope.loggedIn == true}">--%>
+                <%--                NIKT NIE JEST ZALOGOWANY lub nieznana rola--%>
+                <c:when test="${empty sessionScope.user && sessionScope.user.role != 0 && sessionScope.user.role != 1}">
+
                 <footer>
                         <div class="grid">
                             <div>
@@ -86,7 +86,7 @@
                         </div>
                     </footer>
                 </c:when>
-
+<%--               ZALOGOWANY ADMIN--%>
                 <c:when test="${sessionScope.user.role == 1}">
                     <footer>
                         <div class="grid">

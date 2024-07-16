@@ -15,6 +15,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("")
@@ -58,6 +59,8 @@ public class FlashPackController {
         }
         List<Packet> userPackets = userService.getUserPackets(user.getId());
         model.addAttribute("packets", userPackets);
+        model.addAttribute("packetsWithFlashcards", userPackets.stream()
+                .collect(Collectors.toMap(Packet::getId, p -> !p.getFlashcards().isEmpty())));
         return "userPacketsList";
     }
 
