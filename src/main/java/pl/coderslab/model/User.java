@@ -44,7 +44,7 @@ public class User {
             name = "user_packet",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "packet_id"))
-    private Set<Packet> packets;
+    private Set<Packet> packets = new HashSet<>();
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
@@ -133,12 +133,18 @@ public class User {
         return firstName + " " + lastName;
     }
 
-    public Set<Packet> getPackets() {
-        if (packets == null) {
-            packets = new HashSet<>();
-        }
-        return packets;
+//    public Set<Packet> getPackets() {
+//        if (packets == null) {
+//            packets = new HashSet<>();
+//        }
+//        return packets;
+//    }
+public Set<Packet> getPackets() {
+    if (this.packets == null) {
+        this.packets = new HashSet<>();
     }
+    return this.packets;
+}
 
     public void setPackets(Set<Packet> packets) {
         this.packets = packets;

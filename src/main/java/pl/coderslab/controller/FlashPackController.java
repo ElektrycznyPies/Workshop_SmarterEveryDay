@@ -45,7 +45,8 @@ public class FlashPackController {
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        Packet savedPacket = packetService.addPacket(packet, user);
+        //Packet savedPacket = packetService.addPacket(packet, user);
+        packetService.addPacket(packet, user);
         return "redirect:/flashpack/user/packets";
     }
 

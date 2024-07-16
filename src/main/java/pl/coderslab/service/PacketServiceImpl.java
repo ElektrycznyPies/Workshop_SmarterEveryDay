@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PacketServiceImpl implements PacketService {
@@ -40,22 +41,73 @@ public Optional<Packet> getPacket(Long id) {
     return packet;
 }
 
+//    @Transactional
+//    public Packet addPacket(Packet packet, User user) {
+//        // Ensure users set is initialized
+//        if (packet.getUsers() == null) {
+//            packet.setUsers(new HashSet<>());
+//        }
+//
+//        // Check if the user is already associated with the packet
+//        if (!packet.getUsers().contains(user)) {
+//            packet.getUsers().add(user);
+//        }
+//
+//        System.out.println("\033[36;1;44m}}}}}}}}}}}}}}}Before saving: Packet ID = " + packet.getId() + ", User ID = " + user.getId()+"\033[0m");
+//        System.out.println("\033[36;1;44m}}}}}}}}}}}}}}}Packet users before saving: " + packet.getUsers().stream().map(User::getId).collect(Collectors.toSet()) + "\033[0m");
+//
+//        // Save the packet
+//        Packet savedPacket = packetRepository.save(packet);
+//
+//        System.out.println("\033[36;1;44m}}}}}}}}}}}}}}}After saving: Packet ID = " + packet.getId() + ", User ID = " + user.getId()+"\033[0m");
+//        System.out.println("\033[36;1;44m}}}}}}}}}}}}}}}Packet users after saving: " + packet.getUsers().stream().map(User::getId).collect(Collectors.toSet()) + "\033[0m");
+//
+//        // Ensure user's packets set is initialized
+//        if (user.getPackets() == null) {
+//            user.setPackets(new HashSet<>());
+//        }
+//
+//        // Check if the packet is already associated with the user
+//        if (!user.getPackets().contains(savedPacket)) {
+//            user.getPackets().add(savedPacket);
+//            user = userRepository.save(user);
+//        }
+//
+//        return savedPacket;
+//    }
+
     @Transactional
     public Packet addPacket(Packet packet, User user) {
+        // Fetch the user from the database to ensure it's in a managed state
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        // Ensure users set is initialized
         if (packet.getUsers() == null) {
             packet.setUsers(new HashSet<>());
         }
-        packet.getUsers().add(user);
 
+        // Check if the user is already associated with the packet
+        if (!packet.getUsers().contains(managedUser)) {
+            packet.getUsers().add(managedUser);
+        }
+
+        // Save the packet
         Packet savedPacket = packetRepository.save(packet);
 
-        if (user.getPackets() == null) {
-            user.setPackets(new HashSet<>());
+        // Ensure user's packets set is initialized
+        if (managedUser.getPackets() == null) {
+            managedUser.setPackets(new HashSet<>());
         }
-        user.getPackets().add(savedPacket);
-        userRepository.save(user);
+
+        // Check if the packet is already associated with the user
+        if (!managedUser.getPackets().contains(savedPacket)) {
+            managedUser.getPackets().add(savedPacket);
+            userRepository.save(managedUser);
+        }
         return savedPacket;
     }
+
     @Override
     public void deletePacket(Long id) {
         packetRepository.deleteById(id);

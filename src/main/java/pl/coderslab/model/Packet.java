@@ -1,3 +1,46 @@
+//package pl.coderslab.model;
+//
+//import org.hibernate.annotations.CreationTimestamp;
+//import org.hibernate.annotations.UpdateTimestamp;
+//
+//import javax.persistence.*;
+//import javax.validation.constraints.NotBlank;
+//import javax.validation.constraints.Size;
+//import java.sql.Timestamp;
+//import java.util.HashSet;
+//import java.util.Set;
+//
+//@Entity
+//@Table(name = "Packets")
+//public class Packet {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//    @NotBlank
+//    @Size(max=100)
+//    private String name;
+//    @Size(max=1000)
+//    private String description;
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "packet_show_fields", joinColumns = @JoinColumn(name = "packet_id"))
+//    @Column(name = "show_field")
+//    private Set<String> showFields = new HashSet<>();
+//    @Column(name = "compare_field")
+//    private String compareField;
+//    @CreationTimestamp
+//    private Timestamp created_at;
+//    @UpdateTimestamp
+//    private Timestamp updated_at;
+//
+//    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
+//    private Set<User> users;
+//
+//    @OneToMany(mappedBy = "pack", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<Flashcard> flashcards;
+//
+//    @OneToMany(mappedBy = "packet", fetch = FetchType.EAGER)
+//    private Set<StudySession> studySessions;
 package pl.coderslab.model;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,30 +60,38 @@ public class Packet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     @Size(max=100)
     private String name;
+
     @Size(max=1000)
     private String description;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "packet_show_fields", joinColumns = @JoinColumn(name = "packet_id"))
     @Column(name = "show_field")
     private Set<String> showFields = new HashSet<>();
+
     @Column(name = "compare_field")
     private String compareField;
+
     @CreationTimestamp
     private Timestamp created_at;
+
     @UpdateTimestamp
     private Timestamp updated_at;
 
     @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "pack", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Flashcard> flashcards;
 
     @OneToMany(mappedBy = "packet", fetch = FetchType.EAGER)
     private Set<StudySession> studySessions;
+
+
 
     public Packet() {
     }
