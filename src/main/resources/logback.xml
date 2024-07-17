@@ -18,8 +18,7 @@
 </appender>
 
 <!--    <logger name="pl.coderslab" level="DEBUG" />-->
-<!--    <logger name="pl.coderslab.SomeClass" level="INFO" />-->
-
+<logger name="pl.coderslab.controller.StudyController" level="DEBUG" />
 <root level="WARN">
     <appender-ref ref="CONSOLE" />
     <appender-ref ref="FILE" />

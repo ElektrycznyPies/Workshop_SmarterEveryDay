@@ -5,14 +5,19 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.coderslab.model.StudySession;
 import pl.coderslab.model.User;
 import pl.coderslab.model.Packet;
+import pl.coderslab.repository.PacketRepository;
+import pl.coderslab.repository.StudySessionRepository;
 import pl.coderslab.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Primary
@@ -20,11 +25,17 @@ public class JpaUserService implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PacketRepository packetRepository;
+    private final StudySessionRepository studySessionRepository;
+
 
     @Autowired
-    public JpaUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public JpaUserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                          PacketRepository packetRepository, StudySessionRepository studySessionRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.packetRepository = packetRepository;
+        this.studySessionRepository = studySessionRepository;
     }
 
     public void registerUser(User user) {
@@ -46,8 +57,28 @@ public class JpaUserService implements UserService {
         userRepository.save(user);
     }
 
+
+//    @Transactional
 //    public void deleteUser(Long id) {
-//        userRepository.deleteById(id);
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+//
+//
+//        User defaultUser = userRepository.findById(0L)
+//                .orElseThrow(() -> new EntityNotFoundException("Default user not found"));
+//        // osierocone pakiety przypisuje do defaultUser id = 0
+//        for (Packet packet : user.getPackets()) {
+//            packet.getUsers().remove(user);
+//            packet.getUsers().add(defaultUser);
+//            packetRepository.save(packet);
+//        }
+//
+//        // zeruje sesje nauki
+//        List<StudySession> studySessions = studySessionRepository.findByUserId(id);
+//        for (StudySession session : studySessions) {
+//            studySessionRepository.delete(session);
+//        }
+//        userRepository.delete(user);
 //    }
 
     @Transactional
@@ -55,14 +86,30 @@ public class JpaUserService implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // osierocone pakiety -- przypisuje do defaultUser o id 0
+        // Znajdź użytkownika o id = 0 (defaultUser)
         User defaultUser = userRepository.findById(0L)
                 .orElseThrow(() -> new EntityNotFoundException("Default user not found"));
 
-        for (Packet packet : user.getPackets()) {
+        // Przypisz pakiety do defaultUser
+        Set<Packet> userPackets = new HashSet<>(user.getPackets());
+        for (Packet packet : userPackets) {
             packet.getUsers().remove(user);
             packet.getUsers().add(defaultUser);
+            defaultUser.getPackets().add(packet);
+            packetRepository.save(packet);
         }
+
+        // Wyczyść pakiety użytkownika
+        user.getPackets().clear();
+
+        // Usuń sesje nauki
+        List<StudySession> studySessions = studySessionRepository.findByUserId(id);
+        studySessionRepository.deleteAll(studySessions);
+
+        // Zapisz zmiany dla defaultUser
+        userRepository.save(defaultUser);
+
+        // Usuń użytkownika
         userRepository.delete(user);
     }
 
