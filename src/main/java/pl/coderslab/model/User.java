@@ -26,6 +26,9 @@ public class User {
     @Size(min = 2, max = 100)
     @Column(name = "last_name")
     private String lastName;
+    @Size(min = 1, max = 100)
+    @Column(name = "nick")
+    private String nick;
     @NotBlank
     @Email
     @Size(max = 50)
@@ -54,7 +57,7 @@ public class User {
     }
 
     public User(Long id, String firstName, String lastName, String email, String password,
-                Timestamp created_at, Timestamp updated_at, Long role) {
+                Timestamp created_at, Timestamp updated_at, Long role, String nick) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -63,10 +66,27 @@ public class User {
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.role = role;
+        this.nick = nick;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    public Set<StudySession> getStudySessions() {
+        return studySessions;
+    }
+
+    public void setStudySessions(Set<StudySession> studySessions) {
+        this.studySessions = studySessions;
     }
 
     public void setId(Long id) {
@@ -156,11 +176,14 @@ public Set<Packet> getPackets() {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", nick='" + nick + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", role=" + role +
+                ", packets=" + packets +
+                ", studySessions=" + studySessions +
                 '}';
     }
 }

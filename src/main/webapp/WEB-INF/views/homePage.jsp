@@ -38,15 +38,19 @@
                                 <label for="lastName">Last Name</label>
                                 <form:input path="lastName" class="input"/>
                             </div>
+                            <div>
+                                <label for="nick">Nick</label>
+                                <form:input path="nick" class="input"/>
+                            </div>
 
                             <div>
                                 <label for="email">Email</label>
-                                <form:input path="email" class="input"/>
+                                <form:input path="email" class="input" required="required" />
                             </div>
 
                             <div>
                                 <label for="password">Password</label>
-                                <form:input path="password" class="input" type="password"/>
+                                <form:input path="password" class="input" type="password" required="required"/>
                             </div>
 
                             <div>

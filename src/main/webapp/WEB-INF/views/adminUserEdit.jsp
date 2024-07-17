@@ -31,10 +31,15 @@
         <form:input path="lastName" class="input"/>
         <form:errors path="lastName" class="text-danger" />
     </div>
+    <div class="form-group">
+        <label for="lastName">Nick</label>
+        <form:input path="nick" class="input"/>
+        <form:errors path="nick" class="text-danger" />
+    </div>
 
     <div class="form-group">
         <label for="email">Email</label>
-        <form:input path="email" class="input"/>
+        <form:input path="email" class="input" required="required"/>
         <form:errors path="email" class="text-danger" />
     </div>
     <div>

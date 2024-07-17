@@ -49,7 +49,7 @@ public class FlashPackController {
         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
             packet.setAuthor("");
         } else if ("nick".equals(authorType)) {
-            packet.setAuthor(user.getFirstName()); // tu podmienić potem na nick
+            packet.setAuthor(user.getNick()); // tu podmienić potem na nick
         } else if ("name".equals(authorType)) {
             packet.setAuthor(user.getFullName());
         }
@@ -137,7 +137,7 @@ public class FlashPackController {
         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
             existingPacket.setAuthor("");
         } else if ("nick".equals(authorType)) {
-            existingPacket.setAuthor(user.getFirstName()); // potem zmienić na nick
+            existingPacket.setAuthor(user.getNick());
         } else if ("name".equals(authorType)) {
             existingPacket.setAuthor(user.getFullName());
         } else {

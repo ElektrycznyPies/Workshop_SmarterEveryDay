@@ -25,10 +25,14 @@
             <label for="lastName">Last Name</label>
             <form:input path="lastName" class="input"/>
         </div>
+        <div class="form-group">
+            <label for="nick">Last Name</label>
+            <form:input path="nick" class="input"/>
+        </div>
 
         <div class="form-group">
             <label for="email">Email</label>
-            <form:input path="email" class="input"/>
+            <form:input path="email" class="input" required="required"/>
         </div>
         <div class="form-group">
             <label for="password">Password</label>

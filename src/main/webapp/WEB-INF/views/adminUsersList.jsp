@@ -21,6 +21,7 @@
         <tr>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
+            <th scope="col">Nick</th>
             <th scope="col">Email</th>
             <th scope="col">Action</th>
         </tr>
@@ -30,6 +31,7 @@
                 <tr scope="row">
                     <td><c:out value="${user.firstName}"/></td>
                     <td><c:out value="${user.lastName}"/></td>
+                    <td><c:out value="${user.nick}"/></td>
                     <td><c:out value="${user.email}"/></td>
                     <td>
                         <c:choose>

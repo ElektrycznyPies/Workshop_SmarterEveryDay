@@ -74,6 +74,7 @@ public class UsersCRUDController {
             User updatedUser = existingUser.get();
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
+            updatedUser.setNick(user.getNick());
             updatedUser.setEmail(user.getEmail());
             if (!user.getPassword().equals(updatedUser.getPassword())) {
                 String encodedPassword = passwordEncoder.encode(user.getPassword());

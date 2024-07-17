@@ -43,7 +43,7 @@
 
         useNickRadio.addEventListener('change', function() {
             if (this.checked) {
-                authorInput.value = '${user.firstName}';
+                authorInput.value = '${user.nick}';
             }
         });
 

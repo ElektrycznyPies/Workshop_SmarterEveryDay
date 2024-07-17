@@ -58,39 +58,18 @@ public class JpaUserService implements UserService {
     }
 
 
-//    @Transactional
-//    public void deleteUser(Long id) {
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-//
-//
-//        User defaultUser = userRepository.findById(0L)
-//                .orElseThrow(() -> new EntityNotFoundException("Default user not found"));
-//        // osierocone pakiety przypisuje do defaultUser id = 0
-//        for (Packet packet : user.getPackets()) {
-//            packet.getUsers().remove(user);
-//            packet.getUsers().add(defaultUser);
-//            packetRepository.save(packet);
-//        }
-//
-//        // zeruje sesje nauki
-//        List<StudySession> studySessions = studySessionRepository.findByUserId(id);
-//        for (StudySession session : studySessions) {
-//            studySessionRepository.delete(session);
-//        }
-//        userRepository.delete(user);
-//    }
-
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // Znajdź użytkownika o id = 0 (defaultUser)
+        // przy kasowaniu usera jego pakiety zostają przypisane userowi id = 0 (defaultUser)
+
+        // znajdź użytkownika o id = 0 (defaultUser)
         User defaultUser = userRepository.findById(0L)
                 .orElseThrow(() -> new EntityNotFoundException("Default user not found"));
 
-        // Przypisz pakiety do defaultUser
+        // przypisz pakiety do defaultUser
         Set<Packet> userPackets = new HashSet<>(user.getPackets());
         for (Packet packet : userPackets) {
             packet.getUsers().remove(user);
@@ -99,17 +78,17 @@ public class JpaUserService implements UserService {
             packetRepository.save(packet);
         }
 
-        // Wyczyść pakiety użytkownika
+        // wyczyść pakiety kasowanego usera
         user.getPackets().clear();
 
-        // Usuń sesje nauki
+        // usuń jego sesje nauki
         List<StudySession> studySessions = studySessionRepository.findByUserId(id);
         studySessionRepository.deleteAll(studySessions);
 
-        // Zapisz zmiany dla defaultUser
+        // zapisz zmiany dla defaultUser
         userRepository.save(defaultUser);
 
-        // Usuń użytkownika
+        // usuń kasowanego użytkownika
         userRepository.delete(user);
     }
 
