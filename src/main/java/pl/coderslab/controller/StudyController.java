@@ -16,6 +16,7 @@ import pl.coderslab.service.StudySessionService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -33,22 +34,6 @@ public class StudyController {
     }
 
 
-//    @GetMapping("/flashpack/user/packets/{id}/study")
-//    public String startStudySession(@PathVariable Long id, Model model, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        studySessionService.startSession(user, packet);
-//        List<Flashcard> flashcards = flashcardService.getFlashcardsByPacketId(id);
-//        session.setAttribute("flashcards", flashcards);
-//        session.setAttribute("currentIndex", 0);
-//        model.addAttribute("packet", packet);
-//        model.addAttribute("flashcard", flashcards.get(0));
-//        return "userStudy";
-//    }
-
     @GetMapping("/flashpack/user/packets/{id}/study")
     public String startStudySession(@PathVariable Long id, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -58,6 +43,7 @@ public class StudyController {
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         studySessionService.startSession(user, packet);
         List<Flashcard> flashcards = flashcardService.getFlashcardsByPacketId(id);
+        Collections.shuffle(flashcards); // Losowe mieszanie fiszek
         session.setAttribute("flashcards", flashcards);
         session.setAttribute("currentIndex", 0);
         session.setAttribute("correctAnswers", 0);

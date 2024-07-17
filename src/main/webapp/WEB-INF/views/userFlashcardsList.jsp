@@ -13,32 +13,44 @@
         <a href="<c:url value='/flashpack/user/packets'/>" class="button">Back to packets list</a>
     </div>
 
-    <h3>Packet name: ${packetName}</h3>
+    <h4>Packet name: ${packetName}</h4>
     <c:choose>
-    <c:when test="${empty flashcards}">
-    <p>No flashcards</p>
-    <form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
-        <button type="submit" class="primary">Add Flashcard</button>
-    </form>
+        <c:when test="${empty flashcards}">
+        <p>No flashcards</p>
+        <form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
+            <button type="submit" class="primary">Add Flashcard</button>
+        </form>
     </c:when>
     <c:otherwise>
-    <div class="container">
-        <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">            <h4>Select fields to show during study:</h4>
-            <label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image</label>
-            <label><input type="checkbox" name="showFields" value="name" ${showFields.contains('name') ? 'checked' : ''}> Name</label>
-            <label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word</label>
-            <label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional Text</label>
+        <p>Select fields to show during study session:</p>
+        <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">
+            <div class="grid container">
+                <div><label><input type="checkbox" name="showFields" value="name" ${showFields.contains('name') ? 'checked' : ''}> Name</label></div>
+                <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word</label></div>
+                <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional Text</label></div>
+                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image</label></div>
+            </div>
+        <p>Select the field to compare for correct answer:</p>
+        <div class="grid container">
+            <div><label><input type="radio" name="compareField" value="name" ${compareField == 'name' ? 'checked' : ''}> Name</label></div>
+            <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word</label></div>
+            <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional Text</label></div>
+            <div></div>
+        </div>
+<%--        <div class="grid container">--%>
+<%--            <button type="submit" class="primary">Save Study Settings</button>--%>
+<%--            <div></div>--%>
+<%--            <div></div>--%>
+<%--        </div>--%>
+<%--        </form>--%>
 
-            <label><input type="radio" name="compareField" value="name" ${compareField == 'name' ? 'checked' : ''}> Name</label>
-            <label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word</label>
-            <label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional Text</label>
+        <div class="grid container">
+            <div><button type="submit" class="primary">Save Study Settings</button></div></form>
+            <div><a role="button" href="<c:url value='/flashpack/user/packets/${packetId}/study'/>" class="button primary">Start Study Session</a></div>
+            <div><form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
+                <button type="submit" class="primary">Add Flashcard</button></form></div>
 
-            <button type="submit" class="primary">Save Study Settings</button>
-            <a href="<c:url value='/flashpack/user/packets/${packetId}/study'/>" class="button primary">Start Study Session</a>
-        </form>
-        <form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
-        <button type="submit" class="primary">Add Flashcard</button>
-    </form>
+        </div>
 
                 <section class="grid" id="tables">
                     <table class="striped full-width">
@@ -53,11 +65,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${flashcards}" var="flashcard">
+                            <c:forEach items="${flashcards}" var="flashcard" varStatus="status">
                                 <tr scope="row">
                                     <td><c:out value="${flashcard.name}"/></td>
                                     <td><c:out value="${flashcard.word}"/></td>
-                                    <td><c:out value="${flashcard.imageLink}"/></td>
+                                    <td><c:out value="…${shortImageLinks[status.index]}"/>
+                                    </td>
                                     <td><c:out value="${flashcard.soundLink}"/></td>
                                     <td><c:out value="${flashcard.additionalText}"/></td>
                                     <td>

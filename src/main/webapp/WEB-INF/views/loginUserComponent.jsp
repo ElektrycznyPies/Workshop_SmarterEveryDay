@@ -3,9 +3,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <section id="login">
-    <p>
-        Enter your credentials.
-    </p>
 <%--    <form action="<c:url value='/login'/>" method="post">--%>
     <form action="${pageContext.request.contextPath}/login" method="post">
         <div class="grid">

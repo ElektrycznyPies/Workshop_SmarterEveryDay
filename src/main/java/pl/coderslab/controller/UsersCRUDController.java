@@ -5,12 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
 import pl.coderslab.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/users")
@@ -28,6 +32,14 @@ public class UsersCRUDController {
     // POKAŻ WSZYSTKIE
     @GetMapping("/all")     // w przeglądarce
     public String showAll(Model model) {
+        List<User> allUsers = userService.getAllUsers();
+
+        Map<Long, Boolean> usersWithPackets = allUsers.stream()
+                .collect(Collectors.toMap(User::getId, user -> user.getPackets().stream()
+                                .anyMatch(packet -> packet.getUsers().size() == 1 && packet.getUsers().contains(user))
+                )); // czy user jest przypisany do pakietu, do kt. jest przypisany tylko 1 user, i ten user to on :)
+
+        model.addAttribute("usersWithPackets", usersWithPackets);
         model.addAttribute("users", userService.getAllUsers());
         return "adminUsersList";  // nazwa pliku
     }

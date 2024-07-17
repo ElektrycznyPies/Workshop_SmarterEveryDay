@@ -36,7 +36,7 @@
     <section>
         <article id="article">
             <h1>Smarter Every Day</h1>
-            <h3>Simple flashcard learning tool.</h3>
+            <h4>Simple flashcard learning tool</h4>
             <c:choose>
 
                 <%--                NIKT NIE JEST ZALOGOWANY lub nieznana rola--%>
@@ -44,12 +44,14 @@
 
                 <footer>
                         <div class="grid">
-                            <div>
-                                <small>Login or register to use this tool fully.</small>
+                            <div class="col-6">
+                                <small>Login or register to use this tool fully</small>
                             </div>
-                            <div style="text-align: right;">
+                            <div class="col-2" align="right">
                             </div>
-                            <div style="text-align: right;">
+                            <div class="col-2" align="right">
+                            </div>
+                            <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
                                         <small><a href="${prevUrl}" class="button">Back</a></small>
@@ -67,13 +69,16 @@
                 <c:when test="${sessionScope.user.role == 0}">
                     <footer>
                         <div class="grid">
-                            <div style="width: 70%;">
-                                <small>Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>
+                            <div class="col-6">
+                                <small>Hello, <c:out value="${sessionScope.user.firstName}"/></small>
                             </div>
-                            <div style="text-align: right;">
+                            <div class="col-2" align="right">
+                                <small role="button" tabindex="1"><a href="<c:url value='/user/home'/>">Main page</a></small>
+                            </div>
+                            <div class="col-2" align="right">
                                         <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
-                            <div class="grid" style="text-align: right;">
+                            <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
                                         <small><a href="${prevUrl}" class="button">Back</a></small>
@@ -90,13 +95,16 @@
                 <c:when test="${sessionScope.user.role == 1}">
                     <footer>
                         <div class="grid">
-                            <div style="width: 70%;">
-                                <small><a href="<c:url value='/user/home#admin'/>">ADMIN privileges</a>. Hello, <c:out value="${sessionScope.user.firstName}"/>.</small>
+                            <div class="col-6">
+                                <small><a href="<c:url value='/user/home#admin'/>">ADMIN</a> privileges. Hello, <c:out value="${sessionScope.user.firstName}"/></small>
                             </div>
-                            <div style="text-align: right;">
+                            <div class="col-2" align="right">
+                                <small><a href="<c:url value='/user/home'/>">Main page</a></small>
+                            </div>
+                            <div class="col-2" align="right">
                                     <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
-                            <div style="text-align: right;">
+                            <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
                                         <small><a href="${prevUrl}" class="button">Back</a></small>

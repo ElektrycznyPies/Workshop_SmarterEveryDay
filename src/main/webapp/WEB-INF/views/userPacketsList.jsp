@@ -9,9 +9,9 @@
 </head>
 <body>
 <div class="container">
-    <div>
-        <a href="<c:url value='/user/home'/>" class="button">Main page</a>
-    </div>
+<%--    <div>--%>
+<%--        <a href="<c:url value='/user/home'/>" class="button">Main page</a>--%>
+<%--    </div>--%>
     <c:choose>
     <c:when test="${empty packets}">
     <section class="grid" id="tables">
@@ -27,6 +27,9 @@
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Actions</th>
+                <th scope="col">HF
+                    <a href="#" onclick="alert('Packet with blue dot Has Flashcard(s)'); return false;"><small>*</small></a>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -41,6 +44,9 @@
                            class="button danger">Delete</a>
                         <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>
                         <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>" class="button info">Study</a>
+                    </td>
+                    <td>
+                        <c:if test="${packetsWithFlashcards[packet.id] == true}"><span style="color: blue;">•</span></c:if>
                     </td>
                 </tr>
             </c:forEach>

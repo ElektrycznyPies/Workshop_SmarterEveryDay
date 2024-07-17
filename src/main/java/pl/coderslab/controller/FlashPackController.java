@@ -1,5 +1,7 @@
 package pl.coderslab.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,8 @@ import pl.coderslab.service.PacketService;
 import pl.coderslab.service.UserService;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("")
 public class FlashPackController {
+    private static final Logger logger = LoggerFactory.getLogger(FlashPackController.class);
 
     private final UserService userService;
     private final PacketService packetService;
@@ -45,7 +50,6 @@ public class FlashPackController {
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-
         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
             packet.setAuthor("");
         } else if ("nick".equals(authorType)) {
@@ -67,33 +71,33 @@ public class FlashPackController {
             throw new EntityNotFoundException("User not found");
         }
         List<Packet> userPackets = userService.getUserPackets(user.getId());
-        model.addAttribute("packets", userPackets);
-        model.addAttribute("packetsWithFlashcards", userPackets.stream()
+
+        List<Packet> sortedPackets = new ArrayList<>(userPackets);
+
+        sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); // sort. po name, bez case sens.
+
+        model.addAttribute("packets", sortedPackets);
+        model.addAttribute("packetsWithFlashcards", sortedPackets.stream()
                 .collect(Collectors.toMap(Packet::getId, p -> !p.getFlashcards().isEmpty())));
         return "userPacketsList";
     }
+
+
 
     // ADMIN: POKAŻ PAKIETY USERA
     @GetMapping("/admin/users/packets/{id}")
     public String showPackets(Model model, @PathVariable Long id) {
         User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
         List<Packet> userPackets = userService.getUserPackets(id);
+
+        List<Packet> sortedPackets = new ArrayList<>(userPackets);
+        sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); //sort. po name, bez case sens.
         model.addAttribute("user", user);
-        model.addAttribute("packets", userPackets);
+        model.addAttribute("packets", sortedPackets);
         return "adminUserPacketsList";
     }
 
     // EDYCJA PAKIETU
-//    @GetMapping("/flashpack/user/packets/edit/{id}")
-//    public String editPacketPage(@PathVariable Long id, Model model, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        model.addAttribute("packet", packet);
-//        return "userPacketEdit";
-//    }
 
     @GetMapping("/flashpack/user/packets/edit/{id}")
     public String editPacketPage(@PathVariable Long id, Model model, HttpSession session) {
@@ -106,17 +110,6 @@ public class FlashPackController {
         model.addAttribute("user", user);
         return "userPacketEdit";
     }
-
-
-//    @PostMapping("/flashpack/user/packets/edit")
-//    public String editPacket(@ModelAttribute Packet packet, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        packetService.updatePacket(packet);
-//        return "redirect:/flashpack/user/packets";
-//    }
 
     @PostMapping("/flashpack/user/packets/edit")
     public String editPacket(@ModelAttribute Packet packet, @RequestParam(required = false) String authorType, HttpSession session) {
@@ -175,7 +168,21 @@ public class FlashPackController {
             throw new EntityNotFoundException("User not found");
         }
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        model.addAttribute("flashcards", packet.getFlashcards());
+        List<Flashcard> sortedFlashcards = new ArrayList<>(packet.getFlashcards());
+        sortedFlashcards.sort(Comparator.comparing(flashcard -> flashcard.getName().toLowerCase()));
+
+        int lenOfDisplayedLink = 24; // ile liter linku pokazać w tabelce
+        List<String> shortImageLinks = sortedFlashcards.stream()
+                .map(flashcard -> {
+                    String imageLink = flashcard.getImageLink();
+                    return imageLink != null && imageLink.length() > lenOfDisplayedLink
+                            ? imageLink.substring(imageLink.length() - lenOfDisplayedLink)
+                            : imageLink;
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("flashcards", sortedFlashcards);
+        model.addAttribute("shortImageLinks", shortImageLinks);
         model.addAttribute("packetId", id);
         model.addAttribute("packetName", packet.getName());
         model.addAttribute("showFields", packet.getShowFields());
@@ -241,15 +248,4 @@ public class FlashPackController {
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
-    // ROZPOCZNIJ SESJĘ NAUKI
-//    @GetMapping("/flashpack/user/packets/{id}/study")
-//    public String startStudySession(@PathVariable Long id, Model model, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        model.addAttribute("packet", packet);
-//        return "studySession";
-//    }
 }
