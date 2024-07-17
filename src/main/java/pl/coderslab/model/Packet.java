@@ -65,6 +65,9 @@ public class Packet {
     @Size(max=100)
     private String name;
 
+    @Column(length = 100)
+    private String author;
+
     @Size(max=1000)
     private String description;
 
@@ -96,10 +99,10 @@ public class Packet {
     public Packet() {
     }
 
-    public Packet(Long id, String name, String description, Set<String> showFields, String compareField,
-                  Timestamp created_at, Timestamp updated_at, Set<User> users, Set<Flashcard> flashcards, Set<StudySession> studySessions) {
+    public Packet(Long id, String name, String author, String description, Set<String> showFields, String compareField, Timestamp created_at, Timestamp updated_at, Set<User> users, Set<Flashcard> flashcards, Set<StudySession> studySessions) {
         this.id = id;
         this.name = name;
+        this.author = author;
         this.description = description;
         this.showFields = showFields;
         this.compareField = compareField;
@@ -110,6 +113,13 @@ public class Packet {
         this.studySessions = studySessions;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public Set<String> getShowFields() {
         return showFields;

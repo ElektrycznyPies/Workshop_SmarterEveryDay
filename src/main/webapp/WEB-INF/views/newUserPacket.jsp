@@ -5,7 +5,7 @@
 
 <html>
 <head>
-    <title>Create New Packet</title>
+    <title>Create new packet</title>
 </head>
 <body>
 <div class="container">
@@ -23,48 +23,36 @@
         <div>
             <input type="submit" value="Create Packet"/>
         </div>
+        <div class="form-group">
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" class="form-control" placeholder="Anonymous">
+        </div>
+        <div class="form-group">
+            <input type="radio" id="useNick" name="authorType" value="nick">
+            <label for="useNick">Use nick</label>
+            <input type="radio" id="useName" name="authorType" value="name">
+            <label for="useName">Use name</label>
+        </div>
     </form:form>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const authorInput = document.getElementById('author');
+        const useNickRadio = document.getElementById('useNick');
+        const useNameRadio = document.getElementById('useName');
+
+        useNickRadio.addEventListener('change', function() {
+            if (this.checked) {
+                authorInput.value = '${user.firstName}';
+            }
+        });
+
+        useNameRadio.addEventListener('change', function() {
+            if (this.checked) {
+                authorInput.value = '${user.fullName}';
+            }
+        });
+    });
+</script>
 </body>
 </html>
-<%--<html>--%>
-<%--<head>--%>
-<%--    <title>User Packets</title>--%>
-<%--</head>--%>
-<%--<body>--%>
-<%--<div class="container">--%>
-<%--    <h1>Packets for ${user.firstName} ${user.lastName}</h1>--%>
-<%--    <c:choose>--%>
-<%--        <c:when test="${empty packets}">--%>
-<%--            <p>This user has no packets.</p>--%>
-<%--        </c:when>--%>
-<%--        <c:otherwise>--%>
-<%--            <section class="grid" id="packets">--%>
-<%--                <table class="striped full-width">--%>
-<%--                    <thead>--%>
-<%--                    <tr>--%>
-<%--                        <th scope="col">Packet Name</th>--%>
-<%--                        <th scope="col">Description</th>--%>
-<%--                        <th scope="col">Action</th>--%>
-<%--                    </tr>--%>
-<%--                    </thead>--%>
-<%--                    <tbody>--%>
-<%--                    <c:forEach items="${packets}" var="packet">--%>
-<%--                        <tr scope="row">--%>
-<%--                            <td><c:out value="${packet.name}"/></td>--%>
-<%--                            <td><c:out value="${packet.description}"/></td>--%>
-<%--                            <td>--%>
-<%--                                <a href="<c:url value="/admin/users/packets/edit/${packet.id}"/>" class="button secondary">Edit</a>--%>
-<%--                                <a href="<c:url value="/admin/users/packets/delete/${packet.id}"/>" class="button danger" onclick="return confirm('Are you sure?')">Delete</a>--%>
-<%--                            </td>--%>
-<%--                        </tr>--%>
-<%--                    </c:forEach>--%>
-<%--                    </tbody>--%>
-<%--                </table>--%>
-<%--            </section>--%>
-<%--        </c:otherwise>--%>
-<%--    </c:choose>--%>
-<%--    <a href="<c:url value="/admin/users/all"/>" class="button">Back to Users List</a>--%>
-<%--</div>--%>
-<%--</body>--%>
-<%--</html>--%>

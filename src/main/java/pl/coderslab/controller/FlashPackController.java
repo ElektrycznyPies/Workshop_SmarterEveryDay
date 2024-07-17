@@ -40,15 +40,23 @@ public class FlashPackController {
     }
 
     @PostMapping("/flashpack/new/packet")
-    public String createNewPacket(@ModelAttribute Packet packet, HttpSession session) {
+    public String createNewPacket(@ModelAttribute Packet packet, @RequestParam(required = false) String authorType, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        //Packet savedPacket = packetService.addPacket(packet, user);
+
+        if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
+            packet.setAuthor("");
+        } else if ("nick".equals(authorType)) {
+            packet.setAuthor(user.getFirstName()); // tu podmienić potem na nick
+        } else if ("name".equals(authorType)) {
+            packet.setAuthor(user.getFullName());
+        }
         packetService.addPacket(packet, user);
         return "redirect:/flashpack/user/packets";
     }
+
 
     // USER: POKAŻ WŁASNE PAKIETY
 
@@ -76,6 +84,17 @@ public class FlashPackController {
     }
 
     // EDYCJA PAKIETU
+//    @GetMapping("/flashpack/user/packets/edit/{id}")
+//    public String editPacketPage(@PathVariable Long id, Model model, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        model.addAttribute("packet", packet);
+//        return "userPacketEdit";
+//    }
+
     @GetMapping("/flashpack/user/packets/edit/{id}")
     public String editPacketPage(@PathVariable Long id, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -84,16 +103,47 @@ public class FlashPackController {
         }
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         model.addAttribute("packet", packet);
+        model.addAttribute("user", user);
         return "userPacketEdit";
     }
 
+
+//    @PostMapping("/flashpack/user/packets/edit")
+//    public String editPacket(@ModelAttribute Packet packet, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        packetService.updatePacket(packet);
+//        return "redirect:/flashpack/user/packets";
+//    }
+
     @PostMapping("/flashpack/user/packets/edit")
-    public String editPacket(@ModelAttribute Packet packet, HttpSession session) {
+    public String editPacket(@ModelAttribute Packet packet, @RequestParam(required = false) String authorType, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        packetService.updatePacket(packet);
+
+        // Pobierz istniejący pakiet z bazy danych
+        Packet existingPacket = packetService.getPacket(packet.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+
+        // Aktualizuj pola pakietu
+        existingPacket.setName(packet.getName());
+        existingPacket.setDescription(packet.getDescription());
+
+        // Obsługa pola author
+        if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
+            existingPacket.setAuthor("");
+        } else if ("nick".equals(authorType)) {
+            existingPacket.setAuthor(user.getFirstName()); // potem zmienić na nick
+        } else if ("name".equals(authorType)) {
+            existingPacket.setAuthor(user.getFullName());
+        } else {
+            existingPacket.setAuthor(packet.getAuthor());
+        }
+        packetService.updatePacket(existingPacket);
         return "redirect:/flashpack/user/packets";
     }
 

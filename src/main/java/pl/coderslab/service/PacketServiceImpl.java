@@ -115,14 +115,16 @@ public Optional<Packet> getPacket(Long id) {
 
     @Override
     @Transactional
-    public void updatePacket(Packet updatedPacket) {
-        Packet existingPacket = packetRepository.findById(updatedPacket.getId())
+    public void updatePacket(Packet packet) {
+        Packet existingPacket = packetRepository.findById(packet.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-
-        existingPacket.setName(updatedPacket.getName());
-        existingPacket.setDescription(updatedPacket.getDescription());
+        existingPacket.setName(packet.getName());
+        existingPacket.setDescription(packet.getDescription());
+        existingPacket.setAuthor(packet.getAuthor());
+        // Aktualizuj inne pola, jeśli są
         packetRepository.save(existingPacket);
     }
+
     @Override
     @Transactional
     public void updateStudySettings(Long packetId, Set<String> showFields, String compareField) {
