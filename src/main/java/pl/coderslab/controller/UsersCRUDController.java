@@ -34,12 +34,18 @@ public class UsersCRUDController {
     public String showAll(Model model) {
         List<User> allUsers = userService.getAllUsers();
 
-        Map<Long, Boolean> usersWithPackets = allUsers.stream()
+        Map<Long, Boolean> usersWithExclusivePackets = allUsers.stream()
                 .collect(Collectors.toMap(User::getId, user -> user.getPackets().stream()
                                 .anyMatch(packet -> packet.getUsers().size() == 1 && packet.getUsers().contains(user))
                 )); // czy user jest przypisany do pakietu, do kt. jest przypisany tylko 1 user, i ten user to on :)
 
-        model.addAttribute("usersWithPackets", usersWithPackets);
+        Map<Long, Boolean> usersWithSharedPackets = allUsers.stream()
+                .collect(Collectors.toMap(User::getId, user -> user.getPackets().stream()
+                        .anyMatch(packet -> packet.getUsers().size() > 1 && packet.getUsers().contains(user))
+                )); // czy user jest przypisany do pakietu, do kt. jest przypisany ponad 1 user
+
+        model.addAttribute("usersWithExclusivePackets", usersWithExclusivePackets);
+        model.addAttribute("usersWithSharedPackets", usersWithSharedPackets);
         model.addAttribute("users", userService.getAllUsers());
         return "adminUsersList";  // nazwa pliku
     }

@@ -16,15 +16,15 @@
     <form:form method="POST" modelAttribute="packet" action="/flashpack/user/packets/edit">
         <form:hidden path="id"/>
         <div class="form-group">
-            <form:label path="name">Packet Name:</form:label>
+            <form:label path="name">Packet name</form:label>
             <form:input path="name"/>
         </div>
         <div class="form-group">
-            <form:label path="description">Description:</form:label>
+            <form:label path="description">Description</form:label>
             <form:textarea path="description"/>
         </div>
         <div class="form-group">
-            <label for="author">Author:</label>
+            <label for="author">Author</label>
             <input type="text" id="author" name="author" class="form-control" value="${packet.author}" placeholder="Anonymous">
         </div>
         <div class="form-group">
@@ -45,13 +45,6 @@
         const useNickRadio = document.getElementById('useNick');
         const useNameRadio = document.getElementById('useName');
 
-        // ustawiam: początkowy autor
-        if (authorInput.value === '${user.nick}') {
-            useNickRadio.checked = true;
-        } else if (authorInput.value === '${user.fullName}') {
-            useNameRadio.checked = true;
-        }
-
         useNickRadio.addEventListener('change', function() {
             if (this.checked) {
                 authorInput.value = '${user.nick}';
@@ -63,6 +56,12 @@
                 authorInput.value = '${user.fullName}';
             }
         });
+
+        authorInput.addEventListener('input', function() {
+            useNickRadio.checked = false;
+            useNameRadio.checked = false;
+        });
     });
-</script></body>
+</script>
+</body>
 </html>

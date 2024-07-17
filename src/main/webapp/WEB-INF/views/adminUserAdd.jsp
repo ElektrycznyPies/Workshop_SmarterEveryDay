@@ -4,29 +4,29 @@
 <%@ include file="header.jsp" %>
 <html>
 <head>
-    <title>Add User</title>
+    <title>Add user</title>
 </head>
 <body>
 
 <main class="container">
     <section class="grid">
-        <h2 class="text-center">Add User</h2>
+        <h2 class="text-center">Add user</h2>
 
         <form:form method="post" modelAttribute="user">
 
             <form:hidden path="id"/>
 
         <div class="form-group">
-            <label for="firstName">First Name</label>
+            <label for="firstName">First name</label>
             <form:input path="firstName" class="input"/>
         </div>
 
         <div class="form-group">
-            <label for="lastName">Last Name</label>
+            <label for="lastName">Last name</label>
             <form:input path="lastName" class="input"/>
         </div>
         <div class="form-group">
-            <label for="nick">Last Name</label>
+            <label for="nick">Nick</label>
             <form:input path="nick" class="input"/>
         </div>
 

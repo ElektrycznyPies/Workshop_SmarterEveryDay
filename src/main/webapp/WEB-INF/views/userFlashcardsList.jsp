@@ -16,7 +16,7 @@
     <h4>Packet name: ${packetName}</h4>
     <c:choose>
         <c:when test="${empty flashcards}">
-        <p>No flashcards</p>
+        <p>No flashcards in this packet</p>
         <form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
             <button type="submit" class="primary">Add Flashcard</button>
         </form>

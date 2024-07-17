@@ -22,8 +22,6 @@ public class HomeController {
     @GetMapping("")
     public String homePage(Model model) {
         model.addAttribute("user", new User());
-        System.out.println("\033[36m}}}}}}}}}}}}}}}}TESTING}}}}}}}}}}}}}}}}}}\033[0m");
-
         return "homePage"; // Nazwa pliku widoku
     }
 

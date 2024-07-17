@@ -20,39 +20,73 @@
     </c:when>
     <c:otherwise>
 
-    <section class="grid" id="tables">
-        <table class="striped full-width">
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Actions</th>
-                <th scope="col">HF
-                    <a href="#" onclick="alert('Packet with blue dot Has Flashcard(s)'); return false;"><small>*</small></a>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${packets}" var="packet">
-                <tr scope="row">
-                    <td><c:out value="${packet.name}"/></td>
-                    <td><c:out value="${packet.description}"/></td>
-                    <td>
-                        <a href="<c:url value='/flashpack/user/packets/edit/${packet.id}'/>" class="button secondary">Edit</a>
-                        <a href="<c:url value='/flashpack/user/packets/delete/${packet.id}'/>"
-                           onclick="return confirm('${packetsWithFlashcards[packet.id] ? 'Are you sure? This packet CONTAINS FLASHCARDS!' : 'Are you sure? This packet is empty.'}')"
-                           class="button danger">Delete</a>
-                        <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>
-                        <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>" class="button info">Study</a>
-                    </td>
-                    <td>
-                        <c:if test="${packetsWithFlashcards[packet.id] == true}"><span style="color: blue;">•</span></c:if>
-                    </td>
+<%--    <section class="grid" id="tables">--%>
+<%--        <table class="striped full-width">--%>
+<%--            <thead>--%>
+<%--            <tr>--%>
+<%--                <th scope="col">Name</th>--%>
+<%--                <th scope="col">Description</th>--%>
+<%--                <th scope="col">Actions</th>--%>
+<%--                <th scope="col">HF--%>
+<%--                    <a href="#" onclick="alert('Packet with blue dot Has Flashcard(s)'); return false;">*</a>--%>
+<%--                </th>--%>
+<%--            </tr>--%>
+<%--            </thead>--%>
+<%--            <tbody>--%>
+<%--            <c:forEach items="${packets}" var="packet">--%>
+<%--                <tr scope="row">--%>
+<%--                    <td><c:out value="${packet.name}"/></td>--%>
+<%--                    <td><c:out value="${packet.description}"/></td>--%>
+<%--                        <a href="<c:url value='/flashpack/user/packets/edit/${packet.id}'/>" class="button secondary">Edit</a>--%>
+<%--                        <a href="<c:url value='/flashpack/user/packets/delete/${packet.id}'/>"--%>
+<%--                           onclick="return confirm('${packetsWithFlashcards[packet.id] ? 'Are you sure? This packet CONTAINS FLASHCARDS!' : 'Are you sure? This packet is empty.'}')"--%>
+<%--                           class="button danger">Delete</a>--%>
+<%--                        <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>--%>
+<%--                        <c:if test="${packetsWithFlashcards[packet.id] == true}"><a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> | Study!</a></c:if>--%>
+<%--                    </td>--%>
+<%--                    <td>--%>
+<%--                        <c:if test="${packetsWithFlashcards[packet.id] == true}"><span style="color: blue;">•</span></c:if>--%>
+<%--                    </td>--%>
+<%--                </tr>--%>
+<%--            </c:forEach>--%>
+<%--            </tbody>--%>
+<%--        </table>--%>
+<%--    </section>--%>
+        <section class="grid" id="tables">
+            <table class="striped full-width">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
+                    <th scope="col">HF
+                        <a href="#" onclick="alert('Packet with blue dot Has Flashcard(s)'); return false;">*</a>
+                    </th>
                 </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </section>
+                </thead>
+                <tbody>
+                <c:forEach items="${packets}" var="packet">
+                    <tr>
+                        <td><c:out value="${packet.name}"/></td>
+                        <td><c:out value="${packet.description}"/></td>
+                        <td>
+                            <a href="<c:url value='/flashpack/user/packets/edit/${packet.id}'/>" class="button secondary">Edit</a>
+                            <a href="<c:url value='/flashpack/user/packets/delete/${packet.id}'/>"
+                               onclick="return confirm('${packetsWithFlashcards[packet.id] ? 'Are you sure? This packet CONTAINS FLASHCARDS!' : 'Are you sure? This packet is empty.'}')"
+                               class="button danger">Delete</a>
+                            <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>
+                            <c:if test="${packetsWithFlashcards[packet.id] == true}">
+                                <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> Study!</a>
+                            </c:if>
+                        </td>
+                        <td>
+                            <c:if test="${packetsWithFlashcards[packet.id] == true}"><span style="color: blue;">•</span></c:if>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </section>
     </c:otherwise>
     </c:choose>
 </div>

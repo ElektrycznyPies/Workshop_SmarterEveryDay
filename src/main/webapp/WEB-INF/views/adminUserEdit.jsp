@@ -4,13 +4,13 @@
 <%@ include file="header.jsp" %>
 <html>
 <head>
-    <title>Edit User</title>
+    <title>Edit user</title>
 </head>
 <body>
 
 <main class="container">
     <section class="grid">
-        <h2 class="text-center">Edit User</h2>
+        <h2 class="text-center">Edit user</h2>
 
         <c:url var="edit_url" value="/admin/users/edit"/>
         <form:form method="post" modelAttribute="user" action="${edit_url}">

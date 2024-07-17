@@ -37,6 +37,28 @@ public class FlashPackController {
         this.flashcardService = flashcardService;
     }
 
+
+
+    // ADMIN: POKAŻ PAKIETY USERA
+    @GetMapping("/admin/users/packets/{id}")
+    public String showPackets(Model model, @PathVariable Long id) {
+        User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
+        List<Packet> userPackets = userService.getUserPackets(id);
+
+        List<Packet> sortedPackets = new ArrayList<>(userPackets);
+        sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); //sort. po name, bez case sens.
+        model.addAttribute("user", user);
+        model.addAttribute("packets", sortedPackets);
+        return "adminUserPacketsList";
+    }
+
+    //ADMIN USUWA PAKIET
+    @GetMapping("/admin/users/packets/{userId}/delete/{packetId}")
+    public String admintPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
+        packetService.deletePacket(packetId);
+        return "redirect:/admin/users/packets/" + userId;
+    }
+
     // NOWY PAKIET
     @GetMapping("/flashpack/new/packet")
     public String newPacketPage(Model model) {
@@ -71,30 +93,13 @@ public class FlashPackController {
             throw new EntityNotFoundException("User not found");
         }
         List<Packet> userPackets = userService.getUserPackets(user.getId());
-
         List<Packet> sortedPackets = new ArrayList<>(userPackets);
-
         sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); // sort. po name, bez case sens.
 
         model.addAttribute("packets", sortedPackets);
         model.addAttribute("packetsWithFlashcards", sortedPackets.stream()
                 .collect(Collectors.toMap(Packet::getId, p -> !p.getFlashcards().isEmpty())));
         return "userPacketsList";
-    }
-
-
-
-    // ADMIN: POKAŻ PAKIETY USERA
-    @GetMapping("/admin/users/packets/{id}")
-    public String showPackets(Model model, @PathVariable Long id) {
-        User user = userService.getUser(id).orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
-        List<Packet> userPackets = userService.getUserPackets(id);
-
-        List<Packet> sortedPackets = new ArrayList<>(userPackets);
-        sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); //sort. po name, bez case sens.
-        model.addAttribute("user", user);
-        model.addAttribute("packets", sortedPackets);
-        return "adminUserPacketsList";
     }
 
     // EDYCJA PAKIETU
@@ -171,13 +176,25 @@ public class FlashPackController {
         List<Flashcard> sortedFlashcards = new ArrayList<>(packet.getFlashcards());
         sortedFlashcards.sort(Comparator.comparing(flashcard -> flashcard.getName().toLowerCase()));
 
-        int lenOfDisplayedLink = 24; // ile liter linku pokazać w tabelce
+        int lenOfShortValue = 24; // ile liter linku pokazać w tabelce
         List<String> shortImageLinks = sortedFlashcards.stream()
                 .map(flashcard -> {
                     String imageLink = flashcard.getImageLink();
-                    return imageLink != null && imageLink.length() > lenOfDisplayedLink
-                            ? imageLink.substring(imageLink.length() - lenOfDisplayedLink)
+                    return imageLink != null && imageLink.length() > lenOfShortValue
+                            ? imageLink.substring(imageLink.length() - lenOfShortValue)
                             : imageLink;
+                })
+                .collect(Collectors.toList());
+
+
+
+        // *********************** sprawdzić ******************************
+        List<String> shortAdditionalText = sortedFlashcards.stream()
+                .map(flashcard -> {
+                    String addText = flashcard.getAdditionalText();
+                    return addText != null && addText.length() > lenOfShortValue
+                            ? addText.substring(addText.length() - lenOfShortValue)
+                            : addText;
                 })
                 .collect(Collectors.toList());
 

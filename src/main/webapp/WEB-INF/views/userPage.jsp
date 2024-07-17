@@ -9,6 +9,12 @@
 </head>
 <body>
 <main class="container">
+    </section>
+    <section id="profile">
+        <div class="content">
+            <a href="<c:url value='/user/edit'/>" class="button">Edit your profile</a>
+        </div>
+    </section>
     <section id="stats">
         <details>
             <summary>Your statistics</summary>
