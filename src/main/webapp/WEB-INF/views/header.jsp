@@ -8,28 +8,6 @@
     <meta name="description" content="Simple flashcard learning tool." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css" />
 
-    <%--PŁYNNE ROZWIJANIE:--%>
-    <%--    <style>--%>
-<%--        details .content {--%>
-<%--            max-height: 0;--%>
-<%--            overflow: hidden;--%>
-<%--            transition: max-height 0.5s ease-out;--%>
-<%--        }--%>
-<%--        summary .content {--%>
-<%--            max-height: 0;--%>
-<%--            overflow: hidden;--%>
-<%--            transition: max-height 0.5s ease-out;--%>
-<%--        }--%>
-
-<%--        details[open] .content {--%>
-<%--            max-height: 1500px; /* dostosować */--%>
-<%--            transition: max-height 0.5s ease-in;--%>
-<%--        }--%>
-<%--        details .content {--%>
-<%--            max-height: 500px; /* dostosować */--%>
-<%--            transition: max-height 0.5s ease-in;--%>
-<%--        }--%>
-<%--    </style>--%>
 </head>
 <body>
 <header class="container">
@@ -74,7 +52,7 @@
                             </div>
                             <div class="col-2" align="right">
 <%--       LINKI JAKO BUTTONY:  <small tabindex="1"><a role="button" href="<c:url value='/user/home'/>">Main page</a></small>--%>
-                                <small tabindex="1"><a role="button" href="<c:url value='/user/home'/>">Main page</a></small>
+                                <small tabindex="1"><a href="<c:url value='/user/home'/>">Main page</a></small>
                             </div>
                             <div class="col-2" align="right">
                                         <small><a href="<c:url value='/logout'/>">Logout</a></small>
@@ -127,30 +105,5 @@
     </section>
 </header>
 
-<!-- Skrypt JavaScript -->
-<%--<script>--%>
-<%--    document.addEventListener('DOMContentLoaded', function() {--%>
-<%--        document.querySelectorAll('details').forEach((el) => {--%>
-<%--            const summary = el.querySelector('summary');--%>
-<%--            const content = el.querySelector('.content');--%>
-<%--            el.open = false;  // Ensure it's closed initially--%>
-<%--            summary.addEventListener('click', (e) => {--%>
-<%--                e.preventDefault();--%>
-<%--                if (el.open) {--%>
-<%--                    el.open = false;--%>
-<%--                    requestAnimationFrame(() => {--%>
-<%--                        content.style.maxHeight = content.scrollHeight + 'px';--%>
-<%--                        requestAnimationFrame(() => {--%>
-<%--                            content.style.maxHeight = '0';--%>
-<%--                        });--%>
-<%--                    });--%>
-<%--                } else {--%>
-<%--                    el.open = true;--%>
-<%--                    content.style.maxHeight = content.scrollHeight + 'px';--%>
-<%--                }--%>
-<%--            });--%>
-<%--        });--%>
-<%--    });--%>
-<%--</script>--%>
 </body>
 </html>

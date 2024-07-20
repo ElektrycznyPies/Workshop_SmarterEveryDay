@@ -28,21 +28,13 @@
 
     }
 </style>
-<%--<main class="container">--%>
-<%--    <c:set var="myContext" value="${pageContext.request.contextPath}"/>--%>
-<%--    <div style="text-align: right;">--%>
-<%--        <p>Correct answers: ${correctAnswers}</p>--%>
-<%--        <p>Wrong answers: ${wrongAnswers}</p>--%>
-<%--    </div>--%>
-<%--    <h2>Study session for packet: ${packet.name}</h2>--%>
+
 <main class="container">
     <c:set var="myContext" value="${pageContext.request.contextPath}"/>
     <div>
     <div class="header">
         <h2>Study session for packet: ${packet.name}</h2></div>
-        <div class="stats">
-            <p>Correct answers: ${correctAnswers}</p>
-            <p>Wrong answers: ${wrongAnswers}</p>
+        <div class="stats"><p><span style="color: green"> Correct answers:</span> ${correctAnswers} | <span style="color: darkred">Wrong answers:</span> ${wrongAnswers}</p>
         </div>
     </div>
 
@@ -62,14 +54,21 @@
         <c:if test="${packet.showFields.contains('additionalText')}">
             <p>Additional Text: ${flashcard.additionalText}</p>
         </c:if>
-        <form action="/flashpack/user/packets/${packet.id}/study/answer" method="post">
-            <input type="text" name="answer" placeholder="Your answer"/>
+        <form id="answerForm" action="/flashpack/user/packets/${packet.id}/study/answer" method="post">
+<%--        <form action="/flashpack/user/packets/${packet.id}/study/answer" method="post">--%>
+            <input type="text" name="answer" placeholder="Your answer" autofocus />
             <button type="submit">Submit</button>
         </form>
     </div>
     <form action="/flashpack/user/packets/${packet.id}/study/end" method="post">
         <button type="submit">End session</button>
     </form>
+
 </main>
+<c:if test="${not empty correctAnswer}">
+    <script>
+        alert("Correct answer: ${correctAnswer}");
+    </script>
+</c:if>
 </body>
 </html>

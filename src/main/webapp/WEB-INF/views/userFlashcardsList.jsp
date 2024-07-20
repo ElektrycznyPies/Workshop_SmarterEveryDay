@@ -22,17 +22,21 @@
         </form>
     </c:when>
     <c:otherwise>
-        <p>Select fields to show during study session</p>
+        <p>Select fields to show during study session
+        <a href="#" onclick="alert('These elements will be presented to you during the study session (eg.: if you want to learn birds\' names by their photos, select Image here, but not Name)'); return false;">*</a>
+        </p>
         <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">
             <div class="grid container">
                 <div><label><input type="checkbox" name="showFields" value="name" ${showFields.contains('name') ? 'checked' : ''}> Name</label></div>
                 <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word 1</label></div>
                 <div><label><input type="checkbox" name="showFields" value="word2" ${showFields.contains('word2') ? 'checked' : ''}> Word 2</label></div>
                 <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional text</label></div>
-                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image 1</label></div>
+                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image</label></div>
 <%--                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink2') ? 'checked' : ''}> Image 2</label></div>--%>
             </div>
-        <p>Select field to check against for correct answer</p>
+        <p>Select field to check against for correct answer
+            <a href="#" onclick="alert('Your answer will have to match this element (eg.: if you want to learn birds\' names by their photos, select Name here, but not Image)'); return false;">*</a>
+        </p>
         <div class="grid container">
             <div><label><input type="radio" name="compareField" value="name" ${compareField == 'name' ? 'checked' : ''}> Name</label></div>
             <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word 1</label></div>

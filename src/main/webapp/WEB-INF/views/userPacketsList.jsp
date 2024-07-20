@@ -26,10 +26,9 @@
                     <th scope="col">Name</th>
                     <th scope="col">Description</th>
                     <th scope="col">Actions</th>
-                    <th scope="col">HF
-                        <a href="#" onclick="alert('Packet with blue dot Has Flashcard(s)'); return false;">*</a>
+                    <th>FNo.
+                        <a href="#" onclick="alert('Number of flashcards in this packet'); return false;">*</a>
                     </th>
-                    <th>No.</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,12 +46,7 @@
                                 <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> Study!</a>
                             </c:if>
                         </td>
-                        <td>
-                            <c:if test="${packetsWithFlashcards[packet.id] > 0}"><span style="color: blue;">•</span></c:if>
-                        </td>
-                        <td>
-                        ${packetsWithFlashcards[packet.id]}
-                        </td>
+                        <td>${packetsWithFlashcards[packet.id]}</td>
                     </tr>
                 </c:forEach>
                 </tbody>
