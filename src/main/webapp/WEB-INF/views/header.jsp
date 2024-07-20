@@ -39,7 +39,7 @@
             <h4>Simple flashcard learning tool</h4>
             <c:choose>
 
-                <%--                NIKT NIE JEST ZALOGOWANY lub nieznana rola--%>
+                <%--  NIKT NIE JEST ZALOGOWANY lub nieznana rola--%>
                 <c:when test="${empty sessionScope.user && sessionScope.user.role != 0 && sessionScope.user.role != 1}">
 
                 <footer>
@@ -65,7 +65,7 @@
                     </footer>
                 </c:when>
 
-                <%--                ZALOGOWANY ZWYKŁY USER--%>
+                <%--  ZALOGOWANY ZWYKŁY USER--%>
                 <c:when test="${sessionScope.user.role == 0}">
                     <footer>
                         <div class="grid">
@@ -73,7 +73,8 @@
                                 <small>Hello, <c:out value="${sessionScope.user.firstName}"/></small>
                             </div>
                             <div class="col-2" align="right">
-                                <small role="button" tabindex="1"><a href="<c:url value='/user/home'/>">Main page</a></small>
+<%--       LINKI JAKO BUTTONY:  <small tabindex="1"><a role="button" href="<c:url value='/user/home'/>">Main page</a></small>--%>
+                                <small tabindex="1"><a role="button" href="<c:url value='/user/home'/>">Main page</a></small>
                             </div>
                             <div class="col-2" align="right">
                                         <small><a href="<c:url value='/logout'/>">Logout</a></small>
@@ -81,7 +82,7 @@
                             <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
-                                        <small><a href="${prevUrl}" class="button">Back</a></small>
+                                        <small><a href="${prevUrl}">Back</a></small>
                                     </c:when>
                                     <c:otherwise>
                                         <small><a href="<c:url value='/about'/>" class="button">About</a></small>

@@ -7,9 +7,18 @@
     <title>Study Session</title>
 </head>
 <body>
+<style>
+    .res-img {
+        width: 600px;
+        height: 400px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        padding: 5px;
+    }
+</style>
 <main class="container">
     <c:set var="myContext" value="${pageContext.request.contextPath}"/>
-    <c:set var="contextPath" value="${pageContext.request.contextPath}" />
     <div style="text-align: right;">
         <p>Correct answers: ${correctAnswers}</p>
         <p>Wrong answers: ${wrongAnswers}</p>
@@ -23,14 +32,7 @@
             <p>Word: ${flashcard.word}</p>
         </c:if>
         <c:if test="${packet.showFields.contains('imageLink')}">
-            <p>1: <img src="${myContext}/${flashcard.imageLink}" /></p>
-            <p>2: <img src="webapp/images/${flashcard.imageLink}" /></p>
-            <p>3: <img src="images/${flashcard.imageLink}" /></p>
-            <p>4: <img src="/images/${flashcard.imageLink}" /></p>
-            <p>5: <img src="${pageContext.request.contextPath}/images/${flashcard.imageLink}" alt="Image" /></p>
-            <p>6: <img src="${flashcard.imageLink}" alt="Image" /></p>
-            <p>ContextPath: <c:out value="${pageContext.request.contextPath}" /></p>
-            <p>ContextPath2: <c:out value="${myContext}" /></p>
+            <p><img class="res-img" src="${myContext}/${flashcard.imageLink}" /></p>
         </c:if>
         <c:if test="${packet.showFields.contains('soundLink')}">
             <p><audio controls><source src="${flashcard.soundLink}" type="audio/mpeg"></audio></p>

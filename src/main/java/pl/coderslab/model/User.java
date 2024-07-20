@@ -26,7 +26,7 @@ public class User {
     @Size(min = 2, max = 100)
     @Column(name = "last_name")
     private String lastName;
-    @Size(min = 1, max = 100)
+    @Size(max = 100)
     @Column(name = "nick")
     private String nick;
     @NotBlank

@@ -43,7 +43,7 @@ public class StudyController {
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         studySessionService.startSession(user, packet);
         List<Flashcard> flashcards = flashcardService.getFlashcardsByPacketId(id);
-        Collections.shuffle(flashcards); // Losowe mieszanie fiszek
+        Collections.shuffle(flashcards); // losowe mieszanie fiszek
         session.setAttribute("flashcards", flashcards);
         session.setAttribute("currentIndex", 0);
         session.setAttribute("correctAnswers", 0);

@@ -145,14 +145,6 @@ public class FlashPackController {
         return "redirect:/flashpack/user/packets";
     }
 
-    @PostMapping("/flashpack/user/packets/{packetId}/update-study-settings")
-    public String updateStudySettings(@PathVariable Long packetId,
-                                      @RequestParam(required = false) Set<String> showFields,
-                                      @RequestParam(required = false) String compareField) {
-        packetService.updateStudySettings(packetId, showFields, compareField);
-        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
-    }
-
     // USUWANIE PAKIETU
     @GetMapping("/flashpack/user/packets/delete/{id}")
     public String deletePacket(@PathVariable Long id, HttpSession session) {
@@ -181,25 +173,23 @@ public class FlashPackController {
                 .map(flashcard -> {
                     String imageLink = flashcard.getImageLink();
                     return imageLink != null && imageLink.length() > lenOfShortValue
-                            ? imageLink.substring(imageLink.length() - lenOfShortValue)
+                            ? "…" + imageLink.substring(imageLink.length() - lenOfShortValue)
                             : imageLink;
                 })
                 .collect(Collectors.toList());
 
-
-
-        // *********************** sprawdzić ******************************
-        List<String> shortAdditionalText = sortedFlashcards.stream()
+        List<String> shortAdditionalTexts = sortedFlashcards.stream()
                 .map(flashcard -> {
                     String addText = flashcard.getAdditionalText();
                     return addText != null && addText.length() > lenOfShortValue
-                            ? addText.substring(addText.length() - lenOfShortValue)
+                            ? addText.substring(0, lenOfShortValue) + "…"
                             : addText;
                 })
                 .collect(Collectors.toList());
 
         model.addAttribute("flashcards", sortedFlashcards);
         model.addAttribute("shortImageLinks", shortImageLinks);
+        model.addAttribute("shortAdditionalTexts", shortAdditionalTexts);
         model.addAttribute("packetId", id);
         model.addAttribute("packetName", packet.getName());
         model.addAttribute("showFields", packet.getShowFields());
@@ -262,6 +252,14 @@ public class FlashPackController {
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
     public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id) {
         flashcardService.deleteFlashcard(id);
+        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+    }
+
+    @PostMapping("/flashpack/user/packets/{packetId}/update-study-settings")
+    public String updateStudySettings(@PathVariable Long packetId,
+                                      @RequestParam(required = false) Set<String> showFields,
+                                      @RequestParam(required = false) String compareField) {
+        packetService.updateStudySettings(packetId, showFields, compareField);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 

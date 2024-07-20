@@ -59,11 +59,17 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public ViewResolver viewResolver() {
+    public ViewResolver viewResolver1() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations("/webapp/", "webapp", "/webapp/images/", "/images/");
     }
 
     @Override

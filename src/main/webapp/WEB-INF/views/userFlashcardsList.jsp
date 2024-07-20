@@ -69,10 +69,10 @@
                                 <tr scope="row">
                                     <td><c:out value="${flashcard.name}"/></td>
                                     <td><c:out value="${flashcard.word}"/></td>
-                                    <td><c:out value="…${shortImageLinks[status.index]}"/>
+                                    <td><c:out value="${shortImageLinks[status.index]}"/>
                                     </td>
                                     <td><c:out value="${flashcard.soundLink}"/></td>
-                                    <td><c:out value="${flashcard.additionalText}"/></td>
+                                    <td><c:out value="${shortAdditionalTexts[status.index]}"/></td>
                                     <td>
                                         <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/edit/${flashcard.id}'/>" class="button secondary">Edit</a>
                                         <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/delete/${flashcard.id}'/>" onclick="return confirm('Are you sure?')" class="button danger">Delete</a>

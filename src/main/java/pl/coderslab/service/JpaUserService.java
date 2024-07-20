@@ -54,40 +54,6 @@ public class JpaUserService implements UserService {
         userRepository.save(user);
     }
 
-//
-//    @Transactional
-//    public void deleteUser(Long id) {
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-//
-//        // przy kasowaniu usera jego pakiety zostają przypisane userowi id = 0 (defaultUser)
-//
-//        // znajdź użytkownika o id = 0 (defaultUser)
-//        User defaultUser = userRepository.findById(0L)
-//                .orElseThrow(() -> new EntityNotFoundException("Default user not found"));
-//
-//        // przypisz pakiety do defaultUser
-//        Set<Packet> userPackets = new HashSet<>(user.getPackets());
-//        for (Packet packet : userPackets) {
-//            packet.getUsers().remove(user);
-//            packet.getUsers().add(defaultUser);
-//            defaultUser.getPackets().add(packet);
-//            packetRepository.save(packet);
-//        }
-//
-//        // wyczyść pakiety kasowanego usera
-//        user.getPackets().clear();
-//
-//        // usuń jego sesje nauki
-//        List<StudySession> studySessions = studySessionRepository.findByUserId(id);
-//        studySessionRepository.deleteAll(studySessions);
-//
-//        // zapisz zmiany dla defaultUser
-//        userRepository.save(defaultUser);
-//
-//        // usuń kasowanego użytkownika
-//        userRepository.delete(user);
-//    }
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)

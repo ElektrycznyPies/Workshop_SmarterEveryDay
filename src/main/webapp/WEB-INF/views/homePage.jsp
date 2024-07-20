@@ -38,7 +38,7 @@
         <section id="register">
             <p>Register yourself as a new user</p>
             <div>
-                <%--        <%@ include file="registerUserComponent.jsp" %> --%>
+                <%--        <%@ include file="@@gisterUserComponent.jsp" %> --%>
                 <form:form modelAttribute="user" action="${pageContext.request.contextPath}/register" method="post">
                     <form:hidden path="id"/>
                     <div>
@@ -85,7 +85,7 @@
 <%--            <section id="register">--%>
 <%--                <p>Register yourself as a new user</p>--%>
 <%--                <div>--%>
-<%--                        &lt;%&ndash;        <%@ include file="registerUserComponent.jsp" %> &ndash;%&gt;--%>
+<%--                        &lt;%&ndash;        <%@ include file="@@gisterUserComponent.jsp" %> &ndash;%&gt;--%>
 <%--                        <form:form modelAttribute="user" action="${pageContext.request.contextPath}/register" method="post">--%>
 <%--                            <form:hidden path="id"/>--%>
 <%--                            <div>--%>
