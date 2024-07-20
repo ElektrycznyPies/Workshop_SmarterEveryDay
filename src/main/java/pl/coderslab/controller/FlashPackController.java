@@ -178,6 +178,15 @@ public class FlashPackController {
                 })
                 .collect(Collectors.toList());
 
+        List<String> shortImageLinks2 = sortedFlashcards.stream()
+                .map(flashcard -> {
+                    String imageLink = flashcard.getImageLink();
+                    return imageLink != null && imageLink.length() > lenOfShortValue
+                            ? "…" + imageLink.substring(imageLink.length() - lenOfShortValue)
+                            : imageLink;
+                })
+                .collect(Collectors.toList());
+
         List<String> shortAdditionalTexts = sortedFlashcards.stream()
                 .map(flashcard -> {
                     String addText = flashcard.getAdditionalText();
@@ -189,6 +198,7 @@ public class FlashPackController {
 
         model.addAttribute("flashcards", sortedFlashcards);
         model.addAttribute("shortImageLinks", shortImageLinks);
+        model.addAttribute("shortImageLinks2", shortImageLinks2);
         model.addAttribute("shortAdditionalTexts", shortAdditionalTexts);
         model.addAttribute("packetId", id);
         model.addAttribute("packetName", packet.getName());
@@ -246,7 +256,6 @@ public class FlashPackController {
         String title = type.equals("image") ? "Choose image file" : "Choose sound file";
         return FileChooserUtil.chooseFile(title);
     }
-
 
     // KASOWANIE FISZKI
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")

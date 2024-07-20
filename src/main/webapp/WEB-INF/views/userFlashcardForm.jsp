@@ -19,19 +19,23 @@
     <form:form action="${isEdit ? '/flashpack/user/packets/'.concat(packetId).concat('/flashcards/edit') : '/flashpack/user/packets/'.concat(packetId).concat('/flashcards/add')}" method="post" modelAttribute="flashcard">
         <form:hidden path="id" />
 
-        <label for="name">Name:</label>
+        <label for="name">Name</label>
         <form:input path="name" id="name" required="true" />
 
-        <label for="word">Word:</label>
+        <label for="word">Word 1</label>
         <form:input path="word" id="word" />
 
-        <label for="imageLink">Image Link:</label>
-        <form:input path="imageLink" id="imageLink" />
-        <button type="button" onclick="chooseFile('image')" class="secondary">Choose image</button>
+        <label for="word">Word 2</label>
+        <form:input path="word2" id="word2" />
 
-        <label for="soundLink">Sound Link:</label>
-        <form:input path="soundLink" id="soundLink" />
-        <button type="button" onclick="chooseFile('sound')" class="secondary">Choose sound</button>
+        <fieldset role="group">
+                <button type="button" onclick="chooseFile('image')">Click to choose</button>
+                <form:input path="imageLink" name="imageLink" id="imageLink" placeholder="Image"/>
+        </fieldset>
+
+        <%--        <label for="soundLink">Sound Link:</label>--%>
+<%--        <form:input path="soundLink" id="soundLink" />--%>
+<%--        <button type="button" onclick="chooseFile('sound')" class="secondary">Choose</button>--%>
 
         <label for="additionalText">Additional Text:</label>
         <form:textarea path="additionalText" id="additionalText" rows="4" />
@@ -51,5 +55,6 @@
             });
     }
 </script>
+
 </body>
 </html>

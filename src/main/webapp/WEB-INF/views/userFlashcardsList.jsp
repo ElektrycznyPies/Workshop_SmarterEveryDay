@@ -26,23 +26,22 @@
         <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">
             <div class="grid container">
                 <div><label><input type="checkbox" name="showFields" value="name" ${showFields.contains('name') ? 'checked' : ''}> Name</label></div>
-                <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word</label></div>
-                <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional Text</label></div>
-                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image</label></div>
+                <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word 1</label></div>
+                <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word2') ? 'checked' : ''}> Word 2</label></div>
+                <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional text</label></div>
+                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image 1</label></div>
+                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink2') ? 'checked' : ''}> Image 2</label></div>
             </div>
         <p>Select the field to compare for correct answer:</p>
         <div class="grid container">
             <div><label><input type="radio" name="compareField" value="name" ${compareField == 'name' ? 'checked' : ''}> Name</label></div>
-            <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word</label></div>
-            <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional Text</label></div>
+            <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word 1</label></div>
+            <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word2' ? 'checked' : ''}> Word 2</label></div>
+            <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional text</label></div>
+            <div></div>
             <div></div>
         </div>
-<%--        <div class="grid container">--%>
-<%--            <button type="submit" class="primary">Save Study Settings</button>--%>
-<%--            <div></div>--%>
-<%--            <div></div>--%>
-<%--        </div>--%>
-<%--        </form>--%>
+
 
         <div class="grid container">
             <div><button type="submit" class="primary">Save Study Settings</button></div></form>
@@ -57,10 +56,11 @@
                             <thead>
                             <tr>
                                 <th scope="col">Name</th>
-                                <th scope="col">Word</th>
-                                <th scope="col">Image Link</th>
-                                <th scope="col">Sound Link</th>
-                                <th scope="col">Additional Text</th>
+                                <th scope="col">Word 1</th>
+                                <th scope="col">Word 2</th>
+                                <th scope="col">Image 1</th>
+<%--                                <th scope="col">Image 2</th>--%>
+                                <th scope="col">Add. text</th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>
@@ -69,9 +69,11 @@
                                 <tr scope="row">
                                     <td><c:out value="${flashcard.name}"/></td>
                                     <td><c:out value="${flashcard.word}"/></td>
+                                    <td><c:out value="${flashcard.word2}"/></td>
                                     <td><c:out value="${shortImageLinks[status.index]}"/>
                                     </td>
-                                    <td><c:out value="${flashcard.soundLink}"/></td>
+<%--                                    <td><c:out value="${shortImageLinks2[status.index]}"/>--%>
+<%--                                    </td>--%>
                                     <td><c:out value="${shortAdditionalTexts[status.index]}"/></td>
                                     <td>
                                         <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/edit/${flashcard.id}'/>" class="button secondary">Edit</a>

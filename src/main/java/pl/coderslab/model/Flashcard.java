@@ -19,16 +19,18 @@ public class Flashcard {
     @Size(max=100)
     private String word;
     @Size(max=100)
+    private String word2;
+    @Size(max=100)
     private String imageLink;
+    @Size(max=100)
+    private String imageLink2;
     @Size(max=100)
     private String soundLink;
     @Size(max=1000)
     private String additionalText;
-
     @ManyToOne
     @JoinColumn(name = "packet_id", nullable = false)
     private Packet pack;
-
     @CreationTimestamp
     private Timestamp created_at;
     @UpdateTimestamp
@@ -36,16 +38,34 @@ public class Flashcard {
 
     public Flashcard(){
     }
-    public Flashcard(Long id, String name, String word, String imageLink, String soundLink,
-                     String additionalText, Timestamp created_at, Timestamp updated_at) {
+    public Flashcard(Long id, String name, String word, String word2, String imageLink, String imageLink2, String soundLink, String additionalText, Packet pack, Timestamp created_at, Timestamp updated_at) {
         this.id = id;
         this.name = name;
         this.word = word;
+        this.word2 = word2;
         this.imageLink = imageLink;
+        this.imageLink2 = imageLink2;
         this.soundLink = soundLink;
         this.additionalText = additionalText;
+        this.pack = pack;
         this.created_at = created_at;
         this.updated_at = updated_at;
+    }
+
+    public String getWord2() {
+        return word2;
+    }
+
+    public void setWord2(String word2) {
+        this.word2 = word2;
+    }
+
+    public String getImageLink2() {
+        return imageLink2;
+    }
+
+    public void setImageLink2(String imageLink2) {
+        this.imageLink2 = imageLink2;
     }
 
     public Long getId() {
@@ -126,9 +146,12 @@ public class Flashcard {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", word='" + word + '\'' +
+                ", word2='" + word2 + '\'' +
                 ", imageLink='" + imageLink + '\'' +
+                ", imageLink2='" + imageLink2 + '\'' +
                 ", soundLink='" + soundLink + '\'' +
                 ", additionalText='" + additionalText + '\'' +
+                ", pack=" + pack +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 '}';
