@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.coderslab.app.FileChooserUtil;
 import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
@@ -33,7 +34,6 @@ public class FlashPackController {
         this.packetService = packetService;
         this.flashcardService = flashcardService;
     }
-
 
 
     // ADMIN: POKAŻ PAKIETY USERA
@@ -122,15 +122,15 @@ public class FlashPackController {
             throw new EntityNotFoundException("User not found");
         }
 
-        // Pobierz istniejący pakiet z bazy danych
+        // pobiera istniejący pakiet z bazy danych
         Packet existingPacket = packetService.getPacket(packet.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
 
-        // Aktualizuj pola pakietu
+        // aktualizuje pola pakietu
         existingPacket.setName(packet.getName());
         existingPacket.setDescription(packet.getDescription());
 
-        // Obsługa pola author
+        // obsł. pola author
         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
             existingPacket.setAuthor("");
         } else if ("nick".equals(authorType)) {
@@ -220,12 +220,17 @@ public class FlashPackController {
 
 
     @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
-    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard) {
+    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file) {
         Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        if (!file.isEmpty()) {
+            String fileName = file.getOriginalFilename();
+            flashcard.setImageLink(fileName);
+            } else {
+                throw new IllegalArgumentException("Invalid file location");
+            }
         flashcardService.addFlashcard(flashcard, packet);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
-
 
     // EDYCJA FISZKI, JEDEN FORM.
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/edit/{id}")
@@ -240,21 +245,19 @@ public class FlashPackController {
     }
 
     @PostMapping("/flashpack/user/packets/{packetId}/flashcards/edit")
-    public String editFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard) {
+    public String editFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file) {
         Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         flashcard.setPack(packet);
+        if (!file.isEmpty()) {
+            String fileName = file.getOriginalFilename();
+            flashcard.setImageLink(fileName);
+        } else {
+            throw new IllegalArgumentException("Invalid file location");
+        }
         flashcardService.updateFlashcard(flashcard);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
-    // WYBÓR PLIKU OBRAZ/DŹWIĘK
-
-    @GetMapping("/choose-file")
-    @ResponseBody
-    public String chooseFile(@RequestParam String type) {
-        String title = type.equals("image") ? "Choose image file" : "Choose sound file";
-        return FileChooserUtil.chooseFile(title);
-    }
 
     // KASOWANIE FISZKI
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")

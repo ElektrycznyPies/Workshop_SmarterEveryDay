@@ -15,7 +15,7 @@
     <p>URL: ${url}</p>
     <hr>
     <p>Details: ${exception}</p>
-    <a href="<c:url value='/'/>">Return to home page</a>
+    <a href="<c:url value='/user/home'/>">Return to home page</a>
 
 
 </main>

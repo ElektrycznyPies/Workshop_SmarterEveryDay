@@ -30,7 +30,7 @@
                 <div><label><input type="checkbox" name="showFields" value="word2" ${showFields.contains('word2') ? 'checked' : ''}> Word 2</label></div>
                 <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional text</label></div>
                 <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image 1</label></div>
-                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink2') ? 'checked' : ''}> Image 2</label></div>
+<%--                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink2') ? 'checked' : ''}> Image 2</label></div>--%>
             </div>
         <p>Select field to check against for correct answer</p>
         <div class="grid container">
@@ -38,7 +38,7 @@
             <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word 1</label></div>
             <div><label><input type="radio" name="compareField" value="word2" ${compareField == 'word2' ? 'checked' : ''}> Word 2</label></div>
             <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional text</label></div>
-            <div></div>
+<%--            <div></div>--%>
             <div></div>
         </div>
 

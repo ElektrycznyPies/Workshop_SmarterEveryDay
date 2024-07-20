@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ include file="header.jsp" %>
+<%@ include file="headerStudy.jsp" %>
 <html>
 <head>
     <title>Study Session</title>
@@ -15,15 +15,37 @@
         border: 1px solid #ccc;
         border-radius: 15px;
         padding: 5px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stats {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+
     }
 </style>
+<%--<main class="container">--%>
+<%--    <c:set var="myContext" value="${pageContext.request.contextPath}"/>--%>
+<%--    <div style="text-align: right;">--%>
+<%--        <p>Correct answers: ${correctAnswers}</p>--%>
+<%--        <p>Wrong answers: ${wrongAnswers}</p>--%>
+<%--    </div>--%>
+<%--    <h2>Study session for packet: ${packet.name}</h2>--%>
 <main class="container">
     <c:set var="myContext" value="${pageContext.request.contextPath}"/>
-    <div style="text-align: right;">
-        <p>Correct answers: ${correctAnswers}</p>
-        <p>Wrong answers: ${wrongAnswers}</p>
+    <div>
+    <div class="header">
+        <h2>Study session for packet: ${packet.name}</h2></div>
+        <div class="stats">
+            <p>Correct answers: ${correctAnswers}</p>
+            <p>Wrong answers: ${wrongAnswers}</p>
+        </div>
     </div>
-    <h2>Study session for packet: ${packet.name}</h2>
+
     <div class="flashcard">
         <c:if test="${packet.showFields.contains('name')}">
             <p>Name: ${flashcard.name}</p>

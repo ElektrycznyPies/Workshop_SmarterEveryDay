@@ -25,17 +25,6 @@ public class UserController {
     }
 
     // EDYCJA PROFILU PRZEZ USERA
-//    @GetMapping(value = "/edit/{id}")
-//    public String showEditProfileForm(@PathVariable Long id, Model model) {
-//        Optional<User> userOptional = userService.getUser(id);
-//        if (userOptional.isPresent()) {
-//            model.addAttribute("user", userOptional.get());
-//            return "userProfileEdit";
-//        } else {
-//            // Handle the case where the user is not found
-//            return "userPage";
-//        }
-//    }
     @GetMapping("/edit")
     public String showEditProfileForm(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");

@@ -13,10 +13,19 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value= HttpStatus.NOT_FOUND)
-    public String handleException(HttpServletRequest req, Exception exception, Model model) {
+    public String handleException1(HttpServletRequest req, Exception exception, Model model) {
         model.addAttribute("exception", exception);
         model.addAttribute("url", req.getRequestURL() );
         model.addAttribute("errorMessage", exception.getMessage());
         return "error";
     }
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(value= HttpStatus.NOT_FOUND)
+    public String handleException2(HttpServletRequest req, Exception exception, Model model) {
+        model.addAttribute("exception", exception);
+        model.addAttribute("url", req.getRequestURL() );
+        model.addAttribute("errorMessage", exception.getMessage());
+        return "error";
+    }
+
 }

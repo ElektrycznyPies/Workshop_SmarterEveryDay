@@ -50,18 +50,10 @@ public class FlashcardServiceImpl implements FlashcardService {
 
     @Override
     public void updateFlashcard(Flashcard updatedFlashcard) {
-        Flashcard existingFlashcard = flashcardRepository.findById(updatedFlashcard.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
-
-        // updatuję poszczególne pola, żeby w razie zostawienia pustych nie zapisał jako null
-        existingFlashcard.setName(updatedFlashcard.getName());
-        existingFlashcard.setWord(updatedFlashcard.getWord());
-        existingFlashcard.setWord2(updatedFlashcard.getWord2());
-        existingFlashcard.setImageLink(updatedFlashcard.getImageLink());
-        existingFlashcard.setSoundLink(updatedFlashcard.getSoundLink());
-        existingFlashcard.setAdditionalText(updatedFlashcard.getAdditionalText());
-
-        flashcardRepository.save(existingFlashcard);
+        if (!flashcardRepository.existsById(updatedFlashcard.getId())) {
+            throw new EntityNotFoundException("Flashcard not found");
+        }
+        flashcardRepository.save(updatedFlashcard);
     }
 
     @Override
