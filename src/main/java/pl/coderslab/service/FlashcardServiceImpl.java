@@ -56,6 +56,7 @@ public class FlashcardServiceImpl implements FlashcardService {
         // updatuję poszczególne pola, żeby w razie zostawienia pustych nie zapisał jako null
         existingFlashcard.setName(updatedFlashcard.getName());
         existingFlashcard.setWord(updatedFlashcard.getWord());
+        existingFlashcard.setWord2(updatedFlashcard.getWord2());
         existingFlashcard.setImageLink(updatedFlashcard.getImageLink());
         existingFlashcard.setSoundLink(updatedFlashcard.getSoundLink());
         existingFlashcard.setAdditionalText(updatedFlashcard.getAdditionalText());

@@ -15,10 +15,7 @@ import pl.coderslab.service.PacketService;
 import pl.coderslab.service.UserService;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -95,10 +92,12 @@ public class FlashPackController {
         List<Packet> userPackets = userService.getUserPackets(user.getId());
         List<Packet> sortedPackets = new ArrayList<>(userPackets);
         sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); // sort. po name, bez case sens.
-
         model.addAttribute("packets", sortedPackets);
         model.addAttribute("packetsWithFlashcards", sortedPackets.stream()
-                .collect(Collectors.toMap(Packet::getId, p -> !p.getFlashcards().isEmpty())));
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getFlashcards().size()
+                ))); // podaje liczbę fiszek w każdym pakiecie
         return "userPacketsList";
     }
 

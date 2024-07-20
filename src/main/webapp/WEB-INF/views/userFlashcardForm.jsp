@@ -25,7 +25,7 @@
         <label for="word">Word 1</label>
         <form:input path="word" id="word" />
 
-        <label for="word">Word 2</label>
+        <label for="word2">Word 2</label>
         <form:input path="word2" id="word2" />
 
         <fieldset role="group">

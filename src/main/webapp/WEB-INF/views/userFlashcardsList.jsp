@@ -22,21 +22,21 @@
         </form>
     </c:when>
     <c:otherwise>
-        <p>Select fields to show during study session:</p>
+        <p>Select fields to show during study session</p>
         <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">
             <div class="grid container">
                 <div><label><input type="checkbox" name="showFields" value="name" ${showFields.contains('name') ? 'checked' : ''}> Name</label></div>
                 <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word 1</label></div>
-                <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word2') ? 'checked' : ''}> Word 2</label></div>
+                <div><label><input type="checkbox" name="showFields" value="word2" ${showFields.contains('word2') ? 'checked' : ''}> Word 2</label></div>
                 <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional text</label></div>
                 <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image 1</label></div>
                 <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink2') ? 'checked' : ''}> Image 2</label></div>
             </div>
-        <p>Select the field to compare for correct answer:</p>
+        <p>Select field to check against for correct answer</p>
         <div class="grid container">
             <div><label><input type="radio" name="compareField" value="name" ${compareField == 'name' ? 'checked' : ''}> Name</label></div>
             <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word 1</label></div>
-            <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word2' ? 'checked' : ''}> Word 2</label></div>
+            <div><label><input type="radio" name="compareField" value="word2" ${compareField == 'word2' ? 'checked' : ''}> Word 2</label></div>
             <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional text</label></div>
             <div></div>
             <div></div>
@@ -44,10 +44,10 @@
 
 
         <div class="grid container">
-            <div><button type="submit" class="primary">Save Study Settings</button></div></form>
-            <div><a role="button" href="<c:url value='/flashpack/user/packets/${packetId}/study'/>" class="button primary">Start Study Session</a></div>
+            <div><button type="submit" class="primary">Save study settings</button></div></form>
+            <div><a role="button" href="<c:url value='/flashpack/user/packets/${packetId}/study'/>" class="button primary">Start study session</a></div>
             <div><form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
-                <button type="submit" class="primary">Add Flashcard</button></form></div>
+                <button type="submit" class="primary">Add flashcard</button></form></div>
 
         </div>
 
