@@ -110,6 +110,4 @@ public class UsersCRUDController {
         userService.deleteUser(id);
         return "redirect:/admin/users/all";
     }
-
-
 }

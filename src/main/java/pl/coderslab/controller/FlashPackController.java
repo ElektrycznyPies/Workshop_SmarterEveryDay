@@ -46,6 +46,11 @@ public class FlashPackController {
         sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); //sort. po name, bez case sens.
         model.addAttribute("user", user);
         model.addAttribute("packets", sortedPackets);
+        model.addAttribute("packetsWithFlashcards", sortedPackets.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getFlashcards().size()
+                ))); // podaje liczbę fiszek w każdym pakiecie
         return "adminUserPacketsList";
     }
 
@@ -92,6 +97,18 @@ public class FlashPackController {
         List<Packet> userPackets = userService.getUserPackets(user.getId());
         List<Packet> sortedPackets = new ArrayList<>(userPackets);
         sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); // sort. po name, bez case sens.
+
+//      DO IMPLEMENTACJI SKRÓCENIA DESCRIPTION NA LIŚCIE PAKIETÓW USERA:
+//        int lenOfShortValue = 24;
+//        List<String> shortDescriptions = sortedPackets.stream()
+//                .map(packet -> {
+//                    String desc = packet.getDescription();
+//                    return desc != null && desc.length() > lenOfShortValue
+//                            ? desc.substring(0, lenOfShortValue) + "…"
+//                            : desc;
+//                })
+//                .collect(Collectors.toList());
+
         model.addAttribute("packets", sortedPackets);
         model.addAttribute("packetsWithFlashcards", sortedPackets.stream()
                 .collect(Collectors.toMap(
@@ -222,15 +239,15 @@ public class FlashPackController {
     @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
     public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file) {
         Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             String fileName = file.getOriginalFilename();
             flashcard.setImageLink(fileName);
-            } else {
-                throw new IllegalArgumentException("Invalid file location");
             }
         flashcardService.addFlashcard(flashcard, packet);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
+
+
 
     // EDYCJA FISZKI, JEDEN FORM.
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/edit/{id}")
@@ -251,9 +268,8 @@ public class FlashPackController {
         if (!file.isEmpty()) {
             String fileName = file.getOriginalFilename();
             flashcard.setImageLink(fileName);
-        } else {
-            throw new IllegalArgumentException("Invalid file location");
         }
+
         flashcardService.updateFlashcard(flashcard);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }

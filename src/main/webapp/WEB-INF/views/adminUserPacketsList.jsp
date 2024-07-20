@@ -23,15 +23,19 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Author</th>
+                        <th>FNo.
+                            <a href="#" onclick="alert('Number of flashcards in this packet'); return false;">*</a>
+                        </th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${packets}" var="packet">
+                    <c:forEach items="${packets}" var="packet" varStatus="status">
                         <tr>
                             <td>${packet.name}</td>
                             <td>${packet.description}</td>
                             <td>${packet.author}</td>
+                            <td>${packetsWithFlashcards[packet.id]}</td>
                             <td>
                                 <a href="<c:url value='/admin/users/packets/${user.id}/delete/${packet.id}'/>"
                                    onclick="return confirm('Are you sure?')"
