@@ -20,11 +20,11 @@ public class StudySessionService {
 
     @Transactional
     public StudySession startSession(User user, Packet packet) {
-        StudySession session = new StudySession();
-        session.setUser(user);
-        session.setPacket(packet);
-        session.setStartTime(new Timestamp(System.currentTimeMillis()));
-        return studySessionRepository.save(session);
+        StudySession studySession = new StudySession();
+        studySession.setUser(user);
+        studySession.setPacket(packet);
+        studySession.setStartTime(new Timestamp(System.currentTimeMillis()));
+        return studySessionRepository.save(studySession);
     }
 
     public StudySession endSession(Long sessionId) {

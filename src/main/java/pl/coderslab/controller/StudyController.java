@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
+import pl.coderslab.model.StudySession;
 import pl.coderslab.model.User;
 import pl.coderslab.service.FlashcardService;
 import pl.coderslab.service.PacketService;
@@ -16,6 +17,7 @@ import pl.coderslab.service.StudySessionService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +54,10 @@ public class StudyController {
             throw new EntityNotFoundException("User not found");
         }
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        studySessionService.startSession(user, packet);
+        StudySession studySession = studySessionService.startSession(user, packet);
+        //studySessionService.startSession(user, packet);
+        session.setAttribute("studySessionId", studySession.getId());
+
         List<Flashcard> flashcards = flashcardService.getFlashcardsByPacketId(id);
 
         // powtórz fiszki repetitions razy
@@ -71,8 +76,8 @@ public class StudyController {
         model.addAttribute("correctAnswers", 0);
         model.addAttribute("wrongAnswers", 0);
         return "userStudy";
+        //return "redirect:/flashpack/user/packets/" + id + "/study";
     }
-
 
     @PostMapping("/flashpack/user/packets/{id}/study/answer")
     public String checkAnswer(@PathVariable Long id, @RequestParam String answer, Model model, HttpSession session) {
@@ -136,10 +141,12 @@ public class StudyController {
         }
     }
 
-
-
     @PostMapping("/flashpack/user/packets/{id}/study/end")
     public String endStudySession(@PathVariable Long id, HttpSession session) {
+        Long sessionId = (Long) session.getAttribute("studySessionId"); // Pobierz id sesji z sesji
+        if (sessionId != null) {
+            studySessionService.endSession(sessionId);
+        }
         session.removeAttribute("flashcards");
         session.removeAttribute("currentIndex");
         return "redirect:/flashpack/user/packets";

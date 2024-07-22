@@ -115,6 +115,13 @@ public class FlashPackController {
                         Packet::getId,
                         p -> p.getFlashcards().size()
                 ))); // podaje liczbę fiszek w każdym pakiecie
+        model.addAttribute("noFieldsSet", sortedPackets.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getShowFields().isEmpty() ||
+                                (p.getCompareField() == null || p.getCompareField().isEmpty() || p.getCompareField().isBlank())
+                        // sprawdza, czy każdy pakiet ma ustawione pola wyświetlania/porównawcze
+                )));
         return "userPacketsList";
     }
 
@@ -214,7 +221,7 @@ public class FlashPackController {
 
         model.addAttribute("flashcards", sortedFlashcards);
         model.addAttribute("shortImageLinks", shortImageLinks);
-        model.addAttribute("shortImageLinks2", shortImageLinks2);
+//        model.addAttribute("shortImageLinks2", shortImageLinks2);
         model.addAttribute("shortAdditionalTexts", shortAdditionalTexts);
         model.addAttribute("packetId", id);
         model.addAttribute("packetName", packet.getName());
