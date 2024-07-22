@@ -49,7 +49,17 @@
 
         <div class="grid container">
             <div><button type="submit" class="primary">Save study settings</button></div></form>
+
+    <c:choose>
+        <c:when test="${not empty showFields and not empty compareField}">
             <div><a role="button" href="<c:url value='/flashpack/user/packets/${packetId}/study'/>" class="button primary">Start study session</a></div>
+        </c:when>
+        <c:otherwise>
+            <div><button class="primary" disabled>Set fields to study</button></div>
+        </c:otherwise>
+    </c:choose>
+
+
             <div><form action="<c:url value='/flashpack/user/packets/${packetId}/flashcards/add'/>" method="get">
                 <button type="submit" class="primary">Add flashcard</button></form></div>
 

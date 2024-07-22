@@ -19,7 +19,7 @@
         <details>
             <summary>Your statistics</summary>
             <div class="content">
-                <%@ include file="statsUserComponent.jsp" %>
+                <%@ include file="userStatsComponent.jsp" %>
                 <%--            całkowity czas spędzony na nauce--%>
                 <%--            ulubiony pakiet -- czas spędzony w nim--%>
                 <%--            ranga na pakiet--%>
