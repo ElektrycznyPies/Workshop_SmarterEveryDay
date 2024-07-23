@@ -9,4 +9,5 @@ import java.util.List;
 public interface StudySessionRepository extends JpaRepository<StudySession, Long> {
     List<StudySession> findByUserId(Long userId);
     List<StudySession> findByPacketId(Long packetId);
+
 }

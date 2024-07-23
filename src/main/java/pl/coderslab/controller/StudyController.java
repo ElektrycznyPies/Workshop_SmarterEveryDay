@@ -18,9 +18,8 @@ import pl.coderslab.service.StudySessionService;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class StudyController {
@@ -55,9 +54,8 @@ public class StudyController {
         }
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         StudySession studySession = studySessionService.startSession(user, packet);
-        //studySessionService.startSession(user, packet);
         session.setAttribute("studySessionId", studySession.getId());
-
+        System.out.println("||||||||||||||||||||||||||| id study session: " + studySession.getId());
         List<Flashcard> flashcards = flashcardService.getFlashcardsByPacketId(id);
 
         // powtórz fiszki repetitions razy
@@ -101,6 +99,10 @@ public class StudyController {
 
         currentIndex++;
         if (currentIndex >= flashcards.size()) {
+            Long sessionId = (Long) session.getAttribute("studySessionId");
+            if (sessionId != null) {
+                studySessionService.endSession(sessionId);
+            }
             return "redirect:/flashpack/user/packets"; // wszystkie przerobione, koniec sesji
         }
         session.setAttribute("currentIndex", currentIndex);
@@ -144,12 +146,75 @@ public class StudyController {
     @PostMapping("/flashpack/user/packets/{id}/study/end")
     public String endStudySession(@PathVariable Long id, HttpSession session) {
         Long sessionId = (Long) session.getAttribute("studySessionId"); // Pobierz id sesji z sesji
+        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||| id study session END 1: " + sessionId + "packet id: " + id);
         if (sessionId != null) {
-            studySessionService.endSession(sessionId);
+            StudySession sessionToEnd = studySessionService.findSessionById(sessionId);
+            // Sprawdź, czy sesja jest powiązana z pakietem
+            if (sessionToEnd != null && sessionToEnd.getPacket().getId().equals(id)) {
+                studySessionService.endSession(sessionId);
+                System.out.println("||||||||||||||||||||||||||| id study session END 2: " + sessionId + "packet id: " + id);
+            } else {
+                throw new EntityNotFoundException("No session associated with this packet found.");
+            }
         }
+
         session.removeAttribute("flashcards");
         session.removeAttribute("currentIndex");
         return "redirect:/flashpack/user/packets";
     }
 
-}
+
+    @PostMapping("/user/home")
+    public String getStats(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        List<StudySession> studySessions = studySessionService.getSessionsPerPacket(user.getId());
+
+        // walidacja sesji - jeśli są z pustymi polami, to je pomija
+        List<StudySession> validSessions = studySessions.stream()
+                .filter(s -> s.getPacket() != null
+                        && s.getStartTime() != null
+                        && s.getEndTime() != null
+                        && s.getDuration() > 0)
+                .collect(Collectors.toList());
+
+        // sesje z pustymi polami usuwa nawet z bazy
+        studySessions.stream()
+                .filter(s -> s.getPacket() == null
+                        || s.getStartTime() == null
+                        || s.getEndTime() == null
+                        || s.getDuration() <= 0)
+                .forEach(s -> studySessionService.deleteStudySession(s.getId()));
+
+        // Sprawdź, czy validSessions nie jest puste
+        if (validSessions.isEmpty()) {
+            model.addAttribute("sortedPackets", Collections.emptyList());
+            model.addAttribute("totalDuration", 0);
+            return "userPage";
+        }
+
+        // grupuje sesje wg pakietu, sumuje czas trwania
+        Map<Packet, Long> durationMap = validSessions.stream()
+                .collect(Collectors.groupingBy(StudySession::getPacket,
+                        Collectors.summingLong(StudySession::getDuration)));
+
+        // sort. pakietów wg ogólnego czasu trwania
+        List<Packet> sortedPackets = durationMap.keySet().stream()
+                .sorted(Comparator.comparingLong(durationMap::get).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+
+        // całkowity czas nauki
+        long totalDuration = durationMap.values().stream().mapToLong(Long::longValue).sum();
+
+        model.addAttribute("sortedPackets", sortedPackets);
+        model.addAttribute("durationMap", durationMap);
+        model.addAttribute("totalDuration", totalDuration);
+        return "userPage";
+    }
+
+
+    }

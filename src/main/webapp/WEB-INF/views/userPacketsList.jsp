@@ -5,7 +5,7 @@
 
 <html>
 <head>
-    <title>Packets List</title>
+    <title>Packets list</title>
 </head>
 <body>
 <div class="container">
@@ -46,12 +46,10 @@
                                         <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> Study!</a>
                                     </c:when>
                                     <c:otherwise>
-                                        !<a href="#" onclick="alert('There are flashcards in this packet, but no display fields or compare field set up. To study this packet, click on Show Flashcards, then set-up display and compare fields'); return false;">*</a>
+                                        Alert<a href="#" onclick="alert('There are flashcards in this packet, but no display fields or compare field set up. To study this packet, click on Show Flashcards, then set-up display and compare fields'); return false;">*</a>
                                     </c:otherwise>
                                 </c:choose>
-
 <%--                                <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> Study!</a>--%>
-
                             </c:if>
                         </td>
                         <td>${packetsWithFlashcards[packet.id]}</td>

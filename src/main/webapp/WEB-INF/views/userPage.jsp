@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>--%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%@ include file="header.jsp" %>
 <html>
 <head>
@@ -19,10 +22,53 @@
         <details>
             <summary>Your statistics</summary>
             <div class="content">
-                <%@ include file="userStatsComponent.jsp" %>
-                <%--            całkowity czas spędzony na nauce--%>
-                <%--            ulubiony pakiet -- czas spędzony w nim--%>
-                <%--            ranga na pakiet--%>
+                <c:choose>
+                    <c:when test="${not empty sortedPackets}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Most studied packet(s)</th>
+                        <th>HH:MM:SS</th>
+                        <th>Avg correct answers</th>
+                        <th>Avg wrong answers</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <c:forEach var="packet" items="${sortedPackets}">
+                        <tr>
+                            <td>${packet.name}</td>
+                            <td>
+                                <c:set var="duration" value="${durationMap[packet]}" />
+                                <c:set var="hours" value="${duration / 3600}" />
+                                <c:set var="minutes" value="${(duration % 3600) / 60}" />
+                                <c:set var="seconds" value="${duration % 60}" />
+                                <fmt:formatNumber value="${hours}" pattern="00"/>:<fmt:formatNumber value="${minutes}" pattern="00"/>:<fmt:formatNumber value="${seconds}" pattern="00"/>
+                            </td>
+                            <td><!-- Wstaw tutaj logikę do obliczenia średnich poprawnych odpowiedzi --></td>
+                            <td><!-- Wstaw tutaj logikę do obliczenia średnich błędów --></td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td>Total study time:</td>
+                        <td>
+                            <c:set var="totalHours" value="${totalDuration / 3600}" />
+                            <c:set var="totalMinutes" value="${(totalDuration % 3600) / 60}" />
+                            <c:set var="totalSeconds" value="${totalDuration % 60}" />
+                            <fmt:formatNumber value="${totalHours}" pattern="00"/>:<fmt:formatNumber value="${totalMinutes}" pattern="00"/>:<fmt:formatNumber value="${totalSeconds}" pattern="00"/>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tfoot>
+                </table>
+                    </c:when>
+                    <c:otherwise>
+                        <p>No study sessions to analyze</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </details>
     </section>

@@ -15,10 +15,10 @@
                 <form action="${pageContext.request.contextPath}/login" method="post">
                     <fieldset role="group">
                 <div>
-                    <input type="email" name="email" placeholder="Email address" aria-label="Email address" autocomplete="email" value="dp@x.com"/>
+                    <input type="email" name="email" placeholder="Email address" aria-label="Email address" autocomplete="email" value="dpiot@x.com"/>
                 </div>
                 <div>
-                    <input type="password" name="password" placeholder="Password" aria-label="Password" value="parek"  />
+                    <input type="password" name="password" placeholder="Password" aria-label="Password" value="dpiot"  />
                 </div>
                 <button type="submit">QuickLog Admin</button>
                     </fieldset>

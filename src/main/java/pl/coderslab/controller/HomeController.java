@@ -4,19 +4,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.coderslab.model.StudySession;
 import pl.coderslab.model.User;
 import pl.coderslab.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
 
     private UserService userService;
-
-    public HomeController(UserService userService) {
+    private StudyController studyController;
+    public HomeController(UserService userService, StudyController studyController) {
         this.userService = userService;
+        this.studyController = studyController;
     }
 
     @GetMapping("")
@@ -33,8 +36,10 @@ public class HomeController {
     }
 
     @GetMapping("/user/home")
-    public String loggedPage() {
-        return "userPage"; // Nazwa pliku widoku
+    public String loggedPage(HttpSession sess, Model model) {
+
+        studyController.getStats(sess, model);
+        return "userPage";
     }
 
     @GetMapping("/t")
