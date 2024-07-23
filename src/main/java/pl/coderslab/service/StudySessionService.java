@@ -36,14 +36,6 @@ public class StudySessionService {
         return studySessionRepository.save(studySession);
     }
 
-//    public StudySession endSession(Long sessionId) {
-//        StudySession session = studySessionRepository.findById(sessionId)
-//                .orElseThrow(() -> new EntityNotFoundException("Session not found"));
-//        session.setEndTime(new Timestamp(System.currentTimeMillis()));
-//        session.setDuration((session.getEndTime().getTime() - session.getStartTime().getTime()) / 1000);
-//        return studySessionRepository.save(session);
-//    }
-
     public StudySession endSession(StudySession studySession) {
         studySession.setEndTime(new Timestamp(System.currentTimeMillis()));
         studySession.setDuration((studySession.getEndTime().getTime() - studySession.getStartTime().getTime()) / 1000);

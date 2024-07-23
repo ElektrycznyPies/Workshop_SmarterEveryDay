@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>--%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="header.jsp" %>
@@ -47,12 +47,30 @@
                                         <c:set var="seconds" value="${duration % 60}" />
                                         <fmt:formatNumber value="${hours}" pattern="00"/>:<fmt:formatNumber value="${minutes}" pattern="00"/>:<fmt:formatNumber value="${seconds}" pattern="00"/>
                                     </td>
-                                    <td>${avgCorrectTotalAnswers}</td>
-                                    <td>${avgCorrectRecentAnswers}</td>
-                                    <td>${avgCorrectLastOneAnswers}</td>
-                                    <td>${avgWrongTotalAnswers}</td>
-                                    <td>${avgWrongRecentAnswers}</td>
-                                    <td>${avgWrongLastOneAnswers}</td>
+                                    <td>
+                                        <c:set var="correctPercentageTotal" value="${correctAnswerPercentagesTotal[packet]}" />
+                                        <c:out value="${correctPercentageTotal != null ? correctPercentageTotal : 0}" />%
+                                    </td>
+                                    <td>
+                                        <c:set var="correctPercentageRecent" value="${correctAnswerPercentagesRecent[packet]}" />
+                                        <c:out value="${correctPercentageRecent != null ? correctPercentageRecent : 0}" />%
+                                    </td>
+                                    <td>
+                                        <c:set var="correctPercentageLastOne" value="${correctAnswerPercentagesLastOne[packet]}" />
+                                        <c:out value="${correctPercentageLastOne != null ? correctPercentageLastOne : 0}" />%
+                                    </td>
+                                    <td>
+                                        <c:set var="wrongPercentageTotal" value="${wrongAnswerPercentagesTotal[packet]}" />
+                                        <c:out value="${wrongPercentageTotal != null ? wrongPercentageTotal : 0}" />%
+                                    </td>
+                                    <td>
+                                        <c:set var="wrongPercentageRecent" value="${wrongAnswerPercentagesRecent[packet]}" />
+                                        <c:out value="${wrongPercentageRecent != null ? wrongPercentageRecent : 0}" />%
+                                    </td>
+                                    <td>
+                                        <c:set var="wrongPercentageLastOne" value="${wrongAnswerPercentagesLastOne[packet]}" />
+                                        <c:out value="${wrongPercentageLastOne != null ? wrongPercentageLastOne : 0}" />%
+                                    </td>
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -78,75 +96,6 @@
         </details>
     </section>
 
-<%--    <section id="stats">--%>
-<%--        <details>--%>
-<%--            <summary><p role="button">Your statistics</summary>--%>
-<%--            <div class="content">--%>
-<%--                <c:choose>--%>
-<%--                    <c:when test="${not empty sortedPackets}">--%>
-<%--                        <table>--%>
-<%--                            <thead>--%>
-<%--                            <tr>--%>
-<%--                                <th>10 most studied packet(s)</th>--%>
-<%--                                <th>HH:mm:ss</th>--%>
-<%--                                <th>Avg correct answers--%>
-<%--                                    <th>Total</th>--%>
-<%--                                    <th>Last 3 sess.</th>--%>
-<%--                                    <th>Last sess.</th>--%>
-<%--                                </th>--%>
-<%--                                <th>Avg wrong answers--%>
-<%--                                    <th>Total</th>--%>
-<%--                                    <th>Last 3 sess.</th>--%>
-<%--                                    <th>Last sess.</th>--%>
-<%--                                </th>--%>
-<%--                            </tr>--%>
-<%--                            </thead>--%>
-<%--                            <tbody>--%>
-<%--                            <c:forEach var="packet" items="${sortedPackets}">--%>
-<%--                                <tr>--%>
-<%--                                    <td>${packet.name}</td>--%>
-<%--                                    <td>--%>
-<%--                                        <c:set var="duration" value="${durationMap[packet]}" />--%>
-<%--                                        <c:set var="hours" value="${duration / 3600}" />--%>
-<%--                                        <c:set var="minutes" value="${(duration % 3600) / 60}" />--%>
-<%--                                        <c:set var="seconds" value="${duration % 60}" />--%>
-<%--                                        <fmt:formatNumber value="${hours}" pattern="00"/>:<fmt:formatNumber value="${minutes}" pattern="00"/>:<fmt:formatNumber value="${seconds}" pattern="00"/>--%>
-<%--                                    </td>--%>
-<%--                                    <td>--%>
-<%--                                        <td>${avgCorrectRecentAnswers}</td>--%>
-<%--                                        <td>${avgCorrectRecentAnswers}</td>--%>
-<%--                                        <td>${avgCorrectLastOneAnswers}</td>--%>
-<%--                                    </td>--%>
-<%--                                    <td>--%>
-<%--                                        <td>${avgWrongTotalAnswers}</td>--%>
-<%--                                        <td>${avgWrongRecentAnswers}</td>--%>
-<%--                                        <td>${avgWrongLastOneAnswers}</td>--%>
-<%--                                    </td>--%>
-<%--                                </tr>--%>
-<%--                            </c:forEach>--%>
-<%--                            </tbody>--%>
-<%--                            <tfoot>--%>
-<%--                            <tr>--%>
-<%--                                <td>Total study time:</td>--%>
-<%--                                <td>--%>
-<%--                                    <c:set var="totalHours" value="${totalDuration / 3600}" />--%>
-<%--                                    <c:set var="totalMinutes" value="${(totalDuration % 3600) / 60}" />--%>
-<%--                                    <c:set var="totalSeconds" value="${totalDuration % 60}" />--%>
-<%--                                    <fmt:formatNumber value="${totalHours}" pattern="00"/>:<fmt:formatNumber value="${totalMinutes}" pattern="00"/>:<fmt:formatNumber value="${totalSeconds}" pattern="00"/>--%>
-<%--                                </td>--%>
-<%--                                <td></td>--%>
-<%--                                <td></td>--%>
-<%--                            </tr>--%>
-<%--                            </tfoot>--%>
-<%--                        </table>--%>
-<%--                    </c:when>--%>
-<%--                    <c:otherwise>--%>
-<%--                        <p>No study sessions to analyze</p>--%>
-<%--                    </c:otherwise>--%>
-<%--                </c:choose>--%>
-<%--            </div>--%>
-<%--        </details>--%>
-<%--    </section>--%>
     <div class="grid">
 <%--    <section id="packages">--%>
             <div>

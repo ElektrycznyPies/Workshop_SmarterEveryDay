@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="headerStudy.jsp" %>
 <html>
 <head>
@@ -60,9 +61,10 @@
             <button type="submit">Submit</button>
         </form>
     </div>
-    <form action="/flashpack/user/packets/${packet.id}/study/end" method="post">
-        <button type="submit">End session</button>
-    </form>
+<%--    <form action="/flashpack/user/packets/${packet.id}/study/end" method="post">--%>
+        <form action="<c:url value='/flashpack/user/packets/${packet.id}/study/end'/>" method="post">
+            <button type="submit">End session</button>
+        </form>
 
 </main>
 <c:if test="${not empty correctAnswer}">
