@@ -247,6 +247,42 @@ public class StudyController {
         Map<Packet, Integer> correctAnswerPercentagesLastOne = new HashMap<>();
         Map<Packet, Integer> wrongAnswerPercentagesLastOne = new HashMap<>();
 
+//        for (StudySession s : validSessions) {
+//            Packet packet = s.getPacket();
+//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
+//            if (totalAnswers > 0) {
+//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
+//                int wrongPercentage = 100 - correctPercentage;
+//
+//                correctAnswerPercentagesTotal.merge(packet, correctPercentage, Integer::sum);
+//                wrongAnswerPercentagesTotal.merge(packet, wrongPercentage, Integer::sum);
+//            }
+//        }
+//
+//        for (StudySession s : recentSessions) {
+//            Packet packet = s.getPacket();
+//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
+//            if (totalAnswers > 0) {
+//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
+//                int wrongPercentage = 100 - correctPercentage;
+//
+//                correctAnswerPercentagesRecent.merge(packet, correctPercentage, Integer::sum);
+//                wrongAnswerPercentagesRecent.merge(packet, wrongPercentage, Integer::sum);
+//            }
+//        }
+//
+//        for (StudySession s : lastOneSession) {
+//            Packet packet = s.getPacket();
+//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
+//            if (totalAnswers > 0) {
+//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
+//                int wrongPercentage = 100 - correctPercentage;
+//
+//                correctAnswerPercentagesLastOne.merge(packet, correctPercentage, Integer::sum);
+//                wrongAnswerPercentagesLastOne.merge(packet, wrongPercentage, Integer::sum);
+//            }
+//        }
+
         for (StudySession s : validSessions) {
             Packet packet = s.getPacket();
             int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
@@ -254,8 +290,8 @@ public class StudyController {
                 int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
                 int wrongPercentage = 100 - correctPercentage;
 
-                correctAnswerPercentagesTotal.merge(packet, correctPercentage, Integer::sum);
-                wrongAnswerPercentagesTotal.merge(packet, wrongPercentage, Integer::sum);
+                correctAnswerPercentagesTotal.merge(packet, correctPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
+                wrongAnswerPercentagesTotal.merge(packet, wrongPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
             }
         }
 
@@ -266,8 +302,8 @@ public class StudyController {
                 int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
                 int wrongPercentage = 100 - correctPercentage;
 
-                correctAnswerPercentagesRecent.merge(packet, correctPercentage, Integer::sum);
-                wrongAnswerPercentagesRecent.merge(packet, wrongPercentage, Integer::sum);
+                correctAnswerPercentagesRecent.merge(packet, correctPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
+                wrongAnswerPercentagesRecent.merge(packet, wrongPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
             }
         }
 
@@ -278,10 +314,11 @@ public class StudyController {
                 int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
                 int wrongPercentage = 100 - correctPercentage;
 
-                correctAnswerPercentagesLastOne.merge(packet, correctPercentage, Integer::sum);
-                wrongAnswerPercentagesLastOne.merge(packet, wrongPercentage, Integer::sum);
+                correctAnswerPercentagesLastOne.merge(packet, correctPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
+                wrongAnswerPercentagesLastOne.merge(packet, wrongPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
             }
         }
+
 
         model.addAttribute("correctAnswerPercentagesTotal", correctAnswerPercentagesTotal);
         model.addAttribute("wrongAnswerPercentagesTotal", wrongAnswerPercentagesTotal);

@@ -24,8 +24,8 @@
                             <tr>
                                 <th rowspan="2">10 most studied packet(s)</th>
                                 <th rowspan="2">HH:mm:ss</th>
-                                <th colspan="3">Avg correct answers</th>
-                                <th colspan="3">Avg wrong answers</th>
+                                <th colspan="3" style="color: green">Avg correct answers</th>
+                                <th colspan="3" style="color: darkred">Avg wrong answers</th>
                             </tr>
                             <tr>
                                 <th>Total</th>
