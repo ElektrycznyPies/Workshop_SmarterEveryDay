@@ -247,42 +247,6 @@ public class StudyController {
         Map<Packet, Integer> correctAnswerPercentagesLastOne = new HashMap<>();
         Map<Packet, Integer> wrongAnswerPercentagesLastOne = new HashMap<>();
 
-//        for (StudySession s : validSessions) {
-//            Packet packet = s.getPacket();
-//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
-//            if (totalAnswers > 0) {
-//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
-//                int wrongPercentage = 100 - correctPercentage;
-//
-//                correctAnswerPercentagesTotal.merge(packet, correctPercentage, Integer::sum);
-//                wrongAnswerPercentagesTotal.merge(packet, wrongPercentage, Integer::sum);
-//            }
-//        }
-//
-//        for (StudySession s : recentSessions) {
-//            Packet packet = s.getPacket();
-//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
-//            if (totalAnswers > 0) {
-//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
-//                int wrongPercentage = 100 - correctPercentage;
-//
-//                correctAnswerPercentagesRecent.merge(packet, correctPercentage, Integer::sum);
-//                wrongAnswerPercentagesRecent.merge(packet, wrongPercentage, Integer::sum);
-//            }
-//        }
-//
-//        for (StudySession s : lastOneSession) {
-//            Packet packet = s.getPacket();
-//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
-//            if (totalAnswers > 0) {
-//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
-//                int wrongPercentage = 100 - correctPercentage;
-//
-//                correctAnswerPercentagesLastOne.merge(packet, correctPercentage, Integer::sum);
-//                wrongAnswerPercentagesLastOne.merge(packet, wrongPercentage, Integer::sum);
-//            }
-//        }
-
         for (StudySession s : validSessions) {
             Packet packet = s.getPacket();
             int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
@@ -307,18 +271,36 @@ public class StudyController {
             }
         }
 
-        for (StudySession s : lastOneSession) {
-            Packet packet = s.getPacket();
-            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
-            if (totalAnswers > 0) {
-                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
-                int wrongPercentage = 100 - correctPercentage;
+//        for (StudySession s : lastOneSession) {
+//            Packet packet = s.getPacket();
+//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
+//            if (totalAnswers > 0) {
+//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
+//                int wrongPercentage = 100 - correctPercentage;
+//
+//                correctAnswerPercentagesLastOne.merge(packet, correctPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
+//                wrongAnswerPercentagesLastOne.merge(packet, wrongPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
+//            }
+//        }
 
-                correctAnswerPercentagesLastOne.merge(packet, correctPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
-                wrongAnswerPercentagesLastOne.merge(packet, wrongPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
+        for (Packet packet : sortedPackets) {
+            List<StudySession> lastOneSessionForPacket = validSessions.stream()
+                    .filter(s -> s.getPacket().equals(packet))
+                    .sorted(Comparator.comparing(StudySession::getEndTime).reversed())
+                    .limit(1)
+                    .collect(Collectors.toList());
+
+            for (StudySession s : lastOneSessionForPacket) {
+                int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
+                if (totalAnswers > 0) {
+                    int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
+                    int wrongPercentage = 100 - correctPercentage;
+
+                    correctAnswerPercentagesLastOne.put(packet, correctPercentage);
+                    wrongAnswerPercentagesLastOne.put(packet, wrongPercentage);
+                }
             }
         }
-
 
         model.addAttribute("correctAnswerPercentagesTotal", correctAnswerPercentagesTotal);
         model.addAttribute("wrongAnswerPercentagesTotal", wrongAnswerPercentagesTotal);
