@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.coderslab.app.FileChooserUtil;
+import pl.coderslab.app.NameShortenerUtil;
 import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
@@ -192,32 +193,49 @@ public class FlashPackController {
         sortedFlashcards.sort(Comparator.comparing(flashcard -> flashcard.getName().toLowerCase()));
 
         int lenOfShortValue = 24; // ile liter linku pokazać w tabelce
+
+
+
         List<String> shortImageLinks = sortedFlashcards.stream()
-                .map(flashcard -> {
-                    String imageLink = flashcard.getImageLink();
-                    return imageLink != null && imageLink.length() > lenOfShortValue
-                            ? "…" + imageLink.substring(imageLink.length() - lenOfShortValue)
-                            : imageLink;
-                })
+                .map(flashcard -> NameShortenerUtil.shortenName(flashcard.getImageLink(), 2, 24))
                 .collect(Collectors.toList());
 
         List<String> shortImageLinks2 = sortedFlashcards.stream()
-                .map(flashcard -> {
-                    String imageLink = flashcard.getImageLink();
-                    return imageLink != null && imageLink.length() > lenOfShortValue
-                            ? "…" + imageLink.substring(imageLink.length() - lenOfShortValue)
-                            : imageLink;
-                })
+                .map(flashcard -> NameShortenerUtil.shortenName(flashcard.getImageLink(), 2,24))
                 .collect(Collectors.toList());
 
         List<String> shortAdditionalTexts = sortedFlashcards.stream()
-                .map(flashcard -> {
-                    String addText = flashcard.getAdditionalText();
-                    return addText != null && addText.length() > lenOfShortValue
-                            ? addText.substring(0, lenOfShortValue) + "…"
-                            : addText;
-                })
+                .map(flashcard -> NameShortenerUtil.shortenName(flashcard.getAdditionalText(), 1, 24))
                 .collect(Collectors.toList());
+
+
+//
+//        List<String> shortImageLinks = sortedFlashcards.stream()
+//                .map(flashcard -> {
+//                    String imageLink = flashcard.getImageLink();
+//                    return imageLink != null && imageLink.length() > lenOfShortValue
+//                            ? "…" + imageLink.substring(imageLink.length() - lenOfShortValue)
+//                            : imageLink;
+//                })
+//                .collect(Collectors.toList());
+//
+//        List<String> shortImageLinks2 = sortedFlashcards.stream()
+//                .map(flashcard -> {
+//                    String imageLink = flashcard.getImageLink();
+//                    return imageLink != null && imageLink.length() > lenOfShortValue
+//                            ? "…" + imageLink.substring(imageLink.length() - lenOfShortValue)
+//                            : imageLink;
+//                })
+//                .collect(Collectors.toList());
+//
+//        List<String> shortAdditionalTexts = sortedFlashcards.stream()
+//                .map(flashcard -> {
+//                    String addText = flashcard.getAdditionalText();
+//                    return addText != null && addText.length() > lenOfShortValue
+//                            ? addText.substring(0, lenOfShortValue) + "…"
+//                            : addText;
+//                })
+//                .collect(Collectors.toList());
 
         model.addAttribute("flashcards", sortedFlashcards);
         model.addAttribute("shortImageLinks", shortImageLinks);

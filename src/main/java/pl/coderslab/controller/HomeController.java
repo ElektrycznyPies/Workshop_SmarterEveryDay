@@ -37,7 +37,6 @@ public class HomeController {
 
     @GetMapping("/user/home")
     public String loggedPage(HttpSession sess, Model model) {
-
         studyController.getStats(sess, model);
         return "userPage";
     }

@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 @Table(name = "study_sessions")
 public class StudySession {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,17 +28,40 @@ public class StudySession {
 
     private Long duration;
 
+    @Column(name = "correct_answers")
+    private int correctAnswers;
+    @Column(name = "wrong_answers")
+    private int wrongAnswers;
+
     public StudySession() {
     }
 
     public StudySession(Long id, User user, Packet packet, Timestamp startTime,
-                         Timestamp endTime, Long duration) {
+                         Timestamp endTime, Long duration, int correctAnswers, int wrongAnswers) {
         this.id = id;
         this.user = user;
         this.packet = packet;
         this.startTime = startTime;
         this.endTime = endTime;
         this.duration = duration;
+        this.correctAnswers = correctAnswers;
+        this.wrongAnswers = wrongAnswers;
+    }
+
+    public int getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+    public void setCorrectAnswers(int correctAnswers) {
+        this.correctAnswers = correctAnswers;
+    }
+
+    public int getWrongAnswers() {
+        return wrongAnswers;
+    }
+
+    public void setWrongAnswers(int wrongAnswers) {
+        this.wrongAnswers = wrongAnswers;
     }
 
     public Long getId() {
@@ -92,8 +114,10 @@ public class StudySession {
 
     @Override
     public String toString() {
-        return "StudySessions{" +
-                "id=" + id +
+        return "StudySession{" +
+                "correctAnswers=" + correctAnswers +
+                ", wrongAnswers=" + wrongAnswers +
+                ", id=" + id +
                 ", user=" + user +
                 ", packet=" + packet +
                 ", startTime=" + startTime +
