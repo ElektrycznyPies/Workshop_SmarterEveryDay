@@ -39,7 +39,7 @@
                             <td>
                                 <a href="<c:url value='/admin/users/packets/${user.id}/delete/${packet.id}'/>"
                                    onclick="return confirm('Are you sure?')"
-                                   class="button danger">Delete</a>
+                                   class="button danger">Destroy<a href="#" onclick="alert('This will permanently delete this packet for all users.'); return false;">*</a></a>
                             </td>
                         </tr>
                     </c:forEach>

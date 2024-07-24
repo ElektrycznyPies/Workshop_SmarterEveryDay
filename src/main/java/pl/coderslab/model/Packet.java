@@ -102,15 +102,15 @@ public class Packet {
     )
     private Set<Category> categories;
 
-//    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
-//    private Set<User> users = new HashSet<>();
-@ManyToMany(fetch = FetchType.EAGER)
-@JoinTable(
-        name = "user_packet",
-        joinColumns = @JoinColumn(name = "packet_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-)
-private Set<User> users = new HashSet<>();
+    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
+    private Set<User> users = new HashSet<>();
+//@ManyToMany(fetch = FetchType.EAGER)
+//@JoinTable(
+//        name = "user_packet",
+//        joinColumns = @JoinColumn(name = "packet_id"),
+//        inverseJoinColumns = @JoinColumn(name = "user_id")
+//)
+//private Set<User> users = new HashSet<>();
 
 
 

@@ -59,9 +59,15 @@ public class FlashPackController {
     }
 
     //ADMIN USUWA PAKIET
+//    @GetMapping("/admin/users/packets/{userId}/delete/{packetId}")
+//    public String admintPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
+//        packetService.deletePacket(packetId);
+//        return "redirect:/admin/users/packets/" + userId;
+//    }
+
     @GetMapping("/admin/users/packets/{userId}/delete/{packetId}")
-    public String admintPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
-        packetService.deletePacket(packetId);
+    public String adminPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
+        packetService.destroyPacket(packetId); //admin całkowicie usuwa pakiet
         return "redirect:/admin/users/packets/" + userId;
     }
 
@@ -81,7 +87,7 @@ public class FlashPackController {
         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
             packet.setAuthor("");
         } else if ("nick".equals(authorType)) {
-            packet.setAuthor(user.getNick()); // tu podmienić potem na nick
+            packet.setAuthor(user.getNick());
         } else if ("name".equals(authorType)) {
             packet.setAuthor(user.getFullName());
         }
@@ -163,13 +169,22 @@ public class FlashPackController {
     }
 
     // USUWANIE PAKIETU
+//    @GetMapping("/flashpack/user/packets/delete/{id}")
+//    public String deletePacket(@PathVariable Long id, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        packetService.deletePacket(id);
+//        return "redirect:/flashpack/user/packets";
+//    }
     @GetMapping("/flashpack/user/packets/delete/{id}")
     public String deletePacket(@PathVariable Long id, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        packetService.deletePacket(id);
+        packetService.removePacketFromUser(id, user.getId()); // jeśli pakiet dzielony, tylko odłącza od usera
         return "redirect:/flashpack/user/packets";
     }
 

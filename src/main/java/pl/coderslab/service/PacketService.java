@@ -18,6 +18,8 @@ public interface PacketService {
     List<Packet> getBazaarPackets();
     List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds);
     void updateStudySettings(Long packetId, Set<String> showFields, String compareField);
+    void destroyPacket(Long id);
+    void removePacketFromUser(Long packetId, Long userId);
 
         }
 

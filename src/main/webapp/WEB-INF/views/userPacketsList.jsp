@@ -37,7 +37,7 @@
                             <a href="<c:url value='/flashpack/user/packets/edit/${packet.id}'/>" class="button secondary">Edit</a>
                             <a href="<c:url value='/flashpack/user/packets/delete/${packet.id}'/>"
                                onclick="return confirm('${packetsWithFlashcards[packet.id] > 0 ? 'Are you sure? This packet CONTAINS FLASHCARDS!' : 'Are you sure? This packet is empty.'}')"
-                               class="button danger">Delete</a>
+                               class="button danger">Delete<a href="#" onclick="alert('If packet has more users, it will be deleted only for you. If you are the sole user of this packet, it will be permanently deleted.'); return false;"> *</a></a>
                             <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>
                             <c:if test="${packetsWithFlashcards[packet.id] > 0}">
                                 <c:choose>

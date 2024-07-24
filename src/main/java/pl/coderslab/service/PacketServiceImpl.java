@@ -40,35 +40,61 @@ public Optional<Packet> getPacket(Long id) {
     return packet;
 }
 
+//    @Transactional
+//    public Packet addPacket(Packet packet, User user) {
+//        // pobiera usera do zarządzania
+//        User managedUser = userRepository.findById(user.getId())
+//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+//
+//        // set userów, inicjalizacja
+//        if (packet.getUsers() == null) {
+//            packet.setUsers(new HashSet<>());
+//        }
+//
+//        // czy user jest już przypisany do pakietu?
+//        if (!packet.getUsers().contains(managedUser)) {
+//            packet.getUsers().add(managedUser);
+//        }
+//
+//        // zapisuje pak.
+//        Packet savedPacket = packetRepository.save(packet);
+//
+//        // Ensure user's packets set is initialized
+//        if (managedUser.getPackets() == null) {
+//            managedUser.setPackets(new HashSet<>());
+//        }
+//
+//        // Check if the packet is already associated with the user
+//        if (!managedUser.getPackets().contains(savedPacket)) {
+//            managedUser.getPackets().add(savedPacket);
+//            userRepository.save(managedUser);
+//        }
+//        return savedPacket;
+//    }
+
+
     @Transactional
     public Packet addPacket(Packet packet, User user) {
-        // pobiera usera do zarządzania
         User managedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // set userów, inicjalizacja
-        if (packet.getUsers() == null) {
-            packet.setUsers(new HashSet<>());
-        }
-
-        // czy user jest już przypisany do pakietu?
-        if (!packet.getUsers().contains(managedUser)) {
-            packet.getUsers().add(managedUser);
-        }
-
-        // zapisuje pak.
+        // First, save the packet
         Packet savedPacket = packetRepository.save(packet);
 
-        // Ensure user's packets set is initialized
-        if (managedUser.getPackets() == null) {
-            managedUser.setPackets(new HashSet<>());
+        // Check if the association already exists
+        boolean associationExists = managedUser.getPackets().stream()
+                .anyMatch(p -> p.getId().equals(savedPacket.getId()));
+
+        if (!associationExists) {
+            // Add the association only if it doesn't exist
+            managedUser.getPackets().add(savedPacket);
+            savedPacket.getUsers().add(managedUser);
+
+            // Save both entities
+            userRepository.save(managedUser);
+            packetRepository.save(savedPacket);
         }
 
-        // Check if the packet is already associated with the user
-        if (!managedUser.getPackets().contains(savedPacket)) {
-            managedUser.getPackets().add(savedPacket);
-            userRepository.save(managedUser);
-        }
         return savedPacket;
     }
 
@@ -84,6 +110,40 @@ public Optional<Packet> getPacket(Long id) {
         } else {
             throw new IllegalStateException("Cannot delete packet assigned to multiple users");
         }
+    }
+
+
+    // całkowicie usuwa pakiet (Admin)
+    @Override
+    @Transactional
+    public void destroyPacket(Long id) {
+        Packet packet = packetRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        List<StudySession> studySessions = studySessionRepository.findByPacketId(id);
+        studySessionRepository.deleteAll(studySessions);
+        packetRepository.delete(packet);
+    }
+
+    // jeśli więcej niż 1 user posiada pakiet, odłącza go od usera. Jeśli tylko bieżący user, kasuje (User)
+    @Override
+    @Transactional
+    public void removePacketFromUser(Long packetId, Long userId) {
+        Packet packet = packetRepository.findById(packetId)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        packet.getUsers().remove(user);
+        user.getPackets().remove(packet);
+
+        if (packet.getUsers().isEmpty()) {
+            List<StudySession> studySessions = studySessionRepository.findByPacketId(packetId);
+            studySessionRepository.deleteAll(studySessions);
+            packetRepository.delete(packet);
+        } else {
+            packetRepository.save(packet);
+        }
+        userRepository.save(user);
     }
 
     @Override
