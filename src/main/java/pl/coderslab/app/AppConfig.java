@@ -77,7 +77,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("/webapp/", "webapp", "/webapp/images/", "/images/");
+                .addResourceLocations("/webapp/", "webapp", "/webapp/images/", "/images/", "/webapp/WEB-INF/images/");
     }
 
     @Override

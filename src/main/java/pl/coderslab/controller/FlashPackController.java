@@ -12,6 +12,7 @@ import pl.coderslab.app.NameShortenerUtil;
 import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
+import pl.coderslab.service.CategoryService;
 import pl.coderslab.service.FlashcardService;
 import pl.coderslab.service.PacketService;
 import pl.coderslab.service.UserService;
@@ -28,15 +29,17 @@ public class FlashPackController {
     private final UserService userService;
     private final PacketService packetService;
     private final FlashcardService flashcardService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public FlashPackController(UserService userService, PacketService packetService, FlashcardService flashcardService) {
+    public FlashPackController(UserService userService, PacketService packetService, FlashcardService flashcardService, CategoryService categoryService) {
         this.userService = userService;
         this.packetService = packetService;
         this.flashcardService = flashcardService;
+        this.categoryService = categoryService;
     }
 
-
+    // P A K I E T Y
     // ADMIN: POKAŻ PAKIETY USERA
     @GetMapping("/admin/users/packets/{id}")
     public String showPackets(Model model, @PathVariable Long id) {
@@ -56,9 +59,15 @@ public class FlashPackController {
     }
 
     //ADMIN USUWA PAKIET
+//    @GetMapping("/admin/users/packets/{userId}/delete/{packetId}")
+//    public String admintPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
+//        packetService.deletePacket(packetId);
+//        return "redirect:/admin/users/packets/" + userId;
+//    }
+
     @GetMapping("/admin/users/packets/{userId}/delete/{packetId}")
-    public String admintPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
-        packetService.deletePacket(packetId);
+    public String adminPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
+        packetService.destroyPacket(packetId); //admin całkowicie usuwa pakiet
         return "redirect:/admin/users/packets/" + userId;
     }
 
@@ -78,7 +87,7 @@ public class FlashPackController {
         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
             packet.setAuthor("");
         } else if ("nick".equals(authorType)) {
-            packet.setAuthor(user.getNick()); // tu podmienić potem na nick
+            packet.setAuthor(user.getNick());
         } else if ("name".equals(authorType)) {
             packet.setAuthor(user.getFullName());
         }
@@ -160,15 +169,88 @@ public class FlashPackController {
     }
 
     // USUWANIE PAKIETU
+//    @GetMapping("/flashpack/user/packets/delete/{id}")
+//    public String deletePacket(@PathVariable Long id, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        packetService.deletePacket(id);
+//        return "redirect:/flashpack/user/packets";
+//    }
     @GetMapping("/flashpack/user/packets/delete/{id}")
     public String deletePacket(@PathVariable Long id, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        packetService.deletePacket(id);
+        packetService.removePacketFromUser(id, user.getId()); // jeśli pakiet dzielony, tylko odłącza od usera
         return "redirect:/flashpack/user/packets";
     }
+
+    // BAZAR
+    @GetMapping("/flashpack/user/packets/sendToBazaar/{id}")
+    public String sendToBazaar(@PathVariable Long id) {
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        packet.setOnBazaar(true);
+        packetService.updatePacket(packet);
+        return "redirect:/flashpack/user/packets";
+    }
+
+    @GetMapping("/flashpack/bazaar")
+    public String showBazaar(@RequestParam(required = false) List<Long> categoryIds, Model model, HttpSession sess) {
+        List<Packet> bazaarPackets;
+        User user = (User) sess.getAttribute("user");
+        if (user == null){
+            throw new EntityNotFoundException("User not found.");
+        }
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            bazaarPackets = packetService.getBazaarPackets();
+        } else {
+            bazaarPackets = packetService.getBazaarPacketsByCategories(categoryIds);
+        }
+
+        // pakiety bazaru, których nie ma user
+        List<Packet> filteredPackets = bazaarPackets.stream()
+                .filter(packet -> !packet.getUsers().stream()
+                        .anyMatch(u -> u.getId().equals(user.getId())))
+                .collect(Collectors.toList());
+
+        // pakiety, które ma user - będą wyszarzone na liście
+        List<Packet> packetsGrey = bazaarPackets.stream()
+                .filter(packet -> packet.getUsers().stream()
+                        .anyMatch(u -> u.getId().equals(user.getId())))
+                .collect(Collectors.toList());
+
+        model.addAttribute("packetsWithFlashcardsBaz", filteredPackets.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getFlashcards().size()
+                ))); // podaje liczbę fiszek w każdym pakiecie
+        model.addAttribute("greyPacketsWithFlashcardsBaz", packetsGrey.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getFlashcards().size()
+                ))); // podaje liczbę fiszek w każdym pakiecie
+        model.addAttribute("packets", filteredPackets);
+        model.addAttribute("packets_grey", packetsGrey);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "userBazaarPacketsList";
+    }
+
+    @GetMapping("/flashpack/bazaar/get/{id}")
+    public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        packet.getUsers().add(user);
+        packetService.updatePacket(packet);
+        return "redirect:/flashpack/bazaar";
+    }
+
+        // F I S Z K I
 
     // POKAŻ FISZKI W PAKIECIE
 

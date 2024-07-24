@@ -15,8 +15,11 @@ public interface PacketService {
     Packet addPacket(Packet pack, User user);
     void deletePacket(Long id);
     void updatePacket(Packet pack);
-
+    List<Packet> getBazaarPackets();
+    List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds);
     void updateStudySettings(Long packetId, Set<String> showFields, String compareField);
+    void destroyPacket(Long id);
+    void removePacketFromUser(Long packetId, Long userId);
 
         }
 

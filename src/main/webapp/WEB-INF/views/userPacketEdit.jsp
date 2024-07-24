@@ -5,7 +5,7 @@
 
 <html>
 <head>
-    <title>Edit User Packet</title>
+    <title>Edit user packet</title>
 </head>
 <body>
 <div class="container">
