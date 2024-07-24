@@ -57,7 +57,7 @@
                             <div class="col-2" align="right">
                                         <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
-                            <div><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
+                            <div class="col-2" align="right"><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
                             <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
@@ -84,7 +84,7 @@
                             <div class="col-2" align="right">
                                     <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
-                            <div><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
+                            <div class="col-2" align="right"><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
                             <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">

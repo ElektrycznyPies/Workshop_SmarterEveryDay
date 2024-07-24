@@ -75,11 +75,16 @@ public Optional<Packet> getPacket(Long id) {
     @Override
     @Transactional
     public void deletePacket(Long id) {
+        Packet packet = packetRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        if (packet.getUsers().size() <= 1) {
             List<StudySession> studySessions = studySessionRepository.findByPacketId(id);
-            // usuwa sesje nauki powiązane z pak.
             studySessionRepository.deleteAll(studySessions);
             packetRepository.deleteById(id);
+        } else {
+            throw new IllegalStateException("Cannot delete packet assigned to multiple users");
         }
+    }
 
     @Override
     @Transactional

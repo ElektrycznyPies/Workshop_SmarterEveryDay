@@ -207,6 +207,16 @@ public class FlashPackController {
                         .anyMatch(u -> u.getId().equals(user.getId())))
                 .collect(Collectors.toList());
 
+        model.addAttribute("packetsWithFlashcardsBaz", filteredPackets.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getFlashcards().size()
+                ))); // podaje liczbę fiszek w każdym pakiecie
+        model.addAttribute("greyPacketsWithFlashcardsBaz", packetsGrey.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getFlashcards().size()
+                ))); // podaje liczbę fiszek w każdym pakiecie
         model.addAttribute("packets", filteredPackets);
         model.addAttribute("packets_grey", packetsGrey);
         model.addAttribute("categories", categoryService.getAllCategories());
@@ -222,7 +232,6 @@ public class FlashPackController {
         Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         packet.getUsers().add(user);
         packetService.updatePacket(packet);
-        System.out.println("]]]]]] Kto ma pakiecik numer " + packet.getId() + "? Userzy:  " + (packet.getUsers().isEmpty() ? "nikt" : packet.getUsers().stream().map(User::getFullName).collect(Collectors.joining(", "))));
         return "redirect:/flashpack/bazaar";
     }
 
