@@ -46,9 +46,9 @@ public class User {
     @JoinTable(
             name = "user_packet",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "packet_id"))
+            inverseJoinColumns = @JoinColumn(name = "packet_id")
+    )
     private Set<Packet> packets = new HashSet<>();
-
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<StudySession> studySessions;

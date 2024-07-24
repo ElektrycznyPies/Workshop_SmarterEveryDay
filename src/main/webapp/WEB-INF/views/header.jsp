@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <title>Smarter Every Day</title>
+    <title>Mind Fishka</title>
     <meta name="description" content="Simple flashcard learning tool." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css" />
 
@@ -13,7 +13,7 @@
 <header class="container">
     <section>
         <article id="article">
-            <h1>Smarter Every Day</h1>
+            <h1>Mind Fishka</h1>
             <h4>Simple flashcard learning tool</h4>
             <c:choose>
 
@@ -57,6 +57,7 @@
                             <div class="col-2" align="right">
                                         <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
+                            <div><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
                             <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
@@ -83,6 +84,7 @@
                             <div class="col-2" align="right">
                                     <small><a href="<c:url value='/logout'/>">Logout</a></small>
                             </div>
+                            <div><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
                             <div class="col-2" align="right">
                                 <c:choose>
                                     <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">

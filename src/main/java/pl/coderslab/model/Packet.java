@@ -85,8 +85,8 @@ public class Packet {
     @UpdateTimestamp
     private Timestamp updated_at;
 
-    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
-    private Set<User> users = new HashSet<>();
+    @Column(name = "is_on_bazaar")
+    private boolean isOnBazaar;
 
     @OneToMany(mappedBy = "pack", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Flashcard> flashcards;
@@ -94,12 +94,30 @@ public class Packet {
     @OneToMany(mappedBy = "packet", fetch = FetchType.EAGER)
     private Set<StudySession> studySessions;
 
+    @ManyToMany
+    @JoinTable(
+            name = "packet_categories",
+            joinColumns = @JoinColumn(name = "packet_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories;
+
+//    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
+//    private Set<User> users = new HashSet<>();
+@ManyToMany(fetch = FetchType.EAGER)
+@JoinTable(
+        name = "user_packet",
+        joinColumns = @JoinColumn(name = "packet_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+)
+private Set<User> users = new HashSet<>();
+
 
 
     public Packet() {
     }
 
-    public Packet(Long id, String name, String author, String description, Set<String> showFields, String compareField, Timestamp created_at, Timestamp updated_at, Set<User> users, Set<Flashcard> flashcards, Set<StudySession> studySessions) {
+    public Packet(Long id, String name, String author, String description, Set<String> showFields, String compareField, Timestamp created_at, Timestamp updated_at, Set<User> users, Set<Flashcard> flashcards, Set<StudySession> studySessions, boolean isOnBazaar) {
         this.id = id;
         this.name = name;
         this.author = author;
@@ -111,6 +129,7 @@ public class Packet {
         this.users = users;
         this.flashcards = flashcards;
         this.studySessions = studySessions;
+        this.isOnBazaar = isOnBazaar;
     }
 
     public String getAuthor() {
@@ -153,6 +172,21 @@ public class Packet {
         this.id = id;
     }
 
+    public boolean isOnBazaar() {
+        return isOnBazaar;
+    }
+
+    public void setOnBazaar(boolean onBazaar) {
+        isOnBazaar = onBazaar;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        categories = categories;
+    }
 
     public Timestamp getCreated_at() {
         return created_at;
@@ -207,14 +241,17 @@ public class Packet {
         return "Packet{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 ", showFields=" + showFields +
                 ", compareField='" + compareField + '\'' +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
+                ", isOnBazaar=" + isOnBazaar +
                 ", users=" + users +
                 ", flashcards=" + flashcards +
                 ", studySessions=" + studySessions +
+                ", categories=" + categories +
                 '}';
     }
 }

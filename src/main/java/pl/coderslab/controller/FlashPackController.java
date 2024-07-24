@@ -12,6 +12,7 @@ import pl.coderslab.app.NameShortenerUtil;
 import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
+import pl.coderslab.service.CategoryService;
 import pl.coderslab.service.FlashcardService;
 import pl.coderslab.service.PacketService;
 import pl.coderslab.service.UserService;
@@ -28,15 +29,17 @@ public class FlashPackController {
     private final UserService userService;
     private final PacketService packetService;
     private final FlashcardService flashcardService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public FlashPackController(UserService userService, PacketService packetService, FlashcardService flashcardService) {
+    public FlashPackController(UserService userService, PacketService packetService, FlashcardService flashcardService, CategoryService categoryService) {
         this.userService = userService;
         this.packetService = packetService;
         this.flashcardService = flashcardService;
+        this.categoryService = categoryService;
     }
 
-
+    // P A K I E T Y
     // ADMIN: POKAŻ PAKIETY USERA
     @GetMapping("/admin/users/packets/{id}")
     public String showPackets(Model model, @PathVariable Long id) {
@@ -169,6 +172,43 @@ public class FlashPackController {
         packetService.deletePacket(id);
         return "redirect:/flashpack/user/packets";
     }
+
+    // BAZAR
+    @GetMapping("/flashpack/user/packets/sendToBazaar/{id}")
+    public String sendToBazaar(@PathVariable Long id) {
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        packet.setOnBazaar(true);
+        packetService.updatePacket(packet);
+        return "redirect:/flashpack/user/packets";
+    }
+
+    @GetMapping("/flashpack/bazaar")
+    public String showBazaar(@RequestParam(required = false) List<Long> categoryIds, Model model) {
+        List<Packet> bazaarPackets;
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            bazaarPackets = packetService.getBazaarPackets();
+        } else {
+            bazaarPackets = packetService.getBazaarPacketsByCategories(categoryIds);
+        }
+        model.addAttribute("packets", bazaarPackets);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "userBazaarPacketsList";
+    }
+
+    @GetMapping("/flashpack/bazaar/get/{id}")
+    public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        packet.getUsers().add(user);
+        packetService.updatePacket(packet);
+        System.out.println("]]]]]] Kto ma pakiecik numer " + packet.getId() + "? Userzy:  " + (packet.getUsers().isEmpty() ? "nikt" : packet.getUsers().stream().map(User::getFullName).collect(Collectors.joining(", "))));
+        return "redirect:/flashpack/bazaar";
+    }
+
+        // F I S Z K I
 
     // POKAŻ FISZKI W PAKIECIE
 

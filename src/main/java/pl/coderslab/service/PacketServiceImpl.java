@@ -89,7 +89,9 @@ public Optional<Packet> getPacket(Long id) {
         existingPacket.setName(packet.getName());
         existingPacket.setDescription(packet.getDescription());
         existingPacket.setAuthor(packet.getAuthor());
-        // Aktualizuj inne pola, jeśli są
+        existingPacket.setOnBazaar(packet.isOnBazaar());
+        existingPacket.setUsers(packet.getUsers());
+        // + inne pola, jeśli są
         packetRepository.save(existingPacket);
     }
 
@@ -101,6 +103,18 @@ public Optional<Packet> getPacket(Long id) {
         packet.setShowFields(showFields);
         packet.setCompareField(compareField);
         packetRepository.save(packet);
+    }
+
+    @Override
+    @Transactional
+    public List<Packet> getBazaarPackets() {
+        return packetRepository.findByIsOnBazaar(true);
+    }
+
+    @Override
+    @Transactional
+    public List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds) {
+        return packetRepository.findByIsOnBazaarAndCategoriesIn(true, categoryIds);
     }
 
 }

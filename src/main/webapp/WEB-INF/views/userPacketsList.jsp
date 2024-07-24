@@ -40,9 +40,13 @@
                                class="button danger">Delete</a>
                             <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a>
                             <c:if test="${packetsWithFlashcards[packet.id] > 0}">
-
                                 <c:choose>
                                     <c:when test="${!noFieldsSet[packet.id]}">
+<%--                                        <form action="/flashpack/user/packets/sendToBazaar/${packet.id}" method="post" style="display: inline;">--%>
+<%--                                            <input type="hidden">--%>
+<%--                                            <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">To Bazaar</button>--%>
+<%--                                        </form>--%>
+                                        <a href="<c:url value='/flashpack/user/packets/sendToBazaar/${packet.id}'/>"> To Bazaar</a>
                                         <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> Study!</a>
                                     </c:when>
                                     <c:otherwise>
