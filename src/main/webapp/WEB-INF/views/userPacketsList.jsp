@@ -46,6 +46,7 @@
 <%--                                            <input type="hidden">--%>
 <%--                                            <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">To Bazaar</button>--%>
 <%--                                        </form>--%>
+
                                         <a href="<c:url value='/flashpack/user/packets/sendToBazaar/${packet.id}'/>"> To Bazaar</a>
                                         <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> Study!</a>
                                     </c:when>

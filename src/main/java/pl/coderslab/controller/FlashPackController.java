@@ -183,14 +183,32 @@ public class FlashPackController {
     }
 
     @GetMapping("/flashpack/bazaar")
-    public String showBazaar(@RequestParam(required = false) List<Long> categoryIds, Model model) {
+    public String showBazaar(@RequestParam(required = false) List<Long> categoryIds, Model model, HttpSession sess) {
         List<Packet> bazaarPackets;
+        User user = (User) sess.getAttribute("user");
+        if (user == null){
+            throw new EntityNotFoundException("User not found.");
+        }
         if (categoryIds == null || categoryIds.isEmpty()) {
             bazaarPackets = packetService.getBazaarPackets();
         } else {
             bazaarPackets = packetService.getBazaarPacketsByCategories(categoryIds);
         }
-        model.addAttribute("packets", bazaarPackets);
+
+        // pakiety bazaru, których nie ma user
+        List<Packet> filteredPackets = bazaarPackets.stream()
+                .filter(packet -> !packet.getUsers().stream()
+                        .anyMatch(u -> u.getId().equals(user.getId())))
+                .collect(Collectors.toList());
+
+        // pakiety, które ma user - będą wyszarzone na liście
+        List<Packet> packetsGrey = bazaarPackets.stream()
+                .filter(packet -> packet.getUsers().stream()
+                        .anyMatch(u -> u.getId().equals(user.getId())))
+                .collect(Collectors.toList());
+
+        model.addAttribute("packets", filteredPackets);
+        model.addAttribute("packets_grey", packetsGrey);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "userBazaarPacketsList";
     }
