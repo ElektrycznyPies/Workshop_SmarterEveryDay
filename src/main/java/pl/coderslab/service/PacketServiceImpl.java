@@ -72,7 +72,6 @@ public Optional<Packet> getPacket(Long id) {
 //        return savedPacket;
 //    }
 
-
     @Transactional
     public Packet addPacket(Packet packet, User user) {
         User managedUser = userRepository.findById(user.getId())
@@ -146,6 +145,19 @@ public Optional<Packet> getPacket(Long id) {
         userRepository.save(user);
     }
 
+//    @Override
+//    @Transactional
+//    public void updatePacket(Packet packet) {
+//        Packet existingPacket = packetRepository.findById(packet.getId())
+//                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        existingPacket.setName(packet.getName());
+//        existingPacket.setDescription(packet.getDescription());
+//        existingPacket.setAuthor(packet.getAuthor());
+//        existingPacket.setOnBazaar(packet.isOnBazaar());
+//        existingPacket.setUsers(packet.getUsers());
+//        // + inne pola, jeśli są
+//        packetRepository.save(existingPacket);
+//    }
     @Override
     @Transactional
     public void updatePacket(Packet packet) {
@@ -155,10 +167,15 @@ public Optional<Packet> getPacket(Long id) {
         existingPacket.setDescription(packet.getDescription());
         existingPacket.setAuthor(packet.getAuthor());
         existingPacket.setOnBazaar(packet.isOnBazaar());
-        existingPacket.setUsers(packet.getUsers());
-        // + inne pola, jeśli są
+
+        // aktualizuj userów tylko jeśli lista nie jest null
+        if (packet.getUsers() != null) {
+            existingPacket.getUsers().addAll(packet.getUsers());
+        }
+
         packetRepository.save(existingPacket);
     }
+
 
     @Override
     @Transactional

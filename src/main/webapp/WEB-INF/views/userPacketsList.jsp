@@ -8,6 +8,7 @@
     <title>Packets list</title>
 </head>
 <body>
+<c:set var="fromwhere" value="user" scope="session" />
 <div class="container">
     <c:choose>
     <c:when test="${empty packets}">
@@ -47,8 +48,8 @@
 <%--                                            <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">To Bazaar</button>--%>
 <%--                                        </form>--%>
 
-                                        <a href="<c:url value='/flashpack/user/packets/sendToBazaar/${packet.id}'/>"> To Bazaar</a>
-                                        <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>"> Study!</a>
+                                        <a href="<c:url value='/flashpack/user/packets/sendToBazaar/${packet.id}'/>" onclick="confirm('Packet will be sent to Packets Bazaar, where it will be available to other users. Agree?')"><br>To Bazaar</a>
+                                        <a href="<c:url value='/flashpack/user/packets/${packet.id}/study'/>">| Study!</a>
                                     </c:when>
                                     <c:otherwise>
                                         Alert<a href="#" onclick="alert('There are flashcards in this packet, but no display fields or compare field set up. To study this packet, click on Show Flashcards, then set-up display and compare fields'); return false;">*</a>

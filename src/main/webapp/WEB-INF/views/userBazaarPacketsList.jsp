@@ -8,6 +8,7 @@
     <title>Packets Bazaar</title>
 </head>
 <body>
+<c:set var="fromwhere" value="bazaar" scope="session" />
 <div class="container">
     <c:choose>
         <c:when test="${empty packets and empty packets_grey}">
@@ -17,7 +18,7 @@
         </c:when>
         <c:otherwise>
             <p>Select categories of the packets you're interested in
-                    <%-- <a href="#" onclick="alert('These elements will be presented to you during the study session (eg.: if you want to learn birds\' names by their photos, select Image here, but not Name)'); return false;">*</a> --%>
+
             </p>
             <form method="get" action="/flashpack/bazaar">
                 <c:forEach var="category" items="${categories}">
@@ -55,7 +56,7 @@
                             <td><c:out value="${packet.description}"/></td>
                             <td><c:out value="${packet.author}"/></td>
                             <td>
-                                <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" class="button info">Show Flashcards</a><br>
+                                <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" onclick=""> Show Flashcards</a><br>
                                 <a href="<c:url value='/flashpack/bazaar/get/${packet.id}'/>" class="button info">Get packet</a>
                             </td>
                             <td>${packetsWithFlashcardsBaz[packet.id]}</td>

@@ -8,6 +8,7 @@
     <title>User Packets - Admin View</title>
 </head>
 <body>
+<c:set var="fromwhere" value="admin" scope="session" />
 <div class="container">
     <a href="<c:url value='/admin/users/all'/>" class="button">Back to users list</a>
     <h1>Packets for ${user.firstName} ${user.lastName} <c:if test="${not empty user.nick}">(${user.nick})</c:if></h1>

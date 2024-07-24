@@ -238,17 +238,41 @@ public class FlashPackController {
         return "userBazaarPacketsList";
     }
 
+//    @GetMapping("/flashpack/bazaar/get/{id}")
+//    public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        packet.getUsers().add(user);
+//        packetService.updatePacket(packet);
+//        return "redirect:/flashpack/bazaar";
+//    }
+
     @GetMapping("/flashpack/bazaar/get/{id}")
     public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        Packet packet = packetService.getPacket(id)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+
+        // Dodaj użytkownika do pakietu
         packet.getUsers().add(user);
+
+        // Dodaj pakiet do użytkownika
+        user.getPackets().add(packet);
+
         packetService.updatePacket(packet);
+        userService.updateUser(user);
+
         return "redirect:/flashpack/bazaar";
     }
+
+
+
 
         // F I S Z K I
 

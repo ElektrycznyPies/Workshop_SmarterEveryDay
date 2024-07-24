@@ -10,8 +10,18 @@
 <body>
 <div class="container">
     <div>
-        <a href="<c:url value='/flashpack/user/packets'/>" class="button">Back to packets list</a>
-    </div>
+        <c:choose>
+            <c:when test="${fromwhere == 'user' or fromwhere == 'admin'}">
+                <a href="<c:url value='/flashpack/user/packets'/>" class="button">Back to packets list</a>
+            </c:when>
+            <c:when test="${fromwhere == 'bazaar'}">
+                <a href="<c:url value='/flashpack/bazaar'/>" class="button">Back to Bazaar</a>
+            </c:when>
+            <c:otherwise>
+                <p>"fromwhere" variable problem... fromwhere = ${fromwhere}</p>
+            </c:otherwise>
+        </c:choose>
+            </div>
 
     <h4>Packet name: ${packetName}</h4>
     <c:choose>
@@ -22,7 +32,9 @@
         </form>
     </c:when>
     <c:otherwise>
-        <p>Select fields to show during study session
+
+    <c:if test="${fromwhere == 'user' or fromwhere == 'admin'}">
+    <p>Select fields to show during study session
         <a href="#" onclick="alert('These elements will be presented to you during the study session (eg.: if you want to learn birds\' names by their photos, select Image here, but not Name)'); return false;">*</a>
         </p>
         <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post">
@@ -33,19 +45,18 @@
                 <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional text</label></div>
                 <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image</label></div>
 <%--                <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink2') ? 'checked' : ''}> Image 2</label></div>--%>
-            </div>
-        <p>Select field to check against for correct answer
-            <a href="#" onclick="alert('Your answer will have to match this element (eg.: if you want to learn birds\' names by their photos, select Name here, but not Image)'); return false;">*</a>
-        </p>
-        <div class="grid container">
-            <div><label><input type="radio" name="compareField" value="name" ${compareField == 'name' ? 'checked' : ''}> Name</label></div>
-            <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word 1</label></div>
-            <div><label><input type="radio" name="compareField" value="word2" ${compareField == 'word2' ? 'checked' : ''}> Word 2</label></div>
-            <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional text</label></div>
-<%--            <div></div>--%>
-            <div></div>
-        </div>
-
+                    </div>
+                <p>Select field to check against for correct answer
+                    <a href="#" onclick="alert('Your answer will have to match this element (eg.: if you want to learn birds\' names by their photos, select Name here, but not Image)'); return false;">*</a>
+                </p>
+                <div class="grid container">
+                    <div><label><input type="radio" name="compareField" value="name" ${compareField == 'name' ? 'checked' : ''}> Name</label></div>
+                    <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word 1</label></div>
+                    <div><label><input type="radio" name="compareField" value="word2" ${compareField == 'word2' ? 'checked' : ''}> Word 2</label></div>
+                    <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional text</label></div>
+        <%--            <div></div>--%>
+                    <div></div>
+                </div>
 
         <div class="grid container">
             <div><button type="submit" class="primary">Save study settings</button></div></form>
@@ -64,6 +75,7 @@
                 <button type="submit" class="primary">Add flashcard</button></form></div>
 
         </div>
+</c:if>
 
                 <section class="grid" id="tables">
                     <table class="striped full-width">
@@ -90,8 +102,10 @@
 <%--                                    </td>--%>
                                     <td><c:out value="${shortAdditionalTexts[status.index]}"/></td>
                                     <td>
+                                        <c:if test="${fromwhere == 'user' or fromwhere == 'admin'}">
                                         <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/edit/${flashcard.id}'/>" class="button secondary">Edit</a>
                                         <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/delete/${flashcard.id}'/>" onclick="return confirm('Are you sure?')" class="button danger">Delete</a>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:forEach>
