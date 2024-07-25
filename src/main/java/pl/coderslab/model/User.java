@@ -1,5 +1,6 @@
 package pl.coderslab.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -42,12 +43,13 @@ public class User {
     @Column(nullable = false)
     private Long role = 0L; // 0 = user, 1 = admin, other numbers for future roles
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_packet",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "packet_id")
     )
+    @JsonIgnore
     private Set<Packet> packets = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

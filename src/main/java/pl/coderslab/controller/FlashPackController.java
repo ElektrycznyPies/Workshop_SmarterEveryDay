@@ -2,6 +2,7 @@ package pl.coderslab.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,7 +85,7 @@ public class FlashPackController {
             throw new EntityNotFoundException("User not found");
         }
         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
-            packet.setAuthor("");
+            packet.setAuthor("[anonymous]");
         } else if ("nick".equals(authorType)) {
             packet.setAuthor(user.getNick());
         } else if ("name".equals(authorType)) {
@@ -143,44 +144,75 @@ public class FlashPackController {
     }
 
     @PostMapping("/flashpack/user/packets/edit")
-    public String editPacket(@ModelAttribute Packet packet, @RequestParam(required = false) String authorType, HttpSession session) {
+    public String editPacket(@ModelAttribute Packet updatedPacket, @RequestParam(required = false) String authorType, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
 
-        // pobiera istniejący pakiet z bazy danych
-        Packet existingPacket = packetService.getPacket(packet.getId())
+        Packet existingPacket = packetService.getPacket(updatedPacket.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
 
-        // aktualizuje pola pakietu
-        existingPacket.setName(packet.getName());
-        existingPacket.setDescription(packet.getDescription());
+        if (existingPacket.getUsers().size() > 1) {
+            // Create a new packet
+            Packet newPacket = new Packet();
+            BeanUtils.copyProperties(updatedPacket, newPacket);
+            newPacket.setId(null);
+            newPacket.setOnBazaar(false);
+            newPacket.setUsers(new HashSet<>(Collections.singletonList(user)));
+            newPacket.setFlashcards(new HashSet<>());
 
-        // obsł. pola author
-        if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
-            existingPacket.setAuthor("");
-        } else if ("nick".equals(authorType)) {
-            existingPacket.setAuthor(user.getNick());
-        } else if ("name".equals(authorType)) {
-            existingPacket.setAuthor(user.getFullName());
+            // Copy flashcards
+            for (Flashcard flashcard : existingPacket.getFlashcards()) {
+                Flashcard newFlashcard = new Flashcard();
+                BeanUtils.copyProperties(flashcard, newFlashcard);
+                newFlashcard.setId(null);
+                newFlashcard.setPack(newPacket);
+                newPacket.getFlashcards().add(newFlashcard);
+            }
+
+            // pole Author
+            if (updatedPacket.getAuthor() == null || updatedPacket.getAuthor().trim().isEmpty()) {
+                newPacket.setAuthor("[anonymous]");
+            } else if ("nick".equals(authorType)) {
+                newPacket.setAuthor(user.getNick());
+            } else if ("name".equals(authorType)) {
+                newPacket.setAuthor(user.getFullName());
+            } else {
+                newPacket.setAuthor(updatedPacket.getAuthor());
+            }
+
+            // odłącza stary pak. od usera
+            user.getPackets().remove(existingPacket);
+            existingPacket.getUsers().remove(user);
+
+            // zapis nowego pak.
+            packetService.addPacket(newPacket, user);
         } else {
-            existingPacket.setAuthor(packet.getAuthor());
+            // lub update istniejącego pak.
+            existingPacket.setName(updatedPacket.getName());
+            existingPacket.setDescription(updatedPacket.getDescription());
+            existingPacket.setAuthor(updatedPacket.getAuthor());
+            packetService.updatePacket(existingPacket, user.getId());
         }
-        packetService.updatePacket(existingPacket);
+
         return "redirect:/flashpack/user/packets";
     }
 
-    // USUWANIE PAKIETU
-//    @GetMapping("/flashpack/user/packets/delete/{id}")
-//    public String deletePacket(@PathVariable Long id, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        packetService.deletePacket(id);
-//        return "redirect:/flashpack/user/packets";
-//    }
+    private void setAuthorField(Packet packet, String authorType, User user) {
+         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
+            packet.setAuthor("[anonymous]");
+        } else if ("nick".equals(authorType)) {
+            packet.setAuthor(user.getNick());
+        } else if ("name".equals(authorType)) {
+            packet.setAuthor(user.getFullName());
+        } else {
+            packet.setAuthor(packet.getAuthor());
+        }
+
+    }
+
+
     @GetMapping("/flashpack/user/packets/delete/{id}")
     public String deletePacket(@PathVariable Long id, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -192,13 +224,30 @@ public class FlashPackController {
     }
 
     // BAZAR
-    @GetMapping("/flashpack/user/packets/sendToBazaar/{id}")
-    public String sendToBazaar(@PathVariable Long id) {
-        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        packet.setOnBazaar(true);
-        packetService.updatePacket(packet);
+//    @GetMapping("/flashpack/user/packets/{id}/sendToBazaar")
+//    public String sendToBazaar(@PathVariable Long id, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        if (packet.getFlashcards() == null || packet.getFlashcards().isEmpty()) {
+//            throw new IllegalStateException("Packet must have flashcards to be sent to the bazaar");
+//        }
+//        packet.setOnBazaar(true);
+//        packetService.updatePacket(packet, user.getId());
+//        return "redirect:/flashpack/user/packets";
+//    }
+    @GetMapping("/flashpack/user/packets/{id}/sendToBazaar")
+    public String sendToBazaar(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+        packetService.sendPacketToBazaar(id, user.getId());
         return "redirect:/flashpack/user/packets";
     }
+
 
     @GetMapping("/flashpack/bazaar")
     public String showBazaar(@RequestParam(required = false) List<Long> categoryIds, Model model, HttpSession sess) {
@@ -247,10 +296,56 @@ public class FlashPackController {
 //        if (user == null) {
 //            throw new EntityNotFoundException("User not found");
 //        }
-//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        packet.getUsers().add(user);
-//        packetService.updatePacket(packet);
-//        return "redirect:/flashpack/bazaar";
+//        Packet packet = packetService.getPacket(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//
+//        if (!packet.getUsers().contains(user.getId())) {
+//            // dodaj usera do pakietu
+//            packet.getUsers().add(user);
+//
+//            // dodaj pakiet do u.
+//            user.getPackets().add(packet);
+//
+//            // zapisz użytkownika i pakiet
+//            userService.updateUser(user);
+//            packetService.updatePacket(packet, user.getId());
+//        }
+//
+//        if (session.getAttribute("fromwhere") == "admin") {
+//            return "redirect:/admin/users/all";
+//        } else {
+//            return "redirect:/flashpack/bazaar";
+//        }
+//    }
+
+//    @GetMapping("/flashpack/bazaar/get/{id}")
+//    public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        Packet packet = packetService.getPacket(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//
+//        // Sprawdź, czy użytkownik już ma ten pakiet
+//        if (!packet.getUsers().contains(user)) {
+//            // Dodaj użytkownika do pakietu
+//            packet.getUsers().add(user);
+//
+//            // Dodaj pakiet do użytkownika
+//            user.getPackets().add(packet);
+//
+//            // zapisz użytkownika
+//            userService.updateUser(user);
+//            // zapisz pakiet
+//            packetService.updatePacket(packet, user.getId());
+//        }
+//
+//        if ("admin".equals(session.getAttribute("fromwhere"))) {
+//            return "redirect:/admin/users/all";
+//        } else {
+//            return "redirect:/flashpack/bazaar";
+//        }
 //    }
 
     @GetMapping("/flashpack/bazaar/get/{id}")
@@ -259,26 +354,14 @@ public class FlashPackController {
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        Packet packet = packetService.getPacket(id)
-                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        packetService.addPacketToUser(id, user.getId());
 
-        // Dodaj użytkownika do pakietu
-        packet.getUsers().add(user);
-
-        // Dodaj pakiet do użytkownika
-        user.getPackets().add(packet);
-
-        packetService.updatePacket(packet);
-        userService.updateUser(user);
-        if (session.getAttribute("fromwhere") == "admin") {
+        if ("admin".equals(session.getAttribute("fromwhere"))) {
             return "redirect:/admin/users/all";
         } else {
             return "redirect:/flashpack/bazaar";
         }
     }
-
-
-
 
         // F I S Z K I
 

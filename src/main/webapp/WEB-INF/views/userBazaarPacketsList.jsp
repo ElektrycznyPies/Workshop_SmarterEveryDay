@@ -8,8 +8,10 @@
     <title>Packets Bazaar</title>
 </head>
 <body>
-<c:set var="fromwhere" value="bazaar" scope="session" />
-<div class="container">
+<main class="container">
+    <h3>Packets Bazaar</h3>
+    <c:set var="fromwhere" value="bazaar" scope="session" />
+<div >
     <c:choose>
         <c:when test="${empty packets and empty packets_grey}">
             <section class="grid" id="tables">
@@ -81,5 +83,6 @@
         </c:otherwise>
     </c:choose>
 </div>
+</main>
 </body>
 </html>

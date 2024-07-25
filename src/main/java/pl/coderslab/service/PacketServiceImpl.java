@@ -2,6 +2,7 @@ package pl.coderslab.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.StudySession;
 import pl.coderslab.model.User;
@@ -11,10 +12,7 @@ import pl.coderslab.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,6 +70,7 @@ public Optional<Packet> getPacket(Long id) {
 //        return savedPacket;
 //    }
 
+    @Override
     @Transactional
     public Packet addPacket(Packet packet, User user) {
         User managedUser = userRepository.findById(user.getId())
@@ -145,36 +144,87 @@ public Optional<Packet> getPacket(Long id) {
         userRepository.save(user);
     }
 
-//    @Override
-//    @Transactional
-//    public void updatePacket(Packet packet) {
-//        Packet existingPacket = packetRepository.findById(packet.getId())
-//                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        existingPacket.setName(packet.getName());
-//        existingPacket.setDescription(packet.getDescription());
-//        existingPacket.setAuthor(packet.getAuthor());
-//        existingPacket.setOnBazaar(packet.isOnBazaar());
-//        existingPacket.setUsers(packet.getUsers());
-//        // + inne pola, jeśli są
-//        packetRepository.save(existingPacket);
-//    }
     @Override
     @Transactional
-    public void updatePacket(Packet packet) {
-        Packet existingPacket = packetRepository.findById(packet.getId())
+    public Packet updatePacket(Packet updatedPacket, Long userId) {
+        Packet existingPacket = packetRepository.findById(updatedPacket.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        existingPacket.setName(packet.getName());
-        existingPacket.setDescription(packet.getDescription());
-        existingPacket.setAuthor(packet.getAuthor());
-        existingPacket.setOnBazaar(packet.isOnBazaar());
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // aktualizuj userów tylko jeśli lista nie jest null
-        if (packet.getUsers() != null) {
-            existingPacket.getUsers().addAll(packet.getUsers());
+        boolean isShared = existingPacket.getUsers().size() > 1;
+        boolean isOwnedByCurrentUser = existingPacket.getUsers().stream()
+                .anyMatch(user -> user.getId().equals(userId));
+
+        if (isShared && isOwnedByCurrentUser) {
+            Packet newPacket = new Packet();
+            newPacket.setName(updatedPacket.getName());
+            newPacket.setDescription(updatedPacket.getDescription());
+            newPacket.setAuthor(updatedPacket.getAuthor());
+            newPacket.setOnBazaar(false);
+            newPacket.setShowFields(updatedPacket.getShowFields());
+            newPacket.setCompareField(updatedPacket.getCompareField());
+            newPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
+            currentUser.getPackets().add(newPacket);
+
+            // Ensure flashcards are not null
+            if (newPacket.getFlashcards() == null) {
+                newPacket.setFlashcards(new HashSet<>());
+            }
+            if (updatedPacket.getFlashcards() != null) {
+                for (Flashcard flashcard : updatedPacket.getFlashcards()) {
+                    Flashcard newFlashcard = new Flashcard();
+                    newFlashcard.setName(flashcard.getName());
+                    newFlashcard.setWord(flashcard.getWord());
+                    newFlashcard.setWord2(flashcard.getWord2());
+                    newFlashcard.setAdditionalText(flashcard.getAdditionalText());
+                    newFlashcard.setImageLink(flashcard.getImageLink());
+                    newFlashcard.setPack(newPacket);
+                    newPacket.getFlashcards().add(newFlashcard);
+                }
+            }
+
+            existingPacket.getUsers().remove(currentUser);
+            currentUser.getPackets().remove(existingPacket);
+            packetRepository.save(existingPacket);
+            userRepository.save(currentUser);
+            return packetRepository.save(newPacket);
+        } else if (isOwnedByCurrentUser) {
+            existingPacket.setName(updatedPacket.getName());
+            existingPacket.setDescription(updatedPacket.getDescription());
+            existingPacket.setAuthor(updatedPacket.getAuthor());
+            existingPacket.setShowFields(updatedPacket.getShowFields());
+            existingPacket.setCompareField(updatedPacket.getCompareField());
+
+            // Ensure flashcards are not null
+            if (existingPacket.getFlashcards() == null) {
+                existingPacket.setFlashcards(new HashSet<>());
+            }
+            if (updatedPacket.getFlashcards() != null) {
+                existingPacket.getFlashcards().clear();
+                existingPacket.getFlashcards().addAll(updatedPacket.getFlashcards());
+            }
+            return packetRepository.save(existingPacket);
+        } else {
+            throw new IllegalStateException("User does not have permission to edit this packet");
         }
-
-        packetRepository.save(existingPacket);
     }
+
+//    private void updateExistingPacket(Packet existingPacket, Packet updatedPacket) {
+//        existingPacket.setName(updatedPacket.getName());
+//        existingPacket.setDescription(updatedPacket.getDescription());
+//        existingPacket.setAuthor(updatedPacket.getAuthor());
+//        existingPacket.setShowFields(updatedPacket.getShowFields());
+//        existingPacket.setCompareField(updatedPacket.getCompareField());
+//        // czy flashcards nie są  null
+//        if (existingPacket.getFlashcards() == null) {
+//            existingPacket.setFlashcards(new HashSet<>());
+//        }
+//        if (updatedPacket.getFlashcards() != null) {
+//            existingPacket.getFlashcards().clear();
+//            existingPacket.getFlashcards().addAll(updatedPacket.getFlashcards());
+//        }
+//    }
 
 
     @Override
@@ -189,10 +239,45 @@ public Optional<Packet> getPacket(Long id) {
 
     @Override
     @Transactional
+    public void sendPacketToBazaar(Long packetId, Long userId) {
+        Packet packet = packetRepository.findById(packetId)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!packet.getUsers().contains(user)) {
+            throw new IllegalStateException("User does not own this packet");
+        }
+
+        if (packet.getFlashcards() == null || packet.getFlashcards().isEmpty()) {
+            throw new IllegalStateException("Packet must have flashcards to be sent to the bazaar");
+        }
+
+        packet.setOnBazaar(true);
+        packetRepository.save(packet);
+    }
+
+    @Override
+    @Transactional
     public List<Packet> getBazaarPackets() {
         return packetRepository.findByIsOnBazaar(true);
     }
 
+    @Override
+    @Transactional
+    public void addPacketToUser(Long packetId, Long userId) {
+        Packet packet = packetRepository.findById(packetId)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!packet.getUsers().contains(user)) {
+            packet.getUsers().add(user);
+            user.getPackets().add(packet);
+            packetRepository.save(packet);
+            userRepository.save(user);
+        }
+    }
     @Override
     @Transactional
     public List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds) {

@@ -43,6 +43,7 @@
 //    private Set<StudySession> studySessions;
 package pl.coderslab.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -102,9 +103,11 @@ public class Packet {
     )
     private Set<Category> categories;
 
-    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
-//@ManyToMany(fetch = FetchType.EAGER)
+
+    //@ManyToMany(fetch = FetchType.EAGER)
 //@JoinTable(
 //        name = "user_packet",
 //        joinColumns = @JoinColumn(name = "packet_id"),

@@ -14,12 +14,14 @@ public interface PacketService {
     Optional<Packet> getPacket(Long id);
     Packet addPacket(Packet pack, User user);
     void deletePacket(Long id);
-    void updatePacket(Packet pack);
+    Packet updatePacket(Packet pack, Long userId);
     List<Packet> getBazaarPackets();
     List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds);
     void updateStudySettings(Long packetId, Set<String> showFields, String compareField);
     void destroyPacket(Long id);
     void removePacketFromUser(Long packetId, Long userId);
+    void sendPacketToBazaar (Long packetId, Long userId);
+    void addPacketToUser(Long packetId, Long userId);
 
-        }
+    }
 
