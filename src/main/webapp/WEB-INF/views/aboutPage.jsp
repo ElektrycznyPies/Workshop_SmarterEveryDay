@@ -8,16 +8,26 @@
 <body>
 <main class="container">
     <section id="about">
-        <div>
-            <p><strong>Smarter Every Day</strong> is an educational  flashcards-based tool.
-                It lets you learn vocabulary or images in no time.</p>
-            <h3>What can you do?</h3>
-            <p>Create packets -- sets of flashcards to study by repetition. </p>
-            <p>Create flashcards that may contain pictures, sounds, words, and blocks of text. </p>
-            <p>Study your flashcards to quickly memorize the sets of items, like foreign language vocabulary,
-                birds pictures and sounds, authors of famous quotes, or whatever else you like.  </p>
-            <p>Send your packets or download other users' packets at a world-wide packet bazaar.</p>
-            <p>Gamify your study sessions by gaining points and ranks.</p>
+        <p><strong>Mind Fishka</strong> is an educational, flashcards-based tool developed by Darek "Zen" Żukowski.</p>
+        <p>"Fishka" is a "flashcard" in Slavic languages. When fishkas take over your mind,
+            you will learn things efforlessly and quickly.</p>
+        <div class="container">
+            <div class="column left" style="float: left; width: 45%;">
+                <p>What can you learn? For example:</p>
+                <ul><li>foreign language vocabulary, </li>
+                    <li>birds or airplanes, or dog breeds, or mushrooms,
+                    or architectural icons etc. by their pictures,</li>
+                    <li>authors of famous quotes,</li>
+                    <li>historical dates,</li></ul>
+                <p>...and anything that can be presented as a cohesive list of elements.</p>
+            </div>
+            <div class="column right" style="float: right; width: 45%;">
+                <p>What can you do?</p>
+                <ul><li>Create packets: sets of flashcards to study by repetition. </li>
+                <li>Create flashcards that may contain pictures, words, and blocks of text. </li>
+                <li>Acquire other users' packets at a world-wide Packet Bazaar or share your own packets.</li>
+                <li>Check your learning statistics to measure your progress.</li>
+            </div>
         </div>
     </section>
 </main>

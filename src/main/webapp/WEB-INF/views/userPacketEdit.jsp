@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <div>
-        <a href="<c:url value='/user/home'/>" class="button">Main page</a>
+        <a href="<c:url value='/flashpack/user/packets'/>" class="button">Back to packets list</a>
     </div>
 
     <form:form method="POST" modelAttribute="packet" action="/flashpack/user/packets/edit">

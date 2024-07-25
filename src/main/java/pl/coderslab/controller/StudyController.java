@@ -310,7 +310,7 @@ public class StudyController {
         model.addAttribute("wrongAnswerPercentagesLastOne", wrongAnswerPercentagesLastOne);
 
         session.setAttribute("lastSession", lastSession.getPacket());
-        model.addAttribute("lastSessionName", NameShortenerUtil.shortenName(lastSession.getPacket().getName(), 1, 12));
+        model.addAttribute("lastSessionName", NameShortenerUtil.shortenName(lastSession.getPacket().getName(), 1, 16));
         model.addAttribute("lastSessionPacketId", lastSession.getPacket().getId());
         model.addAttribute("sortedPackets", sortedPackets);
         model.addAttribute("durationMap", durationMap);

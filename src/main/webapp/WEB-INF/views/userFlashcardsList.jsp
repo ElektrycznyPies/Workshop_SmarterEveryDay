@@ -11,8 +11,11 @@
 <div class="container">
     <div>
         <c:choose>
-            <c:when test="${fromwhere == 'user' or fromwhere == 'admin'}">
+            <c:when test="${fromwhere == 'user'}">
                 <a href="<c:url value='/flashpack/user/packets'/>" class="button">Back to packets list</a>
+            </c:when>
+            <c:when test="${fromwhere == 'admin'}">
+                <a href="<c:url value='/admin/users/all'/>" class="button">Back to users list</a>
             </c:when>
             <c:when test="${fromwhere == 'bazaar'}">
                 <a href="<c:url value='/flashpack/bazaar'/>" class="button">Back to Bazaar</a>
@@ -33,7 +36,7 @@
     </c:when>
     <c:otherwise>
 
-    <c:if test="${fromwhere == 'user' or fromwhere == 'admin'}">
+    <c:if test="${fromwhere == 'user'}">
     <p>Select fields to show during study session
         <a href="#" onclick="alert('These elements will be presented to you during the study session (eg.: if you want to learn birds\' names by their photos, select Image here, but not Name)'); return false;">*</a>
         </p>
@@ -102,9 +105,11 @@
 <%--                                    </td>--%>
                                     <td><c:out value="${shortAdditionalTexts[status.index]}"/></td>
                                     <td>
+                                        <c:if test="${fromwhere == 'user'}">
+                                            <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/edit/${flashcard.id}'/>">Edit</a>
+                                        </c:if>
                                         <c:if test="${fromwhere == 'user' or fromwhere == 'admin'}">
-                                        <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/edit/${flashcard.id}'/>" class="button secondary">Edit</a>
-                                        <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/delete/${flashcard.id}'/>" onclick="return confirm('Are you sure?')" class="button danger">Delete</a>
+                                            <a href="<c:url value='/flashpack/user/packets/${packetId}/flashcards/delete/${flashcard.id}'/>" onclick="return confirm('Are you sure?')">Delete</a>
                                         </c:if>
                                     </td>
                                 </tr>

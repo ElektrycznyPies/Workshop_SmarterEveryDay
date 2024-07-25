@@ -24,8 +24,11 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Author</th>
-                        <th>FNo.
+                        <th>Flsh
                             <a href="#" onclick="alert('Number of flashcards in this packet'); return false;">*</a>
+                        </th>
+                        <th>Shrd
+                            <a href="#" onclick="alert('Blue dot indicates that other user(s) share this packet as well'); return false;">*</a>
                         </th>
                         <th>Actions</th>
                     </tr>
@@ -38,9 +41,18 @@
                             <td>${packet.author}</td>
                             <td>${packetsWithFlashcards[packet.id]}</td>
                             <td>
+                                <c:if test="${sharedPackets[packet.id]}">
+                                    <span style="color: darkblue;">•</span>
+                                </c:if>
+                            </td>
+                            <td>
                                 <a href="<c:url value='/admin/users/packets/${user.id}/delete/${packet.id}'/>"
                                    onclick="return confirm('Are you sure?')"
-                                   class="button danger">Destroy<a href="#" onclick="alert('This will permanently delete this packet for all users.'); return false;">*</a></a>
+                                   class="button danger">Destroy</a><a href="#" onclick="alert('This will permanently delete this packet for all users.'); return false;"> *</a>
+                                <a href="<c:url value='/flashpack/user/packets/${packet.id}/flashcards'/>" ><br>Show Flashcards</a>
+                                <c:if test="${user.id == 0}">
+                                <a href="<c:url value='/flashpack/bazaar/get/${packet.id}'/>" ><br>Get packet</a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>

@@ -15,87 +15,183 @@
         <article id="article">
             <h1>Mind Fishka</h1>
             <h4>Simple flashcard learning tool</h4>
-            <c:choose>
+<%--            <c:choose>--%>
 
+<%--                &lt;%&ndash;  NIKT NIE JEST ZALOGOWANY lub nieznana rola&ndash;%&gt;--%>
+<%--                <c:when test="${empty sessionScope.user && sessionScope.user.role != 0 && sessionScope.user.role != 1}">--%>
+<%--                <footer>--%>
+<%--                        <div class="grid">--%>
+<%--                            <div class="col-6">--%>
+<%--                                <small>Login or register to use this tool fully</small>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">--%>
+<%--                                        <small><a href="${prevUrl}" class="button">Back</a></small>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:otherwise>--%>
+<%--                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>--%>
+<%--                                    </c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </footer>--%>
+<%--                </c:when>--%>
+
+<%--                &lt;%&ndash;  ZALOGOWANY ZWYKŁY USER&ndash;%&gt;--%>
+<%--                <c:when test="${sessionScope.user.role == 0}">--%>
+<%--                    <footer>--%>
+<%--                        <div class="grid">--%>
+<%--                            <div class="col-6">--%>
+<%--                                <small>Hello, <c:out value="${sessionScope.user.firstName}"/></small>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--&lt;%&ndash;       LINKI JAKO BUTTONY:  <small tabindex="1"><a role="button" href="<c:url value='/user/home'/>">Main page</a></small>&ndash;%&gt;--%>
+<%--                                <small tabindex="1"><a href="<c:url value='/user/home'/>">Main page</a></small>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                                        <small><a href="<c:url value='/logout'/>">Logout</a></small>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right"><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">--%>
+<%--                                        <small><a href="${prevUrl}">Back</a></small>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:otherwise>--%>
+<%--                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>--%>
+<%--                                    </c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </footer>--%>
+<%--                </c:when>--%>
+<%--&lt;%&ndash;               ZALOGOWANY ADMIN&ndash;%&gt;--%>
+<%--                <c:when test="${sessionScope.user.role == 1}">--%>
+<%--                    <footer>--%>
+<%--                        <div class="grid">--%>
+<%--                            <div class="col-6">--%>
+<%--                                <small>(<a href="<c:url value='/user/home#admin'/>">ADMIN</a>) Hello, <c:out value="${sessionScope.user.firstName}"/></small>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                                <small><a href="<c:url value='/user/home'/>">Main page</a></small>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                                    <small><a href="<c:url value='/logout'/>">Logout</a></small>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-2" align="right"><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>--%>
+<%--                            <div class="col-2" align="right">--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">--%>
+<%--                                        <small><a href="${prevUrl}" class="button">Back</a></small>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:otherwise>--%>
+<%--                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>--%>
+<%--                                    </c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </footer>--%>
+<%--                </c:when>--%>
+
+<%--                <c:otherwise>--%>
+<%--                    <!-- inne przyszłe role -->--%>
+<%--                </c:otherwise>--%>
+<%--            </c:choose>--%>
+            <c:choose>
                 <%--  NIKT NIE JEST ZALOGOWANY lub nieznana rola--%>
                 <c:when test="${empty sessionScope.user && sessionScope.user.role != 0 && sessionScope.user.role != 1}">
+                    <footer>
+                        <table style="width: 100%; border-collapse: collapse; border: none; background-color: transparent;">
 
-                <footer>
-                        <div class="grid">
-                            <div class="col-6">
-                                <small>Login or register to use this tool fully</small>
-                            </div>
-                            <div class="col-2" align="right">
-                            </div>
-                            <div class="col-2" align="right">
-                            </div>
-                            <div class="col-2" align="right">
-                                <c:choose>
-                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
-                                        <small><a href="${prevUrl}" class="button">Back</a></small>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
+                            <tr>
+                                <td colspan="2">
+                                    <small>Login or register to use this tool fully</small>
+                                </td>
+                                <td align="right">
+                                </td>
+                                <td align="right">
+                                </td>
+                                <td align="right">
+                                    <c:choose>
+                                        <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
+                                            <small><a href="${prevUrl}" class="button">Back</a></small>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <small><a href="<c:url value='/about'/>" class="button">About</a></small>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </table>
                     </footer>
                 </c:when>
 
                 <%--  ZALOGOWANY ZWYKŁY USER--%>
                 <c:when test="${sessionScope.user.role == 0}">
                     <footer>
-                        <div class="grid">
-                            <div class="col-6">
-                                <small>Hello, <c:out value="${sessionScope.user.firstName}"/></small>
-                            </div>
-                            <div class="col-2" align="right">
-<%--       LINKI JAKO BUTTONY:  <small tabindex="1"><a role="button" href="<c:url value='/user/home'/>">Main page</a></small>--%>
-                                <small tabindex="1"><a href="<c:url value='/user/home'/>">Main page</a></small>
-                            </div>
-                            <div class="col-2" align="right">
-                                        <small><a href="<c:url value='/logout'/>">Logout</a></small>
-                            </div>
-                            <div class="col-2" align="right"><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
-                            <div class="col-2" align="right">
-                                <c:choose>
-                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
-                                        <small><a href="${prevUrl}">Back</a></small>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td colspan="2">
+                                    <small>Hello, <c:out value="${sessionScope.user.firstName}"/></small>
+                                </td>
+                                <td align="right">
+                                    <small tabindex="1"><a href="<c:url value='/user/home'/>">Main page</a></small>
+                                </td>
+                                <td align="right">
+                                    <small><a href="<c:url value='/logout'/>">Logout</a></small>
+                                </td>
+                                <td align="right">
+                                    <small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small>
+                                </td>
+                                <td align="right">
+                                    <c:choose>
+                                        <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
+                                            <small><a href="${prevUrl}">Back</a></small>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <small><a href="<c:url value='/about'/>" class="button">About</a></small>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </table>
                     </footer>
                 </c:when>
-<%--               ZALOGOWANY ADMIN--%>
+
+                <%--  ZALOGOWANY ADMIN--%>
                 <c:when test="${sessionScope.user.role == 1}">
                     <footer>
-                        <div class="grid">
-                            <div class="col-6">
-                                <small><a href="<c:url value='/user/home#admin'/>">ADMIN</a> privileges. Hello, <c:out value="${sessionScope.user.firstName}"/></small>
-                            </div>
-                            <div class="col-2" align="right">
-                                <small><a href="<c:url value='/user/home'/>">Main page</a></small>
-                            </div>
-                            <div class="col-2" align="right">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td colspan="2">
+                                    <small>(<a href="<c:url value='/user/home#admin'/>">ADMIN</a>) Hello, <c:out value="${sessionScope.user.firstName}"/></small>
+                                </td>
+                                <td align="right">
+                                    <small><a href="<c:url value='/user/home'/>">Main page</a></small>
+                                </td>
+                                <td align="right">
                                     <small><a href="<c:url value='/logout'/>">Logout</a></small>
-                            </div>
-                            <div class="col-2" align="right"><small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small></div>
-                            <div class="col-2" align="right">
-                                <c:choose>
-                                    <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
-                                        <small><a href="${prevUrl}" class="button">Back</a></small>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <small><a href="<c:url value='/about'/>" class="button">About</a></small>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
+                                </td>
+                                <td align="right">
+                                    <small><a href="<c:url value='/flashpack/bazaar'/>">Packets Bazaar</a></small>
+                                </td>
+                                <td align="right">
+                                    <c:choose>
+                                        <c:when test="${pageContext.request.servletPath eq '/WEB-INF/views/aboutPage.jsp'}">
+                                            <small><a href="${prevUrl}" class="button">Back</a></small>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <small><a href="<c:url value='/about'/>" class="button">About</a></small>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </table>
                     </footer>
                 </c:when>
 
@@ -103,6 +199,10 @@
                     <!-- inne przyszłe role -->
                 </c:otherwise>
             </c:choose>
+
+
+
+
         </article>
     </section>
 </header>

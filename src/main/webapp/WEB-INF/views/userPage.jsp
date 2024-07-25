@@ -97,21 +97,15 @@
     </section>
 
     <div class="grid">
-<%--    <section id="packages">--%>
+            <div>
+                <a href="<c:url value='/user/edit'/>"><button class="secondary">Edit your profile</button></a>
+            </div>
             <div>
                 <a href="<c:url value='/flashpack/user/packets'/>"><button>Available packets</button></a>
             </div>
-<%--    </section>--%>
-<%--    <section id="new_package">--%>
             <div>
                 <a href="<c:url value='/flashpack/new/packet'/>"><button>Create new packet</button></a>
             </div>
-<%--    </section>--%>
-<%--    <section id="profile">--%>
-        <div>
-            <a href="<c:url value='/user/edit'/>"><button>Edit your profile</button></a>
-        </div>
-<%--    </section>--%>
         <div>
 
         <c:choose>

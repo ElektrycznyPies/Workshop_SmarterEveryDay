@@ -48,6 +48,11 @@ public class FlashPackController {
 
         List<Packet> sortedPackets = new ArrayList<>(userPackets);
         sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); //sort. po name, bez case sens.
+        model.addAttribute("sharedPackets", sortedPackets.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getUsers().size() > 1
+                ))); // czy pakiet jest dzielony z kimś
         model.addAttribute("user", user);
         model.addAttribute("packets", sortedPackets);
         model.addAttribute("packetsWithFlashcards", sortedPackets.stream()
@@ -59,12 +64,6 @@ public class FlashPackController {
     }
 
     //ADMIN USUWA PAKIET
-//    @GetMapping("/admin/users/packets/{userId}/delete/{packetId}")
-//    public String admintPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
-//        packetService.deletePacket(packetId);
-//        return "redirect:/admin/users/packets/" + userId;
-//    }
-
     @GetMapping("/admin/users/packets/{userId}/delete/{packetId}")
     public String adminPacketDelete(@PathVariable Long userId, @PathVariable Long packetId) {
         packetService.destroyPacket(packetId); //admin całkowicie usuwa pakiet
@@ -108,13 +107,17 @@ public class FlashPackController {
         List<Packet> sortedPackets = new ArrayList<>(userPackets);
         sortedPackets.sort(Comparator.comparing(packet -> packet.getName().toLowerCase())); // sort. po name, bez case sens.
 
-
         model.addAttribute("packets", sortedPackets);
         model.addAttribute("packetsWithFlashcards", sortedPackets.stream()
                 .collect(Collectors.toMap(
                         Packet::getId,
                         p -> p.getFlashcards().size()
                 ))); // podaje liczbę fiszek w każdym pakiecie
+        model.addAttribute("packetsShared", sortedPackets.stream()
+                .collect(Collectors.toMap(
+                        Packet::getId,
+                        p -> p.getUsers().size() > 1
+                ))); // czy pakiet dzielony z innymi
         model.addAttribute("noFieldsSet", sortedPackets.stream()
                 .collect(Collectors.toMap(
                         Packet::getId,
@@ -267,8 +270,11 @@ public class FlashPackController {
 
         packetService.updatePacket(packet);
         userService.updateUser(user);
-
-        return "redirect:/flashpack/bazaar";
+        if (session.getAttribute("fromwhere") == "admin") {
+            return "redirect:/admin/users/all";
+        } else {
+            return "redirect:/flashpack/bazaar";
+        }
     }
 
 
