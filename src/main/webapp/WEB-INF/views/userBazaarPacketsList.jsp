@@ -44,7 +44,7 @@
                         <th scope="col">Description</th>
                         <th scope="col">Author</th>
                         <th scope="col">Actions</th>
-                        <th>FNo.
+                        <th>Flsh
                             <a href="#" onclick="alert('Number of flashcards in this packet'); return false;">*</a>
                         </th>
                     </tr>
@@ -66,11 +66,11 @@
                         <tr><td colspan="5"><i>Packets you already have</i></td></tr>
                         <c:forEach items="${packets_grey}" var="packet_grey" varStatus="status">
                             <tr style="color: grey;">
-                                <td><c:out value="${packet_grey.name}"/></td>
-                                <td><c:out value="${packet_grey.description}"/></td>
-                                <td><c:out value="${packet_grey.author}"/></td>
-                                <td></td>
-                                <td>${greyPacketsWithFlashcardsBaz[packet_grey.id]}</td>
+                                <td style="color: grey;"><c:out value="${packet_grey.name}"/></td>
+                                <td style="color: grey;"><c:out value="${packet_grey.description}"/></td>
+                                <td style="color: grey;"><c:out value="${packet_grey.author}"/></td>
+                                <td style="color: grey;"></td>
+                                <td style="color: grey;">${greyPacketsWithFlashcardsBaz[packet_grey.id]}</td>
                             </tr>
                         </c:forEach>
                     </c:if>
