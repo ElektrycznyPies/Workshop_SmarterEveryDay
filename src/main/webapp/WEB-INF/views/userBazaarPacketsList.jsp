@@ -26,7 +26,7 @@
                 <c:forEach var="category" items="${categories}">
                     <input type="checkbox" name="category" value="${category.id}">${category.name}</input>
                 </c:forEach>
-                <button type="submit">Filter</button>
+                <button type="submit" disabled>Filter</button>
             </form>
 
             <%-- <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post"> --%>

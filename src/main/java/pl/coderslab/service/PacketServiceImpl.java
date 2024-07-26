@@ -132,6 +132,7 @@ public Optional<Packet> getPacket(Long id) {
         System.out.println("]]]3isShared: " + isShared + ", isOwnedByCurrentUser: " + isOwnedByCurrentUser);
 
         if (isShared && isOwnedByCurrentUser) {
+
             System.out.println("]]]3.9 isShared = ");
             System.out.println("]]]4Creating a new packet for copy-on-write");
 
@@ -165,6 +166,9 @@ public Optional<Packet> getPacket(Long id) {
 
             existingPacket.getUsers().remove(currentUser);
             currentUser.getPackets().remove(existingPacket);
+    //            currentUser.getPackets().add(newPacket);
+    //            newPacket.getUsers().add(currentUser);
+
             packetRepository.save(existingPacket);
             userRepository.save(currentUser);
             System.out.println("]]]7Existing packet and user updated");
@@ -176,7 +180,8 @@ public Optional<Packet> getPacket(Long id) {
             existingPacket.setAuthor(updatedPacket.getAuthor());
             existingPacket.setShowFields(updatedPacket.getShowFields());
             existingPacket.setCompareField(updatedPacket.getCompareField());
-
+                System.out.println("]]]7.0 upPacket showF., compF:" + updatedPacket.getShowFields() + " " + updatedPacket.getCompareField());
+                System.out.println("]]]7.1 exPacket showF., compF:" + existingPacket.getShowFields() + " " + existingPacket.getCompareField());
             // Ensure flashcards are not null
             if (existingPacket.getFlashcards() == null) {
                 existingPacket.setFlashcards(new HashSet<>());

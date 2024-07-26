@@ -75,7 +75,8 @@ public class Packet {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "packet_show_fields", joinColumns = @JoinColumn(name = "packet_id"))
     @Column(name = "show_field")
-    private Set<String> showFields = new HashSet<>();
+    //private Set<String> showFields = new HashSet<>();
+    private Set<String> showFields;
 
     @Column(name = "compare_field")
     private String compareField;
