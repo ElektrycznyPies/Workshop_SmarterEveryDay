@@ -78,8 +78,6 @@ public class StudyController {
         //return "redirect:/flashpack/user/packets/" + id + "/study";
     }
 
-
-
     @PostMapping("/flashpack/user/packets/{id}/study/answer")
     public String checkAnswer(@PathVariable Long id, @RequestParam String answer, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -189,7 +187,12 @@ public class StudyController {
         StudySession lastSession = null;
         if (!studySessions.isEmpty()) {
             lastSession = studySessions.get(studySessions.size() - 1);
+            if (lastSession != null && lastSession.getPacket().getUsers().stream().noneMatch(u -> u.getId().equals(user.getId()))) {
+                lastSession = null;
+            }
         }
+
+
         // walidacja sesji - jeśli są z pustymi polami, to je pomija
         List<StudySession> validSessions = studySessions.stream()
                 .filter(s -> s.getPacket() != null
@@ -271,18 +274,6 @@ public class StudyController {
             }
         }
 
-//        for (StudySession s : lastOneSession) {
-//            Packet packet = s.getPacket();
-//            int totalAnswers = s.getCorrectAnswers() + s.getWrongAnswers();
-//            if (totalAnswers > 0) {
-//                int correctPercentage = (int) Math.round((double) s.getCorrectAnswers() / totalAnswers * 100);
-//                int wrongPercentage = 100 - correctPercentage;
-//
-//                correctAnswerPercentagesLastOne.merge(packet, correctPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
-//                wrongAnswerPercentagesLastOne.merge(packet, wrongPercentage, (oldValue, newValue) -> (oldValue + newValue) / 2);
-//            }
-//        }
-
         for (Packet packet : sortedPackets) {
             List<StudySession> lastOneSessionForPacket = validSessions.stream()
                     .filter(s -> s.getPacket().equals(packet))
@@ -308,10 +299,12 @@ public class StudyController {
         model.addAttribute("wrongAnswerPercentagesRecent", wrongAnswerPercentagesRecent);
         model.addAttribute("correctAnswerPercentagesLastOne", correctAnswerPercentagesLastOne);
         model.addAttribute("wrongAnswerPercentagesLastOne", wrongAnswerPercentagesLastOne);
-
-        session.setAttribute("lastSession", lastSession.getPacket());
-        model.addAttribute("lastSessionName", NameShortenerUtil.shortenName(lastSession.getPacket().getName(), 1, 16));
-        model.addAttribute("lastSessionPacketId", lastSession.getPacket().getId());
+        if (lastSession != null) {
+            model.addAttribute("lastSessionName",
+                    NameShortenerUtil.shortenName(lastSession.getPacket().getName(), 1, 16));
+            session.setAttribute("lastSession", lastSession.getPacket());
+            model.addAttribute("lastSessionPacketId", lastSession.getPacket().getId());
+        }
         model.addAttribute("sortedPackets", sortedPackets);
         model.addAttribute("durationMap", durationMap);
         model.addAttribute("totalDuration", totalDuration);

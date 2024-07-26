@@ -150,10 +150,10 @@ public class FlashPackController {
                             if (user == null) {
                                 throw new EntityNotFoundException("User not found");
                             }
-                                        System.out.println("[[0.1 packet showFields, compField: " + packet.getShowFields() + " , " + packet.getCompareField());
+//                                        System.out.println("[[0.1 packet showFields, compField: " + packet.getShowFields() + " , " + packet.getCompareField());
                             Packet existingPacket = packetService.getPacket(packet.getId())
                                     .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-                                        System.out.println("[[0.2 exPacket showFields, compField: " + existingPacket.getShowFields() + " , " + existingPacket.getCompareField());
+//                                        System.out.println("[[0.2 exPacket showFields, compField: " + existingPacket.getShowFields() + " , " + existingPacket.getCompareField());
                             if (existingPacket.getUsers().size() > 1) {
                                 // Detach old packet from user and save changes
                                 user.getPackets().remove(existingPacket);
@@ -208,7 +208,6 @@ public class FlashPackController {
                             } else {
                                 // Update existing packet
                                 System.out.println("[[6.4 przejście do else: tylko 1 user");
-                    //          BeanUtils.copyProperties(packet, existingPacket, "id", "users", "flashcards");
 
                                     System.out.println("[[6.7 ShowFields before setting: " + existingPacket.getShowFields());
                                     System.out.println("[[6.8CompareField before setting: " + existingPacket.getCompareField());
@@ -532,7 +531,7 @@ public class FlashPackController {
         Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
 
         if (packet.getUsers().size() > 1) {
-            // Detach all users except the current user from the packet
+            // odłącz userów poza bieżącym od pakietu
             Iterator<User> iterator = packet.getUsers().iterator();
             while (iterator.hasNext()) {
                 User packetUser = iterator.next();
@@ -543,7 +542,7 @@ public class FlashPackController {
             }
             packet.setShowFields(new HashSet<>(packet.getShowFields()));
             packet.getUsers().add(user);
-            // Save showFields before updating the packet
+            // zapis showFields przed aktualizacją
             packetService.updatePacket(packet, user.getId());
         }
 
@@ -555,56 +554,6 @@ public class FlashPackController {
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
-//    @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
-//    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//
-//        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//
-//        if (packet.getUsers().size() > 1) {
-//            // Detach old packet from user and save changes
-//            user.getPackets().remove(packet);
-//            packet.getUsers().remove(user);
-//            userService.updateUser(user);
-//            packetService.updatePacket(packet, user.getId());
-//
-//            // Create a new packet for the current user
-//            Packet newPacket = new Packet();
-//            newPacket.setName(packet.getName());
-//            newPacket.setDescription(packet.getDescription());
-//            newPacket.setShowFields(new HashSet<>(packet.getShowFields()));
-//            newPacket.setCompareField(packet.getCompareField());
-//            newPacket.setOnBazaar(false);
-//            newPacket.setUsers(new HashSet<>(Collections.singletonList(user)));
-//            newPacket.setFlashcards(new HashSet<>());
-//
-//            // Copy flashcards
-//            for (Flashcard existingFlashcard : packet.getFlashcards()) {
-//                Flashcard newFlashcard = new Flashcard();
-//                newFlashcard.setName(existingFlashcard.getName());
-//                newFlashcard.setWord(existingFlashcard.getWord());
-//                newFlashcard.setWord2(existingFlashcard.getWord2());
-//                newFlashcard.setAdditionalText(existingFlashcard.getAdditionalText());
-//                newFlashcard.setImageLink(existingFlashcard.getImageLink());
-//                newFlashcard.setPack(newPacket);
-//                newPacket.getFlashcards().add(newFlashcard);
-//            }
-//
-//            // Save new packet
-//            packetService.addPacket(newPacket, user);
-//            packet = newPacket; // Update reference to the new packet
-//        }
-//
-//        if (file != null && !file.isEmpty()) {
-//            String fileName = file.getOriginalFilename();
-//            flashcard.setImageLink(fileName);
-//        }
-//        flashcardService.addFlashcard(flashcard, packet);
-//        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
-//    }
 
     // EDYCJA FISZKI, JEDEN FORM.
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/edit/{id}")
@@ -626,7 +575,6 @@ public class FlashPackController {
             String fileName = file.getOriginalFilename();
             flashcard.setImageLink(fileName);
         }
-
         flashcardService.updateFlashcard(flashcard);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }

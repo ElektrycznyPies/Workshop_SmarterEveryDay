@@ -101,7 +101,7 @@
                 <a href="<c:url value='/user/edit'/>"><button class="secondary">Edit your profile</button></a>
             </div>
             <div>
-                <a href="<c:url value='/flashpack/user/packets'/>"><button>Available packets</button></a>
+                <a href="<c:url value='/flashpack/user/packets'/>" autofocus><button>Available packets</button></a>
             </div>
             <div>
                 <a href="<c:url value='/flashpack/new/packet'/>"><button>Create new packet</button></a>
