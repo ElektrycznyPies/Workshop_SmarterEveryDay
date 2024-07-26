@@ -414,7 +414,6 @@ public class FlashPackController {
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
-
     // KASOWANIE FISZKI
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
     public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id, HttpSession sess) {
@@ -423,18 +422,21 @@ public class FlashPackController {
             throw new EntityNotFoundException("User not found");
         }
         Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-
-        if (packet.getUsers().size() > 1) {
-            packet.getUsers().clear();
-                System.out.println("]2.0 delFl: usunięcie userów clear(): " + packet.getUsers());
-            packet.getUsers().add(user);
-                System.out.println("]2.1 delFl: dodanie usera bieżącego add(): " + packet.getUsers());
-            packet.setShowFields(new HashSet<>(packet.getShowFields()));
-            // zapis showFields przed aktualizacją
-            packetService.updatePacket(packet, user.getId());
-        }
+        Flashcard flashcard = flashcardService.getFlashcard(id).orElseThrow(() -> new EntityNotFoundException("Fiszka not found"));
+            System.out.println("]FI kasowana fiszka id: " + flashcard.getId());
+//        if (packet.getUsers().size() > 1) {
+//            packet.getUsers().clear();
+//                System.out.println("]2.0 delFl: usunięcie userów clear(): " + packet.getUsers());
+//            packet.getUsers().add(user);
+//                System.out.println("]2.1 delFl: dodanie usera bieżącego add(): " + packet.getUsers());
+//            packet.setShowFields(new HashSet<>(packet.getShowFields()));
+//            // zapis showFields przed aktualizacją
+//            packetService.updatePacket(packet, user.getId());
+//        }
 
         flashcardService.deleteFlashcard(id);
+        packet.setShowFields(new HashSet<>(packet.getShowFields()));
+        packetService.updatePacket(packet, user.getId());
         //packetService.updatePacket(packet, user.getId());
         System.out.println("]2.2 delFl - currentUser id: " + user.getId() + " all users IDs: " + packet.getUsers());
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";

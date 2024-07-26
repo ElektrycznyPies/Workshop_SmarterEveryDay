@@ -6,6 +6,7 @@ import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.StudySession;
 import pl.coderslab.model.User;
+import pl.coderslab.repository.FlashcardRepository;
 import pl.coderslab.repository.PacketRepository;
 import pl.coderslab.repository.StudySessionRepository;
 import pl.coderslab.repository.UserRepository;
@@ -24,6 +25,8 @@ public class PacketServiceImpl implements PacketService {
     private UserRepository userRepository;
     @Autowired
     private StudySessionRepository studySessionRepository;
+    @Autowired
+    private FlashcardRepository flashcardRepository;
 
     @Override
     public List<Packet> getAllPackets() {
@@ -203,20 +206,36 @@ public Optional<Packet> getPacket(Long id) {
 
             // Kopiowanie fiszek
             existingPacket.getFlashcards().clear();
-            if (packet.getFlashcards() != null) {    ////// możliwy PROBLEM Z KOPIOWANIEM FISZEK
+            if (packet.getFlashcards() != null) {
                 for (Flashcard flashcard : packet.getFlashcards()) {
-                    Flashcard updFlashcard = new Flashcard();
-                    updFlashcard.setName(flashcard.getName());
-                    updFlashcard.setWord(flashcard.getWord());
-                    updFlashcard.setWord2(flashcard.getWord2());
-                    updFlashcard.setAdditionalText(flashcard.getAdditionalText());
-                    updFlashcard.setImageLink(flashcard.getImageLink());
-                    updFlashcard.setPack(existingPacket);
-                    existingPacket.getFlashcards().add(updFlashcard);
+                    Flashcard newFlashcard = new Flashcard();
+                    newFlashcard.setName(flashcard.getName());
+                    newFlashcard.setWord(flashcard.getWord());
+                    newFlashcard.setWord(flashcard.getWord());
+                    newFlashcard.setWord2(flashcard.getWord2());
+                    newFlashcard.setAdditionalText(flashcard.getAdditionalText());
+                    newFlashcard.setImageLink(flashcard.getImageLink());
+                    newFlashcard.setPack(existingPacket);
+                    existingPacket.getFlashcards().add(newFlashcard);
                 }
             }
 
+//            if (packet.getFlashcards() != null) {    ////// możliwy PROBLEM Z KOPIOWANIEM FISZEK
+//                for (Flashcard flashcard : packet.getFlashcards()) {
+//                    Flashcard updFlashcard = flashcardRepository.findById(flashcard.getId())
+//                            .orElse(new Flashcard());
+////                    Flashcard updFlashcard = new Flashcard();
+//                    updFlashcard.setName(flashcard.getName());
+//                    updFlashcard.setWord(flashcard.getWord());
+//                    updFlashcard.setWord2(flashcard.getWord2());
+//                    updFlashcard.setAdditionalText(flashcard.getAdditionalText());
+//                    updFlashcard.setImageLink(flashcard.getImageLink());
+//                    updFlashcard.setPack(existingPacket);
+//                    existingPacket.getFlashcards().add(updFlashcard);
+//                }
+//            }
             packetRepository.save(existingPacket);
+
 
             System.out.println("]7 zaktualizowany stary pakiet. Users: " + existingPacket.getUsers());
 

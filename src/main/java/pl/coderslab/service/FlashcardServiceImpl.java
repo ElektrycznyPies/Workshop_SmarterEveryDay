@@ -58,7 +58,8 @@ public class FlashcardServiceImpl implements FlashcardService {
         Packet packet = flashcard.getPack();
         packet.getFlashcards().remove(flashcard);
         packetRepository.save(packet);
-        flashcardRepository.deleteById(id);
+            System.out.println("]FISer Pak, Fid, listaF: " + packet.getName() + " , " + flashcard.getId() + " , " + packet.getFlashcards());
+        flashcardRepository.delete(flashcard);
     }
 
     @Override
