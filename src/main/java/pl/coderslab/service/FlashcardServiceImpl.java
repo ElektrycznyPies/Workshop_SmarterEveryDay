@@ -31,10 +31,23 @@ public class FlashcardServiceImpl implements FlashcardService {
         return flashcardRepository.findById(id);
     }
 
+//    @Override
+//    @Transactional
+//    public void addFlashcard(Flashcard flashcard, Packet packet) {
+////        flashcard = flashcardRepository.findById(flashcard.getId())
+////                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
+////        packet = flashcard.getPack();
+//        flashcard.setPack(packet);
+//        flashcardRepository.save(flashcard);
+//    }
+
     @Override
-    public void addFlashcard(Flashcard flashcard, Packet pack) {
-        flashcard.setPack(pack);
+    @Transactional
+    public void addFlashcard(Flashcard flashcard, Packet packet) {
+        flashcard.setPack(packet);
         flashcardRepository.save(flashcard);
+//        packet.getFlashcards().add(flashcard);
+//        packetRepository.save(packet);
     }
 
     @Override
@@ -49,11 +62,13 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
     @Override
-    public void updateFlashcard(Flashcard updatedFlashcard) {
-        if (!flashcardRepository.existsById(updatedFlashcard.getId())) {
+    public void updateFlashcard(Flashcard flashcard) {
+        if (!flashcardRepository.existsById(flashcard.getId())) {
             throw new EntityNotFoundException("Flashcard not found");
         }
-        flashcardRepository.save(updatedFlashcard);
+        Packet packet = flashcard.getPack();
+        flashcard.setPack(packet);
+        flashcardRepository.save(flashcard);
     }
 
     @Override

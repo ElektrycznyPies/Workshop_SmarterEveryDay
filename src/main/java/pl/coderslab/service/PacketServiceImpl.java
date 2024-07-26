@@ -115,43 +115,37 @@ public Optional<Packet> getPacket(Long id) {
         userRepository.save(user);
     }
 
-
     @Override
     @Transactional
-    public Packet updatePacket(Packet updatedPacket, Long userId) {
-        Packet existingPacket = packetRepository.findById(updatedPacket.getId())
+    public Packet updatePacket(Packet packet, Long userId) {
+        Packet existingPacket = packetRepository.findById(packet.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        System.out.println("]]]1Fetched existingPacket: " + existingPacket);
-        System.out.println("]]]2Fetched currentUser: " + currentUser);
 
-        boolean isShared = existingPacket.getUsers().size() > 1;
-        boolean isOwnedByCurrentUser = existingPacket.getUsers().stream()
-                .anyMatch(user -> user.getId().equals(userId));
-        System.out.println("]]]3isShared: " + isShared + ", isOwnedByCurrentUser: " + isOwnedByCurrentUser);
+        System.out.println("]0Upd currentUser2: " + currentUser);
+        System.out.println("]]]1Upd packet: " + packet);
+        System.out.println("]]]2Upd currentUser: " + currentUser);
+        System.out.println("]]]2Upd packet users: " + packet.getUsers());
 
-        if (isShared && isOwnedByCurrentUser) {
-
-            System.out.println("]]]3.9 isShared = ");
-            System.out.println("]]]4Creating a new packet for copy-on-write");
-
+        if (existingPacket.getUsers().size() > 1) {
+            // Tworzenie nowego pakietu
             Packet newPacket = new Packet();
-            newPacket.setName(updatedPacket.getName());
-            newPacket.setDescription(updatedPacket.getDescription());
-            newPacket.setAuthor(updatedPacket.getAuthor());
+            newPacket.setName(packet.getName());
+            newPacket.setDescription(packet.getDescription());
+            newPacket.setAuthor(packet.getAuthor());
             newPacket.setOnBazaar(false);
-            newPacket.setShowFields(new HashSet<>(updatedPacket.getShowFields())); // Ensure showFields is copied
-            newPacket.setCompareField(updatedPacket.getCompareField());
-            newPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
-            System.out.println("]]]5New packet created: " + newPacket);
+            newPacket.setShowFields(new HashSet<>(packet.getShowFields())); // Ensure showFields is copied
+            newPacket.setCompareField(packet.getCompareField());
 
-            // Ensure flashcards are not null
-            if (newPacket.getFlashcards() == null) {
-                newPacket.setFlashcards(new HashSet<>());
-            }
-            if (updatedPacket.getFlashcards() != null) {
-                for (Flashcard flashcard : updatedPacket.getFlashcards()) {
+            // tylko 1 user nowego pak.
+            newPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
+            System.out.println("]]]2.2Upd newpacket users: " + newPacket.getUsers());
+
+            // Kopiowanie fiszek
+            newPacket.setFlashcards(new HashSet<>());
+            if (existingPacket.getFlashcards() != null) {
+                for (Flashcard flashcard : existingPacket.getFlashcards()) {
                     Flashcard newFlashcard = new Flashcard();
                     newFlashcard.setName(flashcard.getName());
                     newFlashcard.setWord(flashcard.getWord());
@@ -162,42 +156,61 @@ public Optional<Packet> getPacket(Long id) {
                     newPacket.getFlashcards().add(newFlashcard);
                 }
             }
-            System.out.println("]]]6Flashcards copied to new packet");
+            System.out.println("]6Upd Flashcards copied to new packet: " + newPacket.getFlashcards());
 
+            // Odłączenie użytkownika od istniejącego pakietu
             existingPacket.getUsers().remove(currentUser);
+
+            // Zapisanie zaktualizowanego istniejącego pakietu
+            packetRepository.save(existingPacket);
+
+            // Zapisanie nowego pakietu
+            packetRepository.save(newPacket);
+
+            // Dodanie nowego pakietu do listy pakietów użytkownika
             currentUser.getPackets().remove(existingPacket);
-    //            currentUser.getPackets().add(newPacket);
-    //            newPacket.getUsers().add(currentUser);
+            currentUser.getPackets().add(newPacket);
+            userRepository.save(currentUser);
+
+            System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
+
+            return newPacket;
+        } else {
+            // Aktualizacja istniejącego pakietu
+            existingPacket.setName(packet.getName());
+            existingPacket.setDescription(packet.getDescription());
+            existingPacket.setShowFields(packet.getShowFields());
+            existingPacket.setCompareField(packet.getCompareField());
+            existingPacket.setOnBazaar(packet.isOnBazaar());
+            existingPacket.setAuthor(packet.getAuthor());
+
+            // Ustawianie użytkowników na tylko bieżącego użytkownika
+            existingPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
+            System.out.println("]8Upd exiPacket users: " + existingPacket.getUsers());
+
+            // Kopiowanie fiszek
+            existingPacket.getFlashcards().clear();
+            if (packet.getFlashcards() != null) {
+                for (Flashcard flashcard : packet.getFlashcards()) {
+                    Flashcard updFlashcard = new Flashcard();
+                    updFlashcard.setName(flashcard.getName());
+                    updFlashcard.setWord(flashcard.getWord());
+                    updFlashcard.setWord2(flashcard.getWord2());
+                    updFlashcard.setAdditionalText(flashcard.getAdditionalText());
+                    updFlashcard.setImageLink(flashcard.getImageLink());
+                    updFlashcard.setPack(existingPacket);
+                    existingPacket.getFlashcards().add(updFlashcard);
+                }
+            }
 
             packetRepository.save(existingPacket);
-            userRepository.save(currentUser);
-            System.out.println("]]]7Existing packet and user updated");
 
-            return packetRepository.save(newPacket);
-        } else if (isOwnedByCurrentUser) {
+            System.out.println("]7 zaktualizowany stary pakiet. Users: " + existingPacket.getUsers());
 
-            existingPacket.setName(updatedPacket.getName());
-            existingPacket.setDescription(updatedPacket.getDescription());
-            existingPacket.setAuthor(updatedPacket.getAuthor());
-            existingPacket.setShowFields(new HashSet<>(updatedPacket.getShowFields())); // Ensure showFields is copied
-            existingPacket.setCompareField(updatedPacket.getCompareField());
-                System.out.println("]]]7.0 upPacket showF., compF:" + updatedPacket.getShowFields() + " " + updatedPacket.getCompareField());
-                System.out.println("]]]7.1 exPacket showF., compF:" + existingPacket.getShowFields() + " " + existingPacket.getCompareField());
-            // Ensure flashcards are not null
-            if (existingPacket.getFlashcards() == null) {
-                existingPacket.setFlashcards(new HashSet<>());
-            }
-            if (updatedPacket.getFlashcards() != null) {
-                existingPacket.getFlashcards().clear();
-                existingPacket.getFlashcards().addAll(updatedPacket.getFlashcards());
-            }
-            System.out.println("]]]8Existing packet updated");
-
-            return packetRepository.save(existingPacket);
-        } else {
-            throw new IllegalStateException("User does not have permission to edit this packet");
+            return existingPacket;
         }
     }
+
 
     @Override
     @Transactional
