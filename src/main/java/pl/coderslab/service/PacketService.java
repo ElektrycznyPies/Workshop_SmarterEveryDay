@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -12,9 +13,11 @@ import java.util.Set;
 public interface PacketService {
     List<Packet> getAllPackets();
     Optional<Packet> getPacket(Long id);
-    Packet addPacket(Packet pack, User user);
+    @Transactional
+    Packet addPacket(Packet packet, User user);
+    Packet updatePacket(Packet packet, Long userId);
     void deletePacket(Long id);
-    Packet updatePacket(Packet pack, Long userId);
+    @Transactional
     List<Packet> getBazaarPackets();
     List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds);
     void updateStudySettings(Long packetId, Set<String> showFields, String compareField);

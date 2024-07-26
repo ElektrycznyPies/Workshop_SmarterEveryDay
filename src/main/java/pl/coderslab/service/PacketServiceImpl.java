@@ -38,63 +38,34 @@ public Optional<Packet> getPacket(Long id) {
     return packet;
 }
 
-//    @Transactional
-//    public Packet addPacket(Packet packet, User user) {
-//        // pobiera usera do zarządzania
-//        User managedUser = userRepository.findById(user.getId())
-//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-//
-//        // set userów, inicjalizacja
-//        if (packet.getUsers() == null) {
-//            packet.setUsers(new HashSet<>());
-//        }
-//
-//        // czy user jest już przypisany do pakietu?
-//        if (!packet.getUsers().contains(managedUser)) {
-//            packet.getUsers().add(managedUser);
-//        }
-//
-//        // zapisuje pak.
-//        Packet savedPacket = packetRepository.save(packet);
-//
-//        // Ensure user's packets set is initialized
-//        if (managedUser.getPackets() == null) {
-//            managedUser.setPackets(new HashSet<>());
-//        }
-//
-//        // Check if the packet is already associated with the user
-//        if (!managedUser.getPackets().contains(savedPacket)) {
-//            managedUser.getPackets().add(savedPacket);
-//            userRepository.save(managedUser);
-//        }
-//        return savedPacket;
-//    }
-
     @Override
     @Transactional
     public Packet addPacket(Packet packet, User user) {
+        // user zarządzany przez persistence context
         User managedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // First, save the packet
-        Packet savedPacket = packetRepository.save(packet);
+        // wszyscy userzy zarz. przez persistence context
+        Set<User> managedUsers = packet.getUsers().stream()
+                .map(u -> userRepository.findById(u.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found")))
+                .collect(Collectors.toSet());
 
-        // Check if the association already exists
+        packet.setUsers(managedUsers);
+
+        // czy już przypisany
         boolean associationExists = managedUser.getPackets().stream()
-                .anyMatch(p -> p.getId().equals(savedPacket.getId()));
+                .anyMatch(p -> p.getId().equals(packet.getId()));
 
         if (!associationExists) {
-            // Add the association only if it doesn't exist
-            managedUser.getPackets().add(savedPacket);
-            savedPacket.getUsers().add(managedUser);
-
-            // Save both entities
+            packetRepository.save(packet);
+            managedUser.getPackets().add(packet);
             userRepository.save(managedUser);
-            packetRepository.save(savedPacket);
         }
 
-        return savedPacket;
+        return packet;
     }
+
 
     @Override
     @Transactional
@@ -144,6 +115,7 @@ public Optional<Packet> getPacket(Long id) {
         userRepository.save(user);
     }
 
+
     @Override
     @Transactional
     public Packet updatePacket(Packet updatedPacket, Long userId) {
@@ -151,12 +123,18 @@ public Optional<Packet> getPacket(Long id) {
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        System.out.println("]]]1Fetched existingPacket: " + existingPacket);
+        System.out.println("]]]2Fetched currentUser: " + currentUser);
 
         boolean isShared = existingPacket.getUsers().size() > 1;
         boolean isOwnedByCurrentUser = existingPacket.getUsers().stream()
                 .anyMatch(user -> user.getId().equals(userId));
+        System.out.println("]]]3isShared: " + isShared + ", isOwnedByCurrentUser: " + isOwnedByCurrentUser);
 
         if (isShared && isOwnedByCurrentUser) {
+            System.out.println("]]]3.9 isShared = ");
+            System.out.println("]]]4Creating a new packet for copy-on-write");
+
             Packet newPacket = new Packet();
             newPacket.setName(updatedPacket.getName());
             newPacket.setDescription(updatedPacket.getDescription());
@@ -165,7 +143,7 @@ public Optional<Packet> getPacket(Long id) {
             newPacket.setShowFields(updatedPacket.getShowFields());
             newPacket.setCompareField(updatedPacket.getCompareField());
             newPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
-            currentUser.getPackets().add(newPacket);
+            System.out.println("]]]5New packet created: " + newPacket);
 
             // Ensure flashcards are not null
             if (newPacket.getFlashcards() == null) {
@@ -183,11 +161,14 @@ public Optional<Packet> getPacket(Long id) {
                     newPacket.getFlashcards().add(newFlashcard);
                 }
             }
+            System.out.println("]]]6Flashcards copied to new packet");
 
             existingPacket.getUsers().remove(currentUser);
             currentUser.getPackets().remove(existingPacket);
             packetRepository.save(existingPacket);
             userRepository.save(currentUser);
+            System.out.println("]]]7Existing packet and user updated");
+
             return packetRepository.save(newPacket);
         } else if (isOwnedByCurrentUser) {
             existingPacket.setName(updatedPacket.getName());
@@ -204,28 +185,13 @@ public Optional<Packet> getPacket(Long id) {
                 existingPacket.getFlashcards().clear();
                 existingPacket.getFlashcards().addAll(updatedPacket.getFlashcards());
             }
+            System.out.println("]]]8Existing packet updated");
+
             return packetRepository.save(existingPacket);
         } else {
             throw new IllegalStateException("User does not have permission to edit this packet");
         }
     }
-
-//    private void updateExistingPacket(Packet existingPacket, Packet updatedPacket) {
-//        existingPacket.setName(updatedPacket.getName());
-//        existingPacket.setDescription(updatedPacket.getDescription());
-//        existingPacket.setAuthor(updatedPacket.getAuthor());
-//        existingPacket.setShowFields(updatedPacket.getShowFields());
-//        existingPacket.setCompareField(updatedPacket.getCompareField());
-//        // czy flashcards nie są  null
-//        if (existingPacket.getFlashcards() == null) {
-//            existingPacket.setFlashcards(new HashSet<>());
-//        }
-//        if (updatedPacket.getFlashcards() != null) {
-//            existingPacket.getFlashcards().clear();
-//            existingPacket.getFlashcards().addAll(updatedPacket.getFlashcards());
-//        }
-//    }
-
 
     @Override
     @Transactional
@@ -283,5 +249,4 @@ public Optional<Packet> getPacket(Long id) {
     public List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds) {
         return packetRepository.findByIsOnBazaarAndCategoriesIn(true, categoryIds);
     }
-
 }

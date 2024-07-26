@@ -144,16 +144,12 @@ public class Flashcard {
     public String toString() {
         return "Flashcard{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
                 ", word='" + word + '\'' +
-                ", word2='" + word2 + '\'' +
                 ", imageLink='" + imageLink + '\'' +
-                ", imageLink2='" + imageLink2 + '\'' +
-                ", soundLink='" + soundLink + '\'' +
                 ", additionalText='" + additionalText + '\'' +
-                ", pack=" + pack +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
+                ", soundLink='" + soundLink + '\'' +
                 '}';
     }
 }

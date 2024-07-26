@@ -103,18 +103,9 @@ public class Packet {
     )
     private Set<Category> categories;
 
-    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore
+
+    @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
-
-    //@ManyToMany(fetch = FetchType.EAGER)
-//@JoinTable(
-//        name = "user_packet",
-//        joinColumns = @JoinColumn(name = "packet_id"),
-//        inverseJoinColumns = @JoinColumn(name = "user_id")
-//)
-//private Set<User> users = new HashSet<>();
-
 
 
     public Packet() {
@@ -251,10 +242,6 @@ public class Packet {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", isOnBazaar=" + isOnBazaar +
-                ", users=" + users +
-                ", flashcards=" + flashcards +
-                ", studySessions=" + studySessions +
-                ", categories=" + categories +
                 '}';
     }
 }

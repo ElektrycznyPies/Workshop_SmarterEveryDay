@@ -143,6 +143,9 @@ public class FlashPackController {
         return "userPacketEdit";
     }
 
+
+
+
     @PostMapping("/flashpack/user/packets/edit")
     public String editPacket(@ModelAttribute Packet updatedPacket, @RequestParam(required = false) String authorType, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -154,24 +157,40 @@ public class FlashPackController {
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
 
         if (existingPacket.getUsers().size() > 1) {
+            // Detach old packet from user and save changes
+            user.getPackets().remove(existingPacket);
+            existingPacket.getUsers().remove(user);
+
+            // Zakładam, że masz metodę updateUser w userService, która zapisuje zmiany w użytkowniku
+            userService.updateUser(user);
+            // Zaktualizuj istniejący pakiet bez tego użytkownika
+            packetService.updatePacket(existingPacket, user.getId());
+
             // Create a new packet
             Packet newPacket = new Packet();
-            BeanUtils.copyProperties(updatedPacket, newPacket);
-            newPacket.setId(null);
+            newPacket.setName(updatedPacket.getName());
+            newPacket.setDescription(updatedPacket.getDescription());
+            newPacket.setShowFields(updatedPacket.getShowFields());
+            newPacket.setCompareField(updatedPacket.getCompareField());
             newPacket.setOnBazaar(false);
             newPacket.setUsers(new HashSet<>(Collections.singletonList(user)));
             newPacket.setFlashcards(new HashSet<>());
+            System.out.println("[[1 Ponad 1 user, setting parametrów");
 
             // Copy flashcards
             for (Flashcard flashcard : existingPacket.getFlashcards()) {
                 Flashcard newFlashcard = new Flashcard();
-                BeanUtils.copyProperties(flashcard, newFlashcard);
-                newFlashcard.setId(null);
+                newFlashcard.setName(flashcard.getName());
+                newFlashcard.setWord(flashcard.getWord());
+                newFlashcard.setWord2(flashcard.getWord2());
+                newFlashcard.setAdditionalText(flashcard.getAdditionalText());
+                newFlashcard.setImageLink(flashcard.getImageLink());
                 newFlashcard.setPack(newPacket);
                 newPacket.getFlashcards().add(newFlashcard);
+                System.out.println("[[2 Ponad 1 user, zapis fiszek");
             }
 
-            // pole Author
+            // Set author field
             if (updatedPacket.getAuthor() == null || updatedPacket.getAuthor().trim().isEmpty()) {
                 newPacket.setAuthor("[anonymous]");
             } else if ("nick".equals(authorType)) {
@@ -181,36 +200,88 @@ public class FlashPackController {
             } else {
                 newPacket.setAuthor(updatedPacket.getAuthor());
             }
+            System.out.println("[[3 Pole Author");
 
-            // odłącza stary pak. od usera
-            user.getPackets().remove(existingPacket);
-            existingPacket.getUsers().remove(user);
-
-            // zapis nowego pak.
+            // Save new packet
             packetService.addPacket(newPacket, user);
+            System.out.println("[[6 zapisany nowy pakiet");
         } else {
-            // lub update istniejącego pak.
-            existingPacket.setName(updatedPacket.getName());
-            existingPacket.setDescription(updatedPacket.getDescription());
+            // Update existing packet
+            System.out.println("[[6.4 przejście do else: tylko 1 user");
+            BeanUtils.copyProperties(updatedPacket, existingPacket, "id", "users", "flashcards");
+            System.out.println("[[6.5 Po BeanUtils.copyProperties");
             existingPacket.setAuthor(updatedPacket.getAuthor());
+            System.out.println("[[6.6 Ustawiony Author na " + updatedPacket.getAuthor());
             packetService.updatePacket(existingPacket, user.getId());
+            System.out.println("[[7 zaktu. stary pakiet");
         }
 
         return "redirect:/flashpack/user/packets";
     }
 
-    private void setAuthorField(Packet packet, String authorType, User user) {
-         if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
-            packet.setAuthor("[anonymous]");
-        } else if ("nick".equals(authorType)) {
-            packet.setAuthor(user.getNick());
-        } else if ("name".equals(authorType)) {
-            packet.setAuthor(user.getFullName());
-        } else {
-            packet.setAuthor(packet.getAuthor());
-        }
 
-    }
+
+
+
+
+
+//      METODA Z GITHUBA, KT TAKŻE ZWRACA BŁĄD PODWÓJNEGO ZAPISU DO DB
+//                    @PostMapping("/flashpack/user/packets/edit")
+//                    public String editPacket(@ModelAttribute Packet packet, @RequestParam(required = false) String authorType, HttpSession session) {
+//                        User user = (User) session.getAttribute("user");
+//                        if (user == null) {
+//                            throw new EntityNotFoundException("User not found");
+//                        }
+//
+//                        // pobiera istniejący pakiet z bazy danych
+//                        Packet existingPacket = packetService.getPacket(packet.getId())
+//                                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//
+//                        // aktualizuje pola pakietu
+//                        existingPacket.setName(packet.getName());
+//                        existingPacket.setDescription(packet.getDescription());
+//
+//                        // obsł. pola author
+//                        if (packet.getAuthor() == null || packet.getAuthor().trim().isEmpty()) {
+//                            existingPacket.setAuthor("");
+//                        } else if ("nick".equals(authorType)) {
+//                            existingPacket.setAuthor(user.getNick());
+//                        } else if ("name".equals(authorType)) {
+//                            existingPacket.setAuthor(user.getFullName());
+//                        } else {
+//                            existingPacket.setAuthor(packet.getAuthor());
+//                        }
+//                        packetService.updatePacket(existingPacket, user.getId());
+//                        return "redirect:/flashpack/user/packets";
+//                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @GetMapping("/flashpack/user/packets/delete/{id}")
@@ -224,20 +295,7 @@ public class FlashPackController {
     }
 
     // BAZAR
-//    @GetMapping("/flashpack/user/packets/{id}/sendToBazaar")
-//    public String sendToBazaar(@PathVariable Long id, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        if (packet.getFlashcards() == null || packet.getFlashcards().isEmpty()) {
-//            throw new IllegalStateException("Packet must have flashcards to be sent to the bazaar");
-//        }
-//        packet.setOnBazaar(true);
-//        packetService.updatePacket(packet, user.getId());
-//        return "redirect:/flashpack/user/packets";
-//    }
+
     @GetMapping("/flashpack/user/packets/{id}/sendToBazaar")
     public String sendToBazaar(@PathVariable Long id, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -289,64 +347,6 @@ public class FlashPackController {
         model.addAttribute("categories", categoryService.getAllCategories());
         return "userBazaarPacketsList";
     }
-
-//    @GetMapping("/flashpack/bazaar/get/{id}")
-//    public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        Packet packet = packetService.getPacket(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//
-//        if (!packet.getUsers().contains(user.getId())) {
-//            // dodaj usera do pakietu
-//            packet.getUsers().add(user);
-//
-//            // dodaj pakiet do u.
-//            user.getPackets().add(packet);
-//
-//            // zapisz użytkownika i pakiet
-//            userService.updateUser(user);
-//            packetService.updatePacket(packet, user.getId());
-//        }
-//
-//        if (session.getAttribute("fromwhere") == "admin") {
-//            return "redirect:/admin/users/all";
-//        } else {
-//            return "redirect:/flashpack/bazaar";
-//        }
-//    }
-
-//    @GetMapping("/flashpack/bazaar/get/{id}")
-//    public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            throw new EntityNotFoundException("User not found");
-//        }
-//        Packet packet = packetService.getPacket(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//
-//        // Sprawdź, czy użytkownik już ma ten pakiet
-//        if (!packet.getUsers().contains(user)) {
-//            // Dodaj użytkownika do pakietu
-//            packet.getUsers().add(user);
-//
-//            // Dodaj pakiet do użytkownika
-//            user.getPackets().add(packet);
-//
-//            // zapisz użytkownika
-//            userService.updateUser(user);
-//            // zapisz pakiet
-//            packetService.updatePacket(packet, user.getId());
-//        }
-//
-//        if ("admin".equals(session.getAttribute("fromwhere"))) {
-//            return "redirect:/admin/users/all";
-//        } else {
-//            return "redirect:/flashpack/bazaar";
-//        }
-//    }
 
     @GetMapping("/flashpack/bazaar/get/{id}")
     public String getPacketFromBazaar(@PathVariable Long id, HttpSession session) {

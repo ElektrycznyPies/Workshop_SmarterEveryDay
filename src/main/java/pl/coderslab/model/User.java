@@ -43,13 +43,13 @@ public class User {
     @Column(nullable = false)
     private Long role = 0L; // 0 = user, 1 = admin, other numbers for future roles
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_packet",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "packet_id")
     )
-    @JsonIgnore
     private Set<Packet> packets = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
@@ -154,14 +154,7 @@ public class User {
     public String getFullName() {
         return firstName + " " + lastName;
     }
-
-//    public Set<Packet> getPackets() {
-//        if (packets == null) {
-//            packets = new HashSet<>();
-//        }
-//        return packets;
-//    }
-public Set<Packet> getPackets() {
+    public Set<Packet> getPackets() {
     if (this.packets == null) {
         this.packets = new HashSet<>();
     }
@@ -178,14 +171,8 @@ public Set<Packet> getPackets() {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", nick='" + nick + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                ", role=" + role +
-                ", packets=" + packets +
-                ", studySessions=" + studySessions +
+                ", nick='" + nick + '\'' +
                 '}';
     }
 }
