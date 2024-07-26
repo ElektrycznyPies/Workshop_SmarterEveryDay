@@ -144,7 +144,7 @@ public Optional<Packet> getPacket(Long id) {
 
             // Kopiowanie fiszek
             newPacket.setFlashcards(new HashSet<>());
-            if (existingPacket.getFlashcards() != null) {
+            if (existingPacket.getFlashcards() != null) {   /////////////// TU MOŻE BYĆ PROBLEM Z ZAPISEM FISEK packet, nie expacket
                 for (Flashcard flashcard : existingPacket.getFlashcards()) {
                     Flashcard newFlashcard = new Flashcard();
                     newFlashcard.setName(flashcard.getName());
@@ -158,21 +158,34 @@ public Optional<Packet> getPacket(Long id) {
             }
             System.out.println("]6Upd Flashcards copied to new packet: " + newPacket.getFlashcards());
 
-            // Odłączenie użytkownika od istniejącego pakietu
-            existingPacket.getUsers().remove(currentUser);
 
-            // Zapisanie zaktualizowanego istniejącego pakietu
+            // Remove the current user from the existing packet
+            existingPacket.getUsers().remove(currentUser);
             packetRepository.save(existingPacket);
 
-            // Zapisanie nowego pakietu
+            // Save the new packet
             packetRepository.save(newPacket);
 
-            // Dodanie nowego pakietu do listy pakietów użytkownika
+            // Update user's packet list
             currentUser.getPackets().remove(existingPacket);
             currentUser.getPackets().add(newPacket);
             userRepository.save(currentUser);
 
-            System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
+//            // Odłączenie użytkownika od istniejącego pakietu
+//            existingPacket.getUsers().remove(currentUser);
+//                System.out.println("]7Upd usuw. usera ze starego pak. dziel. Nowa lista userów: " + existingPacket.getUsers());
+//            currentUser.getPackets().remove(existingPacket);
+//            // Zapisanie zaktualizowanego istniejącego pakietu
+//            packetRepository.save(existingPacket);
+//
+//            // Zapisanie nowego pakietu
+//            packetRepository.save(newPacket);
+//
+//            // Dodanie nowego pakietu do listy pakietów użytkownika
+//            currentUser.getPackets().add(newPacket);
+//            userRepository.save(currentUser);
+
+                System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
 
             return newPacket;
         } else {
@@ -185,12 +198,12 @@ public Optional<Packet> getPacket(Long id) {
             existingPacket.setAuthor(packet.getAuthor());
 
             // Ustawianie użytkowników na tylko bieżącego użytkownika
-            existingPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
+            //existingPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
             System.out.println("]8Upd exiPacket users: " + existingPacket.getUsers());
 
             // Kopiowanie fiszek
             existingPacket.getFlashcards().clear();
-            if (packet.getFlashcards() != null) {
+            if (packet.getFlashcards() != null) {    ////// możliwy PROBLEM Z KOPIOWANIEM FISZEK
                 for (Flashcard flashcard : packet.getFlashcards()) {
                     Flashcard updFlashcard = new Flashcard();
                     updFlashcard.setName(flashcard.getName());
@@ -262,6 +275,7 @@ public Optional<Packet> getPacket(Long id) {
             user.getPackets().add(packet);
             packetRepository.save(packet);
             userRepository.save(user);
+            System.out.println("]5Getbaz user, packet: " + user.getFullName() + packet.getName());
         }
     }
     @Override
