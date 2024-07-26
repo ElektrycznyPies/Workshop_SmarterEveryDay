@@ -141,7 +141,7 @@ public Optional<Packet> getPacket(Long id) {
             newPacket.setDescription(updatedPacket.getDescription());
             newPacket.setAuthor(updatedPacket.getAuthor());
             newPacket.setOnBazaar(false);
-            newPacket.setShowFields(updatedPacket.getShowFields());
+            newPacket.setShowFields(new HashSet<>(updatedPacket.getShowFields())); // Ensure showFields is copied
             newPacket.setCompareField(updatedPacket.getCompareField());
             newPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
             System.out.println("]]]5New packet created: " + newPacket);
@@ -175,10 +175,11 @@ public Optional<Packet> getPacket(Long id) {
 
             return packetRepository.save(newPacket);
         } else if (isOwnedByCurrentUser) {
+
             existingPacket.setName(updatedPacket.getName());
             existingPacket.setDescription(updatedPacket.getDescription());
             existingPacket.setAuthor(updatedPacket.getAuthor());
-            existingPacket.setShowFields(updatedPacket.getShowFields());
+            existingPacket.setShowFields(new HashSet<>(updatedPacket.getShowFields())); // Ensure showFields is copied
             existingPacket.setCompareField(updatedPacket.getCompareField());
                 System.out.println("]]]7.0 upPacket showF., compF:" + updatedPacket.getShowFields() + " " + updatedPacket.getCompareField());
                 System.out.println("]]]7.1 exPacket showF., compF:" + existingPacket.getShowFields() + " " + existingPacket.getCompareField());
@@ -233,6 +234,7 @@ public Optional<Packet> getPacket(Long id) {
     public List<Packet> getBazaarPackets() {
         return packetRepository.findByIsOnBazaar(true);
     }
+
 
     @Override
     @Transactional

@@ -523,17 +523,88 @@ public class FlashPackController {
 
 
     @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
-    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file) {
+    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+
         Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+
+        if (packet.getUsers().size() > 1) {
+            // Detach all users except the current user from the packet
+            Iterator<User> iterator = packet.getUsers().iterator();
+            while (iterator.hasNext()) {
+                User packetUser = iterator.next();
+                if (!packetUser.getId().equals(user.getId())) {
+                    packetUser.getPackets().remove(packet);
+                    iterator.remove();
+                }
+            }
+            packet.setShowFields(new HashSet<>(packet.getShowFields()));
+            packet.getUsers().add(user);
+            // Save showFields before updating the packet
+            packetService.updatePacket(packet, user.getId());
+        }
+
         if (file != null && !file.isEmpty()) {
             String fileName = file.getOriginalFilename();
             flashcard.setImageLink(fileName);
-            }
+        }
         flashcardService.addFlashcard(flashcard, packet);
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
 
-
+//    @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
+//    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//
+//        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//
+//        if (packet.getUsers().size() > 1) {
+//            // Detach old packet from user and save changes
+//            user.getPackets().remove(packet);
+//            packet.getUsers().remove(user);
+//            userService.updateUser(user);
+//            packetService.updatePacket(packet, user.getId());
+//
+//            // Create a new packet for the current user
+//            Packet newPacket = new Packet();
+//            newPacket.setName(packet.getName());
+//            newPacket.setDescription(packet.getDescription());
+//            newPacket.setShowFields(new HashSet<>(packet.getShowFields()));
+//            newPacket.setCompareField(packet.getCompareField());
+//            newPacket.setOnBazaar(false);
+//            newPacket.setUsers(new HashSet<>(Collections.singletonList(user)));
+//            newPacket.setFlashcards(new HashSet<>());
+//
+//            // Copy flashcards
+//            for (Flashcard existingFlashcard : packet.getFlashcards()) {
+//                Flashcard newFlashcard = new Flashcard();
+//                newFlashcard.setName(existingFlashcard.getName());
+//                newFlashcard.setWord(existingFlashcard.getWord());
+//                newFlashcard.setWord2(existingFlashcard.getWord2());
+//                newFlashcard.setAdditionalText(existingFlashcard.getAdditionalText());
+//                newFlashcard.setImageLink(existingFlashcard.getImageLink());
+//                newFlashcard.setPack(newPacket);
+//                newPacket.getFlashcards().add(newFlashcard);
+//            }
+//
+//            // Save new packet
+//            packetService.addPacket(newPacket, user);
+//            packet = newPacket; // Update reference to the new packet
+//        }
+//
+//        if (file != null && !file.isEmpty()) {
+//            String fileName = file.getOriginalFilename();
+//            flashcard.setImageLink(fileName);
+//        }
+//        flashcardService.addFlashcard(flashcard, packet);
+//        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+//    }
 
     // EDYCJA FISZKI, JEDEN FORM.
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/edit/{id}")

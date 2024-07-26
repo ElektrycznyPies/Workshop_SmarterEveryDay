@@ -20,5 +20,7 @@ public interface UserService {
     boolean checkPassword(String plainPassword, String hashedPassword);
     @Transactional
     List<Packet> getUserPackets(Long userId);
-    }
+    Optional<User> findById(Long id);
+
+}
 

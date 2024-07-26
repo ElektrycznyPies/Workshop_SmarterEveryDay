@@ -116,4 +116,10 @@ public class JpaUserService implements UserService {
     public List<Packet> getUserPackets(Long userId) {
         return userRepository.findPacketsByUserId(userId);
     }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
 }
