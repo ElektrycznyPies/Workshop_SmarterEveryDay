@@ -2,19 +2,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="header.jsp" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Smarter Every Day - error page</title>
-
+    <title>Error</title>
 </head>
 <body>
 <main class="container">
-    <h3>Oh, no!</h3>
-    <p>An error occured...</p>
-    <p>${errorMessage}</p>
+<h3>Oh, no! An error occurred...</h3>
+<p>${errorMessage}</p>
+<p>Class: ${className}</p>
+<p>Method: ${methodName}</p>
+<p>Line: ${lineNumber}</p>
+    <p>Details: ${exception}</p>
     <p>URL: ${url}</p>
     <hr>
-    <p>Details: ${exception}</p>
     <a href="<c:url value='/user/home'/>">Return to home page</a>
 
 

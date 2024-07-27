@@ -43,6 +43,7 @@
 //    private Set<StudySession> studySessions;
 package pl.coderslab.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -74,7 +75,8 @@ public class Packet {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "packet_show_fields", joinColumns = @JoinColumn(name = "packet_id"))
     @Column(name = "show_field")
-    private Set<String> showFields = new HashSet<>();
+    //private Set<String> showFields = new HashSet<>();
+    private Set<String> showFields;
 
     @Column(name = "compare_field")
     private String compareField;
@@ -102,16 +104,9 @@ public class Packet {
     )
     private Set<Category> categories;
 
+
     @ManyToMany(mappedBy = "packets", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
-//@ManyToMany(fetch = FetchType.EAGER)
-//@JoinTable(
-//        name = "user_packet",
-//        joinColumns = @JoinColumn(name = "packet_id"),
-//        inverseJoinColumns = @JoinColumn(name = "user_id")
-//)
-//private Set<User> users = new HashSet<>();
-
 
 
     public Packet() {
@@ -248,10 +243,6 @@ public class Packet {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", isOnBazaar=" + isOnBazaar +
-                ", users=" + users +
-                ", flashcards=" + flashcards +
-                ", studySessions=" + studySessions +
-                ", categories=" + categories +
                 '}';
     }
 }

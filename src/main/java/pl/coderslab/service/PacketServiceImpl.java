@@ -2,19 +2,18 @@ package pl.coderslab.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.coderslab.model.Flashcard;
 import pl.coderslab.model.Packet;
 import pl.coderslab.model.StudySession;
 import pl.coderslab.model.User;
+import pl.coderslab.repository.FlashcardRepository;
 import pl.coderslab.repository.PacketRepository;
 import pl.coderslab.repository.StudySessionRepository;
 import pl.coderslab.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +25,8 @@ public class PacketServiceImpl implements PacketService {
     private UserRepository userRepository;
     @Autowired
     private StudySessionRepository studySessionRepository;
+    @Autowired
+    private FlashcardRepository flashcardRepository;
 
     @Override
     public List<Packet> getAllPackets() {
@@ -36,66 +37,38 @@ public class PacketServiceImpl implements PacketService {
 @Transactional
 public Optional<Packet> getPacket(Long id) {
     Optional<Packet> packet = packetRepository.findById(id);
-    packet.ifPresent(p -> p.getShowFields().size()); // Access the collection to initialize it
+    packet.ifPresent(p -> p.getShowFields().size());
     return packet;
 }
 
-//    @Transactional
-//    public Packet addPacket(Packet packet, User user) {
-//        // pobiera usera do zarządzania
-//        User managedUser = userRepository.findById(user.getId())
-//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-//
-//        // set userów, inicjalizacja
-//        if (packet.getUsers() == null) {
-//            packet.setUsers(new HashSet<>());
-//        }
-//
-//        // czy user jest już przypisany do pakietu?
-//        if (!packet.getUsers().contains(managedUser)) {
-//            packet.getUsers().add(managedUser);
-//        }
-//
-//        // zapisuje pak.
-//        Packet savedPacket = packetRepository.save(packet);
-//
-//        // Ensure user's packets set is initialized
-//        if (managedUser.getPackets() == null) {
-//            managedUser.setPackets(new HashSet<>());
-//        }
-//
-//        // Check if the packet is already associated with the user
-//        if (!managedUser.getPackets().contains(savedPacket)) {
-//            managedUser.getPackets().add(savedPacket);
-//            userRepository.save(managedUser);
-//        }
-//        return savedPacket;
-//    }
-
+    @Override
     @Transactional
     public Packet addPacket(Packet packet, User user) {
+        // user zarządzany przez persistence context
         User managedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // First, save the packet
-        Packet savedPacket = packetRepository.save(packet);
+        // wszyscy userzy zarz. przez persistence context
+        Set<User> managedUsers = packet.getUsers().stream()
+                .map(u -> userRepository.findById(u.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found")))
+                .collect(Collectors.toSet());
 
-        // Check if the association already exists
+        packet.setUsers(managedUsers);
+
+        // czy już przypisany
         boolean associationExists = managedUser.getPackets().stream()
-                .anyMatch(p -> p.getId().equals(savedPacket.getId()));
+                .anyMatch(p -> p.getId().equals(packet.getId()));
 
         if (!associationExists) {
-            // Add the association only if it doesn't exist
-            managedUser.getPackets().add(savedPacket);
-            savedPacket.getUsers().add(managedUser);
-
-            // Save both entities
+            packetRepository.save(packet);
+            managedUser.getPackets().add(packet);
             userRepository.save(managedUser);
-            packetRepository.save(savedPacket);
         }
 
-        return savedPacket;
+        return packet;
     }
+
 
     @Override
     @Transactional
@@ -145,35 +118,100 @@ public Optional<Packet> getPacket(Long id) {
         userRepository.save(user);
     }
 
-//    @Override
-//    @Transactional
-//    public void updatePacket(Packet packet) {
-//        Packet existingPacket = packetRepository.findById(packet.getId())
-//                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-//        existingPacket.setName(packet.getName());
-//        existingPacket.setDescription(packet.getDescription());
-//        existingPacket.setAuthor(packet.getAuthor());
-//        existingPacket.setOnBazaar(packet.isOnBazaar());
-//        existingPacket.setUsers(packet.getUsers());
-//        // + inne pola, jeśli są
-//        packetRepository.save(existingPacket);
-//    }
+
     @Override
     @Transactional
-    public void updatePacket(Packet packet) {
+    public Packet updatePacket(Packet packet, Long userId) {
         Packet existingPacket = packetRepository.findById(packet.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        existingPacket.setName(packet.getName());
-        existingPacket.setDescription(packet.getDescription());
-        existingPacket.setAuthor(packet.getAuthor());
-        existingPacket.setOnBazaar(packet.isOnBazaar());
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // aktualizuj userów tylko jeśli lista nie jest null
-        if (packet.getUsers() != null) {
-            existingPacket.getUsers().addAll(packet.getUsers());
+        System.out.println("]0Upd currentUser2: " + currentUser);
+        System.out.println("]]]1Upd packet: " + packet);
+        System.out.println("]]]2Upd currentUser: " + currentUser);
+        System.out.println("]]]2Upd packet users: " + packet.getUsers());
+
+        if (existingPacket.getUsers().size() > 1) {
+            // Tworzenie nowego pakietu
+            Packet newPacket = new Packet();
+            newPacket.setName(packet.getName());
+            newPacket.setDescription(packet.getDescription());
+            newPacket.setAuthor(packet.getAuthor());
+            newPacket.setOnBazaar(false);
+            newPacket.setShowFields(new HashSet<>(packet.getShowFields())); // Ensure showFields is copied
+            newPacket.setCompareField(packet.getCompareField());
+
+            // tylko 1 user nowego pak.
+            newPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
+            System.out.println("]]]2.2Upd newpacket users: " + newPacket.getUsers());
+
+            // Kopiowanie fiszek
+            newPacket.setFlashcards(new HashSet<>());
+            if (existingPacket.getFlashcards() != null) {   /////////////// TU MOŻE BYĆ PROBLEM Z ZAPISEM FISEK packet, nie expacket
+                for (Flashcard flashcard : existingPacket.getFlashcards()) {
+                    Flashcard newFlashcard = new Flashcard();
+                    newFlashcard.setName(flashcard.getName());
+                    newFlashcard.setWord(flashcard.getWord());
+                    newFlashcard.setWord2(flashcard.getWord2());
+                    newFlashcard.setAdditionalText(flashcard.getAdditionalText());
+                    newFlashcard.setImageLink(flashcard.getImageLink());
+                    newFlashcard.setPack(newPacket);
+                    newPacket.getFlashcards().add(newFlashcard);
+                }
+            }
+            System.out.println("]6Upd Flashcards copied to new packet: " + newPacket.getFlashcards());
+
+            // Remove the current user from the existing packet
+            existingPacket.getUsers().remove(currentUser);
+            packetRepository.save(existingPacket);
+
+            // Save the new packet
+            packetRepository.save(newPacket);
+
+            // Update user's packet list
+            currentUser.getPackets().remove(existingPacket);
+            currentUser.getPackets().add(newPacket);
+            userRepository.save(currentUser);
+
+                System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
+
+            return newPacket;
+        } else {
+            // Aktualizacja istniejącego pakietu
+            existingPacket.setName(packet.getName());
+            existingPacket.setDescription(packet.getDescription());
+            existingPacket.setShowFields(packet.getShowFields());
+            existingPacket.setCompareField(packet.getCompareField());
+            existingPacket.setOnBazaar(packet.isOnBazaar());
+            existingPacket.setAuthor(packet.getAuthor());
+
+            // Ustawianie użytkowników na tylko bieżącego użytkownika
+            //existingPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
+            System.out.println("]8Upd exiPacket users: " + existingPacket.getUsers());
+
+            // Kopiowanie fiszek
+            existingPacket.getFlashcards().clear();
+            if (packet.getFlashcards() != null) {
+                for (Flashcard flashcard : packet.getFlashcards()) {
+                    Flashcard newFlashcard = new Flashcard();
+                    newFlashcard.setName(flashcard.getName());
+                    newFlashcard.setWord(flashcard.getWord());
+                    newFlashcard.setWord(flashcard.getWord());
+                    newFlashcard.setWord2(flashcard.getWord2());
+                    newFlashcard.setAdditionalText(flashcard.getAdditionalText());
+                    newFlashcard.setImageLink(flashcard.getImageLink());
+                    newFlashcard.setPack(existingPacket);
+                    existingPacket.getFlashcards().add(newFlashcard);
+                }
+            }
+
+            packetRepository.save(existingPacket);
+
+            System.out.println("]7 zaktualizowany stary pakiet. Users: " + existingPacket.getUsers());
+
+            return existingPacket;
         }
-
-        packetRepository.save(existingPacket);
     }
 
 
@@ -189,14 +227,50 @@ public Optional<Packet> getPacket(Long id) {
 
     @Override
     @Transactional
+    public void sendPacketToBazaar(Long packetId, Long userId) {
+        Packet packet = packetRepository.findById(packetId)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!packet.getUsers().contains(user)) {
+            throw new IllegalStateException("User does not own this packet");
+        }
+
+        if (packet.getFlashcards() == null || packet.getFlashcards().isEmpty()) {
+            throw new IllegalStateException("Packet must have flashcards to be sent to the bazaar");
+        }
+
+        packet.setOnBazaar(true);
+        packetRepository.save(packet);
+    }
+
+    @Override
+    @Transactional
     public List<Packet> getBazaarPackets() {
         return packetRepository.findByIsOnBazaar(true);
     }
 
+
+    @Override
+    @Transactional
+    public void addPacketToUser(Long packetId, Long userId) {
+        Packet packet = packetRepository.findById(packetId)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!packet.getUsers().contains(user)) {
+            packet.getUsers().add(user);
+            user.getPackets().add(packet);
+            packetRepository.save(packet);
+            userRepository.save(user);
+            System.out.println("]5Getbaz user, packet: " + user.getFullName() + packet.getName());
+        }
+    }
     @Override
     @Transactional
     public List<Packet> getBazaarPacketsByCategories(List<Long> categoryIds) {
         return packetRepository.findByIsOnBazaarAndCategoriesIn(true, categoryIds);
     }
-
 }

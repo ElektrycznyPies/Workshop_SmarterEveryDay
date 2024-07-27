@@ -50,6 +50,7 @@ public class JpaUserService implements UserService {
         return userRepository.findById(id);
     }
 
+    @Transactional
     public void addUser(User user) {
         userRepository.save(user);
     }
@@ -97,6 +98,7 @@ public class JpaUserService implements UserService {
         // usuwa usera
         userRepository.delete(user);
     }
+    @Transactional
     public void updateUser(User user) {
         userRepository.save(user);
     }
@@ -114,4 +116,10 @@ public class JpaUserService implements UserService {
     public List<Packet> getUserPackets(Long userId) {
         return userRepository.findPacketsByUserId(userId);
     }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
 }

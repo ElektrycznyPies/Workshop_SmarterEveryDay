@@ -115,14 +115,12 @@ public class StudySession {
     @Override
     public String toString() {
         return "StudySession{" +
-                "correctAnswers=" + correctAnswers +
-                ", wrongAnswers=" + wrongAnswers +
-                ", id=" + id +
-                ", user=" + user +
-                ", packet=" + packet +
+                "id=" + id +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", duration=" + duration +
+                ", correctAnswers=" + correctAnswers +
+                ", wrongAnswers=" + wrongAnswers +
                 '}';
     }
 }

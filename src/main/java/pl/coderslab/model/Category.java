@@ -52,7 +52,6 @@ public class Category {
         return "Category{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", packets=" + packets +
                 '}';
     }
 }

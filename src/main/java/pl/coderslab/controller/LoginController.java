@@ -44,8 +44,8 @@ public class LoginController {
                 }
             }
         }
-        model.addAttribute("error", "Invalid email or password"); //REDO:POP-UP
-        return "redirect:/";
+        throw new RuntimeException("Invalid username or password");
+
     }
 
 

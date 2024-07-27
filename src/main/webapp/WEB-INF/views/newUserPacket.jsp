@@ -13,18 +13,16 @@
     <form:form method="POST" modelAttribute="packet">
         <form:hidden path="id"/>
         <div>
-            <form:label path="name">Packet Name:</form:label>
+            <form:label path="name">Packet name</form:label>
             <form:input path="name"/>
         </div>
         <div>
-            <form:label path="description">Description:</form:label>
+            <form:label path="description">Description</form:label>
             <form:textarea path="description"/>
         </div>
-        <div>
-            <input type="submit" value="Create Packet"/>
-        </div>
+
         <div class="form-group">
-            <label for="author">Author:</label>
+            <label for="author">Author</label>
             <input type="text" id="author" name="author" class="form-control" placeholder="Anonymous">
         </div>
         <div class="form-group">
@@ -32,6 +30,9 @@
             <label for="useNick">Use nick</label>
             <input type="radio" id="useName" name="authorType" value="name">
             <label for="useName">Use name</label>
+        </div>
+        <div>
+            <input type="submit" value="Create Packet"/>
         </div>
     </form:form>
 </div>

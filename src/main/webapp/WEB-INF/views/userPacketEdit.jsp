@@ -15,6 +15,8 @@
 
     <form:form method="POST" modelAttribute="packet" action="/flashpack/user/packets/edit">
         <form:hidden path="id"/>
+        <form:hidden path="showFields"/>
+        <form:hidden path="compareField"/>
         <div class="form-group">
             <form:label path="name">Packet name</form:label>
             <form:input path="name"/>
