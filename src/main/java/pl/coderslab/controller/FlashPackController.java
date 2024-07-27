@@ -404,21 +404,13 @@ public class FlashPackController {
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-
         Packet packet = packetService.getPacket(packetId)
                 .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+        Packet updatedPacket = packetService.updatePacket(packet, user.getId());
+        flashcardService.deleteFlashcard(id);
 
-        // Przeprowadź aktualizację pakietu, aby upewnić się, że jest poprawnie przypisany do bieżącego użytkownika
-        packet = packetService.updatePacket(packet, user.getId());
-
-        // Usuń fiszkę z pakietu
-        flashcardService.deleteFlashcard(id); // delegacja na serwis
-
-        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+        return "redirect:/flashpack/user/packets/" + updatedPacket.getId() + "/flashcards";
     }
-
-
-
 
 
 

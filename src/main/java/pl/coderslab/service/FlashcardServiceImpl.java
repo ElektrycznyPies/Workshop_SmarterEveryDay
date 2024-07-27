@@ -69,15 +69,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
 
-    //    @Override
-//    public void updateFlashcard(Flashcard flashcard) {
-//        if (!flashcardRepository.existsById(flashcard.getId())) {
-//            throw new EntityNotFoundException("Flashcard not found");
-//        }
-//        Packet packet = flashcard.getPack();
-//        flashcard.setPack(packet);
-//        flashcardRepository.save(flashcard);
-//    }
+
     @Override
     @Transactional
     public void updateFlashcard(Flashcard updatedFlashcard) {
