@@ -33,13 +33,13 @@ public class PacketServiceImpl implements PacketService {
         return packetRepository.findAll();
     }
 
-@Override
-@Transactional
-public Optional<Packet> getPacket(Long id) {
-    Optional<Packet> packet = packetRepository.findById(id);
-    packet.ifPresent(p -> p.getShowFields().size());
-    return packet;
-}
+    @Override
+    @Transactional
+    public Optional<Packet> getPacket(Long id) {
+        Optional<Packet> packet = packetRepository.findById(id);
+        packet.ifPresent(p -> p.getShowFields().size());
+        return packet;
+    }
 
     @Override
     @Transactional
@@ -148,7 +148,7 @@ public Optional<Packet> getPacket(Long id) {
 
             // Kopiowanie fiszek
             newPacket.setFlashcards(new HashSet<>());
-            if (existingPacket.getFlashcards() != null) {   /////////////// TU MOŻE BYĆ PROBLEM Z ZAPISEM FISEK packet, nie expacket
+            if (existingPacket.getFlashcards() != null) {
                 for (Flashcard flashcard : existingPacket.getFlashcards()) {
                     Flashcard newFlashcard = new Flashcard();
                     newFlashcard.setName(flashcard.getName());
@@ -174,7 +174,7 @@ public Optional<Packet> getPacket(Long id) {
             currentUser.getPackets().add(newPacket);
             userRepository.save(currentUser);
 
-                System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
+            System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
 
             return newPacket;
         } else {
@@ -186,12 +186,11 @@ public Optional<Packet> getPacket(Long id) {
             existingPacket.setOnBazaar(packet.isOnBazaar());
             existingPacket.setAuthor(packet.getAuthor());
 
-            // Ustawianie użytkowników na tylko bieżącego użytkownika
             //existingPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
             System.out.println("]8Upd exiPacket users: " + existingPacket.getUsers());
 
             // Kopiowanie fiszek
-            existingPacket.getFlashcards().clear();
+            //existingPacket.getFlashcards().clear();
             if (packet.getFlashcards() != null) {
                 for (Flashcard flashcard : packet.getFlashcards()) {
                     Flashcard newFlashcard = new Flashcard();

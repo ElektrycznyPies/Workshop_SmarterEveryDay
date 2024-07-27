@@ -94,20 +94,9 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
 
-    //    @Bean
-//    public PublisherConverter publisherConverter() {
-//        return new PublisherConverter();
-//    }
-//
-//    @Bean
-//    public AuthorConverter authorConverter() {
-//        return new AuthorConverter();
-//    }
-//
     @Override
     public void addFormatters(FormatterRegistry registry) {
-//        registry.addConverter(publisherConverter());
-//        registry.addConverter(authorConverter());
+
     }
 
     @Bean

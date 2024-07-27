@@ -10,7 +10,10 @@ import pl.coderslab.repository.PacketRepository;
 import pl.coderslab.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,37 +48,24 @@ public class FlashcardServiceImpl implements FlashcardService {
         packetRepository.save(packet);
     }
 
-//    @Override
-//    @Transactional
-//    public void deleteFlashcard(Long id) {
-//        Flashcard flashcard = flashcardRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
-//
-//        Packet packet = flashcard.getPack();
-//        packet.getFlashcards().remove(flashcard);
-//
-//        packetRepository.save(packet);
-//            System.out.println("]FISer Pak, Fid, listaF: " + packet.getName() + " , " + flashcard.getId() + " , " + packet.getFlashcards());
-//        flashcardRepository.delete(flashcard);
-//    }
-@Override
-@Transactional
-public void deleteFlashcard(Long id) {
-    Flashcard flashcard = flashcardRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
+    @Override
+    @Transactional
+    public void deleteFlashcard(Long id) {
+        Flashcard flashcard = flashcardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
 
-    Packet packet = flashcard.getPack();
-    packet.getFlashcards().remove(flashcard);
+        Packet packet = flashcard.getPack();
+        packet.getFlashcards().remove(flashcard);
 
-    flashcard.setPack(null); // Detach the flashcard from the packet
-    flashcardRepository.delete(flashcard);
-    packetRepository.save(packet);
+        flashcard.setPack(null); // Detach the flashcard from the packet
+        flashcardRepository.delete(flashcard);
+        packetRepository.save(packet);
 
-    System.out.println("]FISer Pak, Fid, listaF: " + packet.getName() + " , " + id + " , " + packet.getFlashcards());
-}
+        System.out.println("]FISer Pak, Fid, listaF: " + packet.getName() + " , " + id + " , " + packet.getFlashcards());
+    }
 
 
-//    @Override
+    //    @Override
 //    public void updateFlashcard(Flashcard flashcard) {
 //        if (!flashcardRepository.existsById(flashcard.getId())) {
 //            throw new EntityNotFoundException("Flashcard not found");
@@ -84,26 +74,26 @@ public void deleteFlashcard(Long id) {
 //        flashcard.setPack(packet);
 //        flashcardRepository.save(flashcard);
 //    }
-@Override
-@Transactional
-public void updateFlashcard(Flashcard updatedFlashcard) {
-    Flashcard existingFlashcard = flashcardRepository.findById(updatedFlashcard.getId())
-            .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
-    Packet newPacket = updatedFlashcard.getPack();
+    @Override
+    @Transactional
+    public void updateFlashcard(Flashcard updatedFlashcard) {
+        Flashcard existingFlashcard = flashcardRepository.findById(updatedFlashcard.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
+        Packet newPacket = updatedFlashcard.getPack();
 
-    existingFlashcard.setName(updatedFlashcard.getName());
-    existingFlashcard.setWord(updatedFlashcard.getWord());
-    existingFlashcard.setWord2(updatedFlashcard.getWord2());
-    existingFlashcard.setAdditionalText(updatedFlashcard.getAdditionalText());
-    existingFlashcard.setImageLink(updatedFlashcard.getImageLink());
+        existingFlashcard.setName(updatedFlashcard.getName());
+        existingFlashcard.setWord(updatedFlashcard.getWord());
+        existingFlashcard.setWord2(updatedFlashcard.getWord2());
+        existingFlashcard.setAdditionalText(updatedFlashcard.getAdditionalText());
+        existingFlashcard.setImageLink(updatedFlashcard.getImageLink());
 
-    // Update the pack only if it has changed
-    if (newPacket != null && !existingFlashcard.getPack().getId().equals(newPacket.getId())) {
-        existingFlashcard.setPack(newPacket);
+        // Update the pack only if it has changed
+        if (newPacket != null && !existingFlashcard.getPack().getId().equals(newPacket.getId())) {
+            existingFlashcard.setPack(newPacket);
+        }
+
+        flashcardRepository.save(existingFlashcard);
     }
-
-    flashcardRepository.save(existingFlashcard);
-}
 
 
 
