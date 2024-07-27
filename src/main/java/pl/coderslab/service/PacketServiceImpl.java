@@ -162,7 +162,6 @@ public Optional<Packet> getPacket(Long id) {
             }
             System.out.println("]6Upd Flashcards copied to new packet: " + newPacket.getFlashcards());
 
-
             // Remove the current user from the existing packet
             existingPacket.getUsers().remove(currentUser);
             packetRepository.save(existingPacket);
@@ -208,7 +207,6 @@ public Optional<Packet> getPacket(Long id) {
             }
 
             packetRepository.save(existingPacket);
-
 
             System.out.println("]7 zaktualizowany stary pakiet. Users: " + existingPacket.getUsers());
 

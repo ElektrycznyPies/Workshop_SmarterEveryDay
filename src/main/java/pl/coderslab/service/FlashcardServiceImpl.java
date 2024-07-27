@@ -35,15 +35,6 @@ public class FlashcardServiceImpl implements FlashcardService {
         return flashcardRepository.findById(id);
     }
 
-//    @Override
-//    @Transactional
-//    public void addFlashcard(Flashcard flashcard, Packet packet) {
-////        flashcard = flashcardRepository.findById(flashcard.getId())
-////                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
-////        packet = flashcard.getPack();
-//        flashcard.setPack(packet);
-//        flashcardRepository.save(flashcard);
-//    }
 
     @Override
     @Transactional
@@ -84,19 +75,37 @@ public void deleteFlashcard(Long id) {
 }
 
 
+//    @Override
+//    public void updateFlashcard(Flashcard flashcard) {
+//        if (!flashcardRepository.existsById(flashcard.getId())) {
+//            throw new EntityNotFoundException("Flashcard not found");
+//        }
+//        Packet packet = flashcard.getPack();
+//        flashcard.setPack(packet);
+//        flashcardRepository.save(flashcard);
+//    }
+@Override
+@Transactional
+public void updateFlashcard(Flashcard updatedFlashcard) {
+    Flashcard existingFlashcard = flashcardRepository.findById(updatedFlashcard.getId())
+            .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
+    Packet newPacket = updatedFlashcard.getPack();
 
+    existingFlashcard.setName(updatedFlashcard.getName());
+    existingFlashcard.setWord(updatedFlashcard.getWord());
+    existingFlashcard.setWord2(updatedFlashcard.getWord2());
+    existingFlashcard.setAdditionalText(updatedFlashcard.getAdditionalText());
+    existingFlashcard.setImageLink(updatedFlashcard.getImageLink());
 
-
-
-    @Override
-    public void updateFlashcard(Flashcard flashcard) {
-        if (!flashcardRepository.existsById(flashcard.getId())) {
-            throw new EntityNotFoundException("Flashcard not found");
-        }
-        Packet packet = flashcard.getPack();
-        flashcard.setPack(packet);
-        flashcardRepository.save(flashcard);
+    // Update the pack only if it has changed
+    if (newPacket != null && !existingFlashcard.getPack().getId().equals(newPacket.getId())) {
+        existingFlashcard.setPack(newPacket);
     }
+
+    flashcardRepository.save(existingFlashcard);
+}
+
+
 
     @Override
     public List<Flashcard> getFlashcardsByPacketId(Long packetId) {
