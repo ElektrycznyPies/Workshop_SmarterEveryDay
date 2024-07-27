@@ -49,23 +49,6 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
 
-    // jakoś tam działająca metoda
-//    @Override
-//    @Transactional
-//    public void deleteFlashcard(Long id) {
-//        Flashcard flashcard = flashcardRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
-//
-//        Packet packet = flashcard.getPack();
-//        packet.getFlashcards().remove(flashcard);
-//
-//        flashcard.setPack(null); // Detach the flashcard from the packet
-//        flashcardRepository.delete(flashcard);
-//        packetRepository.save(packet);
-//
-//        System.out.println("]FISer Pak, Fid, listaF: " + packet.getName() + " , " + id + " , " + packet.getFlashcards());
-//    }
-
 
     @Override
     @Transactional
