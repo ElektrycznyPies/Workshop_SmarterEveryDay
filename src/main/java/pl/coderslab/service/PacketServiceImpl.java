@@ -37,7 +37,7 @@ public class PacketServiceImpl implements PacketService {
 @Transactional
 public Optional<Packet> getPacket(Long id) {
     Optional<Packet> packet = packetRepository.findById(id);
-    packet.ifPresent(p -> p.getShowFields().size()); // Access the collection to initialize it
+    packet.ifPresent(p -> p.getShowFields().size());
     return packet;
 }
 
@@ -118,6 +118,7 @@ public Optional<Packet> getPacket(Long id) {
         userRepository.save(user);
     }
 
+
     @Override
     @Transactional
     public Packet updatePacket(Packet packet, Long userId) {
@@ -174,20 +175,6 @@ public Optional<Packet> getPacket(Long id) {
             currentUser.getPackets().add(newPacket);
             userRepository.save(currentUser);
 
-//            // Odłączenie użytkownika od istniejącego pakietu
-//            existingPacket.getUsers().remove(currentUser);
-//                System.out.println("]7Upd usuw. usera ze starego pak. dziel. Nowa lista userów: " + existingPacket.getUsers());
-//            currentUser.getPackets().remove(existingPacket);
-//            // Zapisanie zaktualizowanego istniejącego pakietu
-//            packetRepository.save(existingPacket);
-//
-//            // Zapisanie nowego pakietu
-//            packetRepository.save(newPacket);
-//
-//            // Dodanie nowego pakietu do listy pakietów użytkownika
-//            currentUser.getPackets().add(newPacket);
-//            userRepository.save(currentUser);
-
                 System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
 
             return newPacket;
@@ -220,20 +207,6 @@ public Optional<Packet> getPacket(Long id) {
                 }
             }
 
-//            if (packet.getFlashcards() != null) {    ////// możliwy PROBLEM Z KOPIOWANIEM FISZEK
-//                for (Flashcard flashcard : packet.getFlashcards()) {
-//                    Flashcard updFlashcard = flashcardRepository.findById(flashcard.getId())
-//                            .orElse(new Flashcard());
-////                    Flashcard updFlashcard = new Flashcard();
-//                    updFlashcard.setName(flashcard.getName());
-//                    updFlashcard.setWord(flashcard.getWord());
-//                    updFlashcard.setWord2(flashcard.getWord2());
-//                    updFlashcard.setAdditionalText(flashcard.getAdditionalText());
-//                    updFlashcard.setImageLink(flashcard.getImageLink());
-//                    updFlashcard.setPack(existingPacket);
-//                    existingPacket.getFlashcards().add(updFlashcard);
-//                }
-//            }
             packetRepository.save(existingPacket);
 
 

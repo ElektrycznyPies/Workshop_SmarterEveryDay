@@ -362,33 +362,54 @@ public class FlashPackController {
     }
 
 
-    @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
-    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            throw new EntityNotFoundException("User not found");
-        }
-
-        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        packet.getUsers().add(user);
-
-            packet.getUsers().clear(); // każda edycja to odłączenie wszystkich userów
-                System.out.println("]2.0 addFl: usunięcie userów clear(): " + packet.getUsers());
-            packet.getUsers().add(user);
-                System.out.println("]2.0 addFl: dodanie usera bieżącego add(): " + packet.getUsers());
-            // zapis showFields przed aktualizacją
-            packet.setShowFields(new HashSet<>(packet.getShowFields()));
-            packet.getUsers().add(user); // po edycji tylko bieżący user przypisany do pak.
-            packetService.updatePacket(packet, user.getId());
-
-        if (file != null && !file.isEmpty()) {
-            String fileName = file.getOriginalFilename();
-            flashcard.setImageLink(fileName);
-        }
-        flashcardService.addFlashcard(flashcard, packet);
-        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+//    @PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
+//    public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file, HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//
+//        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        packet.getUsers().add(user);
+//
+//            packet.getUsers().clear(); // każda edycja to odłączenie wszystkich userów
+//                System.out.println("]2.0 addFl: usunięcie userów clear(): " + packet.getUsers());
+//            packet.getUsers().add(user);
+//                System.out.println("]2.0 addFl: dodanie usera bieżącego add(): " + packet.getUsers());
+//            // zapis showFields przed aktualizacją
+//            packet.setShowFields(new HashSet<>(packet.getShowFields()));
+//            packet.getUsers().add(user); // po edycji tylko bieżący user przypisany do pak.
+//            packetService.updatePacket(packet, user.getId());
+//
+//        if (file != null && !file.isEmpty()) {
+//            String fileName = file.getOriginalFilename();
+//            flashcard.setImageLink(fileName);
+//        }
+//        flashcardService.addFlashcard(flashcard, packet);
+//        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+//    }
+@PostMapping("/flashpack/user/packets/{packetId}/flashcards/add")
+public String addFlashcard(@PathVariable Long packetId, @ModelAttribute Flashcard flashcard, @RequestParam("file") MultipartFile file, HttpSession session) {
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
+        throw new EntityNotFoundException("User not found");
     }
 
+    Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+
+    // Check if the packet is shared and create a new one for the current user if necessary
+    if (packet.getUsers().size() > 1) {
+        packet = packetService.updatePacket(packet, user.getId());
+    }
+
+    if (file != null && !file.isEmpty()) {
+        String fileName = file.getOriginalFilename();
+        flashcard.setImageLink(fileName);
+    }
+
+    flashcardService.addFlashcard(flashcard, packet);
+    return "redirect:/flashpack/user/packets/" + packet.getId() + "/flashcards";
+}
 
     // EDYCJA FISZKI, JEDEN FORM.
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/edit/{id}")
@@ -415,32 +436,45 @@ public class FlashPackController {
     }
 
     // KASOWANIE FISZKI
+//    @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
+//    public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id, HttpSession sess) {
+//        User user = (User) sess.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        Flashcard flashcard = flashcardService.getFlashcard(id).orElseThrow(() -> new EntityNotFoundException("Fiszka not found"));
+//            System.out.println("]FI kasowana fiszka id: " + flashcard.getId());
+//
+////            if (packet.getUsers().size() == 1) {
+////            packet.getUsers().clear();
+////                System.out.println("]2.0 delFl: usunięcie userów clear(): " + packet.getUsers());
+////            packet.getUsers().add(user);
+////                System.out.println("]2.1 delFl: dodanie usera bieżącego add(): " + packet.getUsers());
+////            packet.setShowFields(new HashSet<>(packet.getShowFields()));
+////            // zapis showFields przed aktualizacją
+////            packetService.updatePacket(packet, user.getId());
+////        }
+//
+//        flashcardService.deleteFlashcard(id);
+////        packet.setShowFields(new HashSet<>(packet.getShowFields()));
+//        packetService.updatePacket(packet, user.getId());
+//        //packetService.updatePacket(packet, user.getId());
+//        System.out.println("]2.2 delFl - currentUser id: " + user.getId() + " all users IDs: " + packet.getUsers());
+//        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+//    }
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
     public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id, HttpSession sess) {
         User user = (User) sess.getAttribute("user");
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
-        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
-        Flashcard flashcard = flashcardService.getFlashcard(id).orElseThrow(() -> new EntityNotFoundException("Fiszka not found"));
-            System.out.println("]FI kasowana fiszka id: " + flashcard.getId());
-//        if (packet.getUsers().size() > 1) {
-//            packet.getUsers().clear();
-//                System.out.println("]2.0 delFl: usunięcie userów clear(): " + packet.getUsers());
-//            packet.getUsers().add(user);
-//                System.out.println("]2.1 delFl: dodanie usera bieżącego add(): " + packet.getUsers());
-//            packet.setShowFields(new HashSet<>(packet.getShowFields()));
-//            // zapis showFields przed aktualizacją
-//            packetService.updatePacket(packet, user.getId());
-//        }
-
-        flashcardService.deleteFlashcard(id);
-        packet.setShowFields(new HashSet<>(packet.getShowFields()));
-        packetService.updatePacket(packet, user.getId());
-        //packetService.updatePacket(packet, user.getId());
-        System.out.println("]2.2 delFl - currentUser id: " + user.getId() + " all users IDs: " + packet.getUsers());
+        flashcardService.deleteFlashcard(id); // Delegate deletion to service
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
+
+
+
 
     @PostMapping("/flashpack/user/packets/{packetId}/update-study-settings")
     public String updateStudySettings(@PathVariable Long packetId,
