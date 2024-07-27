@@ -12,7 +12,7 @@
     .res-img {
         width: 600px;
         height: 400px;
-        object-fit: cover;
+        object-fit: contain;
         border: 1px solid #ccc;
         border-radius: 15px;
         padding: 5px;

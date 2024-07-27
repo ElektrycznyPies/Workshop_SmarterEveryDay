@@ -44,10 +44,8 @@ public class LoginController {
                 }
             }
         }
-        throw new RuntimeException("Invalid username or password");
-
+        return "errorLogin";
+        //throw new RuntimeException("Invalid username or password");
     }
-
-
 
 }

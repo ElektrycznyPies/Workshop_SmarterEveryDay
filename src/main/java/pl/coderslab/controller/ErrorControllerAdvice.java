@@ -13,23 +13,20 @@ public class ErrorControllerAdvice {
     public ModelAndView handleException(Exception ex, Model model, HttpServletRequest req) {
         ModelAndView modelAndView = new ModelAndView("error");
 
-        // Pobierz stack trace
         StackTraceElement[] stackTrace = ex.getStackTrace();
         if (stackTrace.length > 0) {
-            // Pobierz pierwszy element stack trace, który zawiera informacje o metodzie
+            // pobiera pierwszy element stack trace
             StackTraceElement element = stackTrace[0];
             String methodName = element.getMethodName();
             String className = element.getClassName();
             int lineNumber = element.getLineNumber();
 
-            // Dodaj informacje do modelu
             model.addAttribute("methodName", methodName);
             model.addAttribute("className", className);
             model.addAttribute("lineNumber", lineNumber);
             model.addAttribute("url", req.getRequestURL() );
         }
 
-        // Dodaj wyjątek do modelu
         model.addAttribute("exception", ex);
 
         return modelAndView;

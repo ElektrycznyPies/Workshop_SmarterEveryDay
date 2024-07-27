@@ -40,10 +40,14 @@ public class StudyController {
     @GetMapping("/flashpack/user/packets/{id}/study")
     public String showStudySessionIntro(@PathVariable Long id, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
+        Packet packet = packetService.getPacket(id).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
+
         model.addAttribute("packetId", id);
+        model.addAttribute("flashcardsNo", packet.getFlashcards().size());
+
         return "userStudyIntro";
     }
 
@@ -191,7 +195,6 @@ public class StudyController {
                 lastSession = null;
             }
         }
-
 
         // walidacja sesji - jeśli są z pustymi polami, to je pomija
         List<StudySession> validSessions = studySessions.stream()
