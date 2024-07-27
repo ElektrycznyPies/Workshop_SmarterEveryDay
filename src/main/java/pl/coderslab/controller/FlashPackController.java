@@ -397,18 +397,70 @@ public class FlashPackController {
     }
 
 
+
     @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
     public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id, HttpSession sess) {
         User user = (User) sess.getAttribute("user");
-        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
+
+        Packet packet = packetService.getPacket(packetId)
+                .orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+
+        // Przeprowadź aktualizację pakietu, aby upewnić się, że jest poprawnie przypisany do bieżącego użytkownika
+        packet = packetService.updatePacket(packet, user.getId());
+
+        // Usuń fiszkę z pakietu
         flashcardService.deleteFlashcard(id); // delegacja na serwis
-        packetService.updatePacket(packet, user.getId());
 
         return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
     }
+
+// jakoś tam działająca metoda
+
+//    @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
+//    public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id, HttpSession sess) {
+//        User user = (User) sess.getAttribute("user");
+//        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//
+//        packetService.updatePacket(packet, user.getId());
+//        flashcardService.deleteFlashcard(id); // delegacja na serwis
+//
+//        return "redirect:/flashpack/user/packets/" + packetId + "/flashcards";
+//    }
+
+
+// do przetestowania po rozwiązaniu problemu mnożenia fiszek
+
+//    @GetMapping("/flashpack/user/packets/{packetId}/flashcards/delete/{id}")
+//    public String deleteFlashcard(@PathVariable Long packetId, @PathVariable Long id, HttpSession sess) {
+//        User user = (User) sess.getAttribute("user");
+//        if (user == null) {
+//            throw new EntityNotFoundException("User not found");
+//        }
+//        Packet packet = packetService.getPacket(packetId).orElseThrow(() -> new EntityNotFoundException("Packet not found"));
+//        Flashcard flashcard = flashcardService.getFlashcard(id).orElseThrow(() -> new EntityNotFoundException("Flashcard not found"));
+//
+//        // Detach the flashcard from the packet
+//        packet.getFlashcards().remove(flashcard);
+//        flashcard.setPack(null);
+//
+//        // Update the packet to ensure it's not shared before deleting the flashcard
+//        Packet updatedPacket = packetService.updatePacket(packet, user.getId());
+//
+//        // Now delete the flashcard from the updated packet
+//        flashcardService.deleteFlashcard(id);
+//
+//        return "redirect:/flashpack/user/packets/" + updatedPacket.getId() + "/flashcards";
+//    }
+
+
+
+
 
     @PostMapping("/flashpack/user/packets/{packetId}/update-study-settings")
     public String updateStudySettings(@PathVariable Long packetId,
