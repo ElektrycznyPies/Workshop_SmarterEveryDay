@@ -65,38 +65,3 @@
 </body>
 </html>
 
-
-
-
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
-<%--<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>--%>
-<%--<%@ include file="header.jsp" %>--%>
-
-<%--<html>--%>
-<%--<head>--%>
-<%--    <title>User packets</title>--%>
-<%--</head>--%>
-<%--<body>--%>
-<%--<main class="container">--%>
-<%--<h1>Packets for ${user.fullName}</h1>--%>
-<%--<c:choose>--%>
-<%--    <c:when test="${empty packets}">--%>
-<%--        <p>This user has no packets.</p>--%>
-<%--    </c:when>--%>
-<%--    <c:otherwise>--%>
-<%--        <ul>--%>
-
-<%--    <c:forEach items="${packets}" var="packet">--%>
-<%--        <li>--%>
-<%--                ${packet.name} - ${packet.description}--%>
-<%--            <a href="/admin/users/packets/${user.id}/delete/${packet.id}" onclick="return confirm('Are you sure?')">Delete</a>--%>
-<%--        </li>--%>
-<%--    </c:forEach>--%>
-<%--        </ul>--%>
-<%--    </c:otherwise>--%>
-<%--</c:choose>--%>
-<%--<a href="/admin/users/all">Back to Users List</a>--%>
-<%--</main>--%>
-<%--</body>--%>
-<%--</html>--%>

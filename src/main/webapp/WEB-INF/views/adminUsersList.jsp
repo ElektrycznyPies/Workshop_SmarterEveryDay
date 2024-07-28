@@ -9,8 +9,6 @@
 </head>
 <body>
 <div class="container">
-<%--    <div>--%>
-<%--    <a href="<c:url value='/user/home'/>" class="button">Main page</a></div>--%>
 
     <form action="<c:url value='/admin/users/add'/>" method="get">
         <button type="submit" class="primary">Add User</button>

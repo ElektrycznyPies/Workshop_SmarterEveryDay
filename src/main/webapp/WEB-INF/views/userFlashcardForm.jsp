@@ -44,29 +44,5 @@
     </form:form>
 </div>
 
-
-<%--        --%>
-<%--        --%>
-<%--        <fieldset role="group">--%>
-<%--                <button type="button" onclick="chooseFile('image')">Click to choose</button>--%>
-<%--                <form:input path="imageLink" name="imageLink" id="imageLink" placeholder="Image"/>--%>
-<%--        </fieldset>--%>
-
-        <%--        <label for="soundLink">Sound Link:</label>--%>
-<%--        <form:input path="soundLink" id="soundLink" />--%>
-<%--        <button type="button" onclick="chooseFile('sound')" class="secondary">Choose</button>--%>
-
-<%--<script>--%>
-<%--    function chooseFile(type) {--%>
-<%--        fetch('/choose-file?type=' + type)--%>
-<%--            .then(response => response.text())--%>
-<%--            .then(path => {--%>
-<%--                if (path) {--%>
-<%--                    document.getElementById(type + 'Link').value = path;--%>
-<%--                }--%>
-<%--            });--%>
-<%--    }--%>
-<%--</script>--%>
-
 </body>
 </html>

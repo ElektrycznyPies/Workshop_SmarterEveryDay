@@ -44,33 +44,6 @@
         </div>
         </form:form>
 
-
-
-
-
-<%--        <html>--%>
-<%--<head>--%>
-<%--    <title>Add User</title>--%>
-<%--</head>--%>
-<%--<body>--%>
-
-<%--<form:form method="post" modelAttribute="user">--%>
-<%--    <p>First Name</p>--%>
-<%--    <form:input path="firstName"/>--%>
-<%--    <form:errors path="firstName"/><br/>--%>
-<%--    <p>Last Name</p>--%>
-<%--    <form:input path="lastName"/>--%>
-<%--    <form:errors path="lastName"/><br/>--%>
-<%--    <p>Email</p>--%>
-<%--    <form:input path="email"/>--%>
-<%--    <form:errors path="email"/><br/>--%>
-<%--    <p>Password</p>--%>
-<%--    <form:input path="hashed_password"/>--%>
-<%--    <form:errors path="hashed_password"/><br/>--%>
-
-<%--    <input type="submit" value="Save">--%>
-<%--</form:form>--%>
-
 </body>
 </html>
 

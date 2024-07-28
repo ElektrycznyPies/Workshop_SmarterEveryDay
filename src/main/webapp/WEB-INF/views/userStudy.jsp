@@ -56,12 +56,10 @@
             <p>Additional Text: ${flashcard.additionalText}</p>
         </c:if>
         <form id="answerForm" action="/flashpack/user/packets/${packet.id}/study/answer" method="post">
-<%--        <form action="/flashpack/user/packets/${packet.id}/study/answer" method="post">--%>
             <input type="text" name="answer" placeholder="Your answer" autofocus />
             <button type="submit">Submit</button>
         </form>
     </div>
-<%--    <form action="/flashpack/user/packets/${packet.id}/study/end" method="post">--%>
         <form action="<c:url value='/flashpack/user/packets/${packet.id}/study/end'/>" method="post">
             <button type="submit">End session</button>
         </form>

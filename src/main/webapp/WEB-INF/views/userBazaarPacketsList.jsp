@@ -29,15 +29,6 @@
                 <button type="submit" disabled>Filter</button>
             </form>
 
-            <%-- <form action="<c:url value='/flashpack/user/packets/${packetId}/update-study-settings'/>" method="post"> --%>
-            <%-- <div class="grid container"> --%>
-            <%-- <div><label><input type="checkbox" name="showFields" value="name" ${showFields.contains('name') ? 'checked' : ''}> Name</label></div> --%>
-            <%-- <div><label><input type="checkbox" name="showFields" value="word" ${showFields.contains('word') ? 'checked' : ''}> Word 1</label></div> --%>
-            <%-- <div><label><input type="checkbox" name="showFields" value="word2" ${showFields.contains('word2') ? 'checked' : ''}> Word 2</label></div> --%>
-            <%-- <div><label><input type="checkbox" name="showFields" value="additionalText" ${showFields.contains('additionalText') ? 'checked' : ''}> Additional text</label></div> --%>
-            <%-- <div><label><input type="checkbox" name="showFields" value="imageLink" ${showFields.contains('imageLink') ? 'checked' : ''}> Image</label></div> --%>
-            <%-- </div> --%>
-            <%-- </form> --%>
             <section class="grid" id="tables">
                 <table class="striped full-width">
                     <thead>

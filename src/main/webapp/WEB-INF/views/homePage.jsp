@@ -25,13 +25,13 @@
                 <form:form modelAttribute="user" action="${pageContext.request.contextPath}/register" method="post">
                     <form:hidden path="id"/>
                     <div>
-                        <label for="firstName">First Name</label>
-                        <form:input path="firstName" class="input"/>
+                        <label for="firstName">First Name<small>*</small></label>
+                        <form:input path="firstName" class="input" required="required"/>
                     </div>
 
                     <div>
-                        <label for="lastName">Last Name</label>
-                        <form:input path="lastName" class="input"/>
+                        <label for="lastName">Last Name<small>*</small></label>
+                        <form:input path="lastName" class="input" required="required"/>
                     </div>
                     <div>
                         <label for="nick">Nick</label>
@@ -39,12 +39,12 @@
                     </div>
 
                     <div>
-                        <label for="email">Email</label>
+                        <label for="email">Email<small>*</small></label>
                         <form:input path="email" class="input" required="required"/>
                     </div>
 
                     <div>
-                        <label for="password">Password</label>
+                        <label for="password">Password<small>*</small></label>
                         <form:input path="password" class="input" type="password" required="required"/>
                     </div>
 

@@ -57,7 +57,6 @@
                     <div><label><input type="radio" name="compareField" value="word" ${compareField == 'word' ? 'checked' : ''}> Word 1</label></div>
                     <div><label><input type="radio" name="compareField" value="word2" ${compareField == 'word2' ? 'checked' : ''}> Word 2</label></div>
                     <div><label><input type="radio" name="compareField" value="additionalText" ${compareField == 'additionalText' ? 'checked' : ''}> Additional text</label></div>
-        <%--            <div></div>--%>
                     <div></div>
                 </div>
 
@@ -88,7 +87,6 @@
                                 <th scope="col">Word 1</th>
                                 <th scope="col">Word 2</th>
                                 <th scope="col">Image 1</th>
-<%--                                <th scope="col">Image 2</th>--%>
                                 <th scope="col">Add. text</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -101,8 +99,6 @@
                                     <td><c:out value="${flashcard.word2}"/></td>
                                     <td><c:out value="${shortImageLinks[status.index]}"/>
                                     </td>
-<%--                                    <td><c:out value="${shortImageLinks2[status.index]}"/>--%>
-<%--                                    </td>--%>
                                     <td><c:out value="${shortAdditionalTexts[status.index]}"/></td>
                                     <td>
                                         <c:if test="${fromwhere == 'user'}">

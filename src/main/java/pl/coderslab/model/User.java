@@ -20,11 +20,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @Size(min = 2, max = 100)
+    @Size(max = 100)
     @Column(name = "first_name")
     private String firstName;
     @NotBlank
-    @Size(min = 2, max = 100)
+    @Size(max = 100)
     @Column(name = "last_name")
     private String lastName;
     @Size(max = 100)

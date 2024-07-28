@@ -128,13 +128,8 @@ public class PacketServiceImpl implements PacketService {
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        System.out.println("]0Upd currentUser2: " + currentUser);
-        System.out.println("]]]1Upd packet: " + packet);
-        System.out.println("]]]2Upd currentUser: " + currentUser);
-        System.out.println("]]]2Upd packet users: " + packet.getUsers());
-
         if (existingPacket.getUsers().size() > 1) {
-            // Tworzenie nowego pakietu
+            // tworzenie NOWEGO pakietu
             Packet newPacket = new Packet();
             newPacket.setName(packet.getName());
             newPacket.setDescription(packet.getDescription());
@@ -145,9 +140,8 @@ public class PacketServiceImpl implements PacketService {
 
             // tylko 1 user nowego pak.
             newPacket.setUsers(new HashSet<>(Collections.singletonList(currentUser)));
-            System.out.println("]]]2.2Upd newpacket users: " + newPacket.getUsers());
 
-            // Kopiowanie fiszek
+            // kopiowanie fiszek
             newPacket.setFlashcards(new HashSet<>());
             for (Flashcard flashcard : existingPacket.getFlashcards()) {
                 Flashcard newFlashcard = new Flashcard();
@@ -160,25 +154,20 @@ public class PacketServiceImpl implements PacketService {
                 newPacket.getFlashcards().add(newFlashcard);
             }
 
-            System.out.println("]6Upd Flashcards copied to new packet: " + newPacket.getFlashcards());
-
-            // Remove the current user from the existing packet
+            // usuwa usera od pak.
             existingPacket.getUsers().remove(currentUser);
             packetRepository.save(existingPacket);
 
-            // Save the new packet
             packetRepository.save(newPacket);
 
-            // Update user's packet list
+            // update listy pak. usrea
             currentUser.getPackets().remove(existingPacket);
             currentUser.getPackets().add(newPacket);
             userRepository.save(currentUser);
 
-            System.out.println("]8Upd newPacket and user updated. Users: " + newPacket.getUsers());
-
             return newPacket;
         } else {
-            // Aktualizacja istniejącego pakietu
+            // AKTUALIZACJA istn. pakietu
             existingPacket.setName(packet.getName());
             existingPacket.setDescription(packet.getDescription());
             existingPacket.setShowFields(packet.getShowFields());
@@ -186,12 +175,7 @@ public class PacketServiceImpl implements PacketService {
             existingPacket.setOnBazaar(packet.isOnBazaar());
             existingPacket.setAuthor(packet.getAuthor());
 
-            System.out.println("]8Upd exiPacket users: " + existingPacket.getUsers());
-
-            // Save the updated existing packet
             packetRepository.save(existingPacket);
-
-            System.out.println("]7 zaktualizowany stary pakiet. Users: " + existingPacket.getUsers());
 
             return existingPacket;
         }
